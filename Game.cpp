@@ -33,7 +33,7 @@ bool isFOOutOfBoard(const FO value)
 }
 
 Game::Game()
-	:mWindow(sf::VideoMode(1280, 960), "TouHou20.0-chs")			//生成窗口
+	:mWindow(sf::VideoMode(1280, 960), "TouHou114.0-chs")			//生成窗口
 	, font()
 	, player(1)
 {
@@ -63,7 +63,7 @@ Game::Game()
 	{
 		puts("Error: Load RobotoCondensed-Regular.ttf failed!");
 	}
-	text.setString("demo");
+	text.setString("v0.1");
 	text.setFont(font);
 	text.setCharacterSize(50);
 
@@ -107,7 +107,7 @@ void Game::NowLoading()
     {
         puts("Error: Load nowloading failed!");
     }
-     menuMusic.play();
+    //menuMusic.play();
     loadingUI.setTexture(loading);
     loadingUISub.setTexture(nowLoading);
     loadingUISub.setScale(1.5f, 1.5f);
@@ -136,7 +136,7 @@ void Game::NowLoading()
         sf::sleep(sf::milliseconds(16)); // 大约60FPS
     }
 
-	 menuMusic.stop();
+	 //menuMusic.stop();
 }
 
 void Game::loadBackgrounds()		//加载背景纹理
@@ -271,7 +271,7 @@ void Game::loadEnemy()
 	}
 }
 //
-void Game::loadMusicAndSounds()		//加载背景音乐
+void Game::loadMusicAndSounds()		//加载背景音乐和音效
 {
 	if (!menuMusic.openFromFile("./res/menu.wav"))
 	{
@@ -289,6 +289,12 @@ void Game::loadMusicAndSounds()		//加载背景音乐
 	{
 		puts("Error: Open stage3.wav failed!");
 	}
+	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))
+	{
+		puts("Error: Open se_select00.wav failed!");
+	}
+	selectSound.setBuffer(selectSoundBuffer);
+	selectSound.setVolume(50);
 	if (!playerBulletSoundBuffer.loadFromFile("./res/se_damage00.wav"))		//加载子弹音效
 	{
 		puts("Error: Open se_damage00.wav failed!");
@@ -325,10 +331,8 @@ void Game::loadMusicAndSounds()		//加载背景音乐
 
 void Game::run()
 {
-	//Play the music				逻辑废置了，但是可以用
-	//menuMusic.play();
-	//menuMusic.setLoop(true);
-	//Menu();						menu未实装，下个版本更新
+	//播放主菜单界面，展示主菜单
+	menu();
 	int level = 1;			//关卡选择，目前仅仅实装了sg1
 	switch (level)
 	{
@@ -356,6 +360,81 @@ void Game::run()
 		mainProcessing();
 		
 		frameDisplay();
+	}
+}
+
+void Game::menu()
+{
+	sf::Text textStart("chick start", font, 50);
+	sf::Text textOptions("options", font, 50);
+	sf::Text textQuit("Quit", font, 50);
+	if (!title.loadFromFile("./res/title.png"))
+	{
+		puts("Error: Load title failed!");
+	}
+	titleUI.setTexture(title);
+	menuMusic.play();
+	menuMusic.setLoop(true);
+	// 设置选项的位置
+	textStart.setPosition(100, 580);
+	textOptions.setPosition(110, 660);
+	textQuit.setPosition(120, 740);
+	int selectedItem = 0;		// 记录当前选项，默认为textStart
+	// 主菜单主循环
+	while (mWindow.isOpen())
+	{
+		sf::Event event;
+		while (mWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				mWindow.close();
+				return;
+			}
+			// 读取上下方向键切换选项
+			if (event.type == sf::Event::KeyPressed)
+			{
+				selectSound.play();
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					selectedItem = (selectedItem - 1 + 3) % 3;
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					selectedItem = (selectedItem + 1) % 3;
+				}
+				else if (event.key.code == sf::Keyboard::Z)
+				{
+					//Quit
+					if (selectedItem == 2)
+					{
+						mWindow.close();
+						return;
+					}
+					//Start
+					else if (selectedItem == 0)
+					{
+						menuMusic.stop();
+						return;
+					}
+					//Options
+					else if (selectedItem == 1)
+					{
+						printf("Options\n");
+					}
+				}
+			}
+		}
+		// 选中时高亮
+		textStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
+		textOptions.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
+		textQuit.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
+		mWindow.draw(titleUI);
+		mWindow.draw(textStart);
+		mWindow.draw(textOptions);
+		mWindow.draw(textQuit);
+
+		mWindow.display();
 	}
 }
 

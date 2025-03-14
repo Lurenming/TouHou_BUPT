@@ -368,6 +368,7 @@ void Game::menu()
 	sf::Text textStart("chick start", font, 50);
 	sf::Text textOptions("options", font, 50);
 	sf::Text textQuit("Quit", font, 50);
+	sf::Text text5G("Use 5G", font, 50);
 	if (!title.loadFromFile("./res/title.png"))
 	{
 		puts("Error: Load title failed!");
@@ -379,6 +380,7 @@ void Game::menu()
 	textStart.setPosition(100, 580);
 	textOptions.setPosition(110, 660);
 	textQuit.setPosition(120, 740);
+	text5G.setPosition(130, 820);
 	int selectedItem = 0;		// 记录当前选项，默认为textStart
 	// 主菜单主循环
 	while (mWindow.isOpen())
@@ -394,17 +396,19 @@ void Game::menu()
 			// 读取上下方向键切换选项
 			if (event.type == sf::Event::KeyPressed)
 			{
-				selectSound.play();
 				if (event.key.code == sf::Keyboard::Up)
 				{
-					selectedItem = (selectedItem - 1 + 3) % 3;
+					selectSound.play();
+					selectedItem = (selectedItem - 1 + 4) % 4;
 				}
 				else if (event.key.code == sf::Keyboard::Down)
 				{
-					selectedItem = (selectedItem + 1) % 3;
+					selectSound.play();
+					selectedItem = (selectedItem + 1) % 4;
 				}
 				else if (event.key.code == sf::Keyboard::Z)
 				{
+					selectSound.play();
 					//Quit
 					if (selectedItem == 2)
 					{
@@ -422,6 +426,24 @@ void Game::menu()
 					{
 						printf("Options\n");
 					}
+					else if (selectedItem == 3)
+					{
+						printf("5G\n");
+					}
+				}
+				else if (event.key.code == sf::Keyboard::X)
+				{
+					// 模拟官作主菜单中的“按X跳转到Quit”操作
+					selectSound.play();
+					if (selectedItem == 2)
+					{
+						mWindow.close();
+						return;
+					}
+					else
+					{
+						selectedItem = 2;
+					}
 				}
 			}
 		}
@@ -429,10 +451,12 @@ void Game::menu()
 		textStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
 		textOptions.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
 		textQuit.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
+		text5G.setFillColor(selectedItem == 3 ? sf::Color::Yellow : sf::Color::White);
 		mWindow.draw(titleUI);
 		mWindow.draw(textStart);
 		mWindow.draw(textOptions);
 		mWindow.draw(textQuit);
+		mWindow.draw(text5G);
 
 		mWindow.display();
 	}

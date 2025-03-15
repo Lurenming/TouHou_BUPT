@@ -374,7 +374,8 @@ void Game::run()
 
 void Game::menu()
 {
-	sf::Text textStart("chick start", font, 50);
+	sf::Text textStart("start", font, 50);
+	sf::Text textExStart("extra start", font, 50);
 	sf::Text textOptions("options", font, 50);
 	sf::Text textQuit("Quit", font, 50);
 	sf::Text text5G("Use 5G", font, 50);
@@ -386,10 +387,11 @@ void Game::menu()
 	menuMusic.play();
 	menuMusic.setLoop(true);
 	// 设置选项的位置
-	textStart.setPosition(100, 580);
-	textOptions.setPosition(110, 660);
-	textQuit.setPosition(120, 740);
-	text5G.setPosition(130, 820);
+	textStart.setPosition(100, 560);
+	textExStart.setPosition(110, 630);
+	textOptions.setPosition(120, 700);
+	textQuit.setPosition(130, 770);
+	text5G.setPosition(140, 840);
 	int selectedItem = 0;		// 记录当前选项，默认为textStart
 	// 主菜单主循环
 	while (mWindow.isOpen())
@@ -458,12 +460,14 @@ void Game::menu()
 			}
 		}
 		// 选中时高亮
-		textStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
+		textStart.setFillColor(sf::Color(166, 166, 166));
+		textExStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
 		textOptions.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
 		textQuit.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
 		text5G.setFillColor(selectedItem == 3 ? sf::Color::Yellow : sf::Color::White);
 		mWindow.draw(titleBackground);
 		mWindow.draw(textStart);
+		mWindow.draw(textExStart);
 		mWindow.draw(textOptions);
 		mWindow.draw(textQuit);
 		mWindow.draw(text5G);
@@ -2641,6 +2645,8 @@ void Game::boardDisplay()			//显示血量和分数
 	case 1:
 		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 7, 278, 36));
 		break;
+	case 0:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 8, 278, 36));
 	default:
 		;
 	}

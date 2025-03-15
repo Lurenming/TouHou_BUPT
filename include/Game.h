@@ -6,6 +6,8 @@
 #include "FO.h"
 #include <list>
 using namespace std;
+#define MAX_LIFE 8
+#define MAX_BOMB 8
 
 class Game
 {
@@ -17,8 +19,10 @@ public:
 	void loadPointsAndEffs();
 	void loadEnemy();
 	void loadMusicAndSounds();
+	void loadOptionsUI();
 	void run();
 	void menu();
+	void options();
 	void Stage1();
 	int S1E1();
 	int S1E2();
@@ -106,10 +110,10 @@ private:
 	sf::Text text, tempScore;
 	sf::Texture loading, nowLoading, stageSelect, front00, julgePointArray, Title1, Title2, allBullets1, allBullets2, whiteSpark;
 	sf::Texture bullets, buffetsEff, deathCircle, bg1, bgEff1, bg2, bgEff2, bg3, bgEff3, Enemy1, Enemy2, Enemy3, lifePieces, magicSquare;
-	sf::Texture title;
+	sf::Texture title,optionsBg,optionsTitle;
 	sf::Sprite loadingUI, loadingUISub, back[6], backEff[6], front01, front02, front03, front04;
 	sf::Sprite julgePoint, playerAmmo, AmmoEff, deathEff, lifeBoard;
-	sf::Sprite titleUI;
+	sf::Sprite titleBackground,optionsBackground,optionsTitleUI;
 	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;

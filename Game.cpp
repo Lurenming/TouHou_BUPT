@@ -491,8 +491,8 @@ void Game::options()
 	// 音量和音效的值
 	static int volume = 10;
 	static int sfx = 10;
-	// 调整残机和雷（不能实际生效）
-	static int lifeDisplay = 3;
+	// 调整残机和雷（雷没有实现）
+	static int lifeDisplay = remnant;
 	static int bombDisplay = 2;
 
 	int selectedItem = 0;
@@ -569,6 +569,8 @@ void Game::options()
 						if (lifeDisplay > 0)
 						{
 							lifeDisplay--;
+							remnant = lifeDisplay;
+							printf("%lld\n", remnant);
 						}
 					}
 					else if (selectedItem == 1)  // 调整雷
@@ -609,6 +611,8 @@ void Game::options()
 						if (lifeDisplay < MAX_LIFE)
 						{
 							lifeDisplay++;
+							remnant = lifeDisplay;
+							printf("%lld\n", remnant);
 						}
 					}
 					else if (selectedItem == 1)  // 调整雷
@@ -2540,6 +2544,7 @@ void Game::playerDisplay()
 		if (remnant > 1)
 		{
 			remnant--;
+			printf("remnant: %lld\n", remnant);
 		}
 		else
 		{
@@ -2612,14 +2617,29 @@ void Game::boardDisplay()			//显示血量和分数
 
 	switch (remnant)
 	{
+	case 8:
+		lifeBoard.setTextureRect(sf::IntRect(0, 0, 278, 36));
+		break;
+	case 7:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44, 278, 36));
+		break;
+	case 6:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 2, 278, 36));
+		break;
+	case 5:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 3, 278, 36));
+		break;
+	case 4:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 4, 278, 36));
+		break;
 	case 3:
-		lifeBoard.setTextureRect(sf::IntRect(0, 0, 272, 36));
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 5, 278, 36));
 		break;
 	case 2:
-		lifeBoard.setTextureRect(sf::IntRect(0, 44, 272, 36));
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 6, 278, 36));
 		break;
 	case 1:
-		lifeBoard.setTextureRect(sf::IntRect(0, 90, 272, 36));
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 7, 278, 36));
 		break;
 	default:
 		;

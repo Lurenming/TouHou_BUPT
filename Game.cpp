@@ -63,9 +63,9 @@ Game::Game()
 	{
 		puts("Error: Load RobotoCondensed-Regular.ttf failed!");
 	}
-	text.setString("v0.1");
-	text.setFont(font);
-	text.setCharacterSize(50);
+	//text.setString("v0.1");
+	//text.setFont(font);
+	//text.setCharacterSize(50);
 
 	
 
@@ -289,6 +289,11 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 	{
 		puts("Error: Open stage3.wav failed!");
 	}
+	menuMusic.setVolume(100);
+	stage1BGM.setVolume(100);
+	stage2BGM.setVolume(100);
+	stage3BGM.setVolume(100);
+
 	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))
 	{
 		puts("Error: Open se_select00.wav failed!");
@@ -312,21 +317,25 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 		puts("Error: Open se_enep00.wav failed!");
 	}
 	breakSound.setBuffer(breakSoundBuffer);							//加载死亡音效
+	breakSound.setVolume(50);
 	if (!playerDeadSoundBuffer.loadFromFile("./res/se_pldead00.wav"))
 	{
 		puts("Error: Open se_pldead00.wav failed!");
 	}
 	playerDeadSound.setBuffer(playerDeadSoundBuffer);
+	playerDeadSound.setVolume(50);
 	if (!SCAnounceBuffer.loadFromFile("./res/se_cat00.wav"))		//加载SC音效
 	{
 		puts("Error: Open se_cat00.wav failed!");
 	}
 	SCAnounce.setBuffer(SCAnounceBuffer);
+	SCAnounce.setVolume(50);
 	if (!cardGetBuffer.loadFromFile("./res/se_cardget.wav"))		//加载收取音效
 	{
 		puts("Error: Open se_cardget.wav failed!");
 	}
 	cardGet.setBuffer(cardGetBuffer);
+	cardGet.setVolume(50);
 }
 
 void Game::run()
@@ -365,7 +374,8 @@ void Game::run()
 
 void Game::menu()
 {
-	sf::Text textStart("chick start", font, 50);
+	sf::Text textStart("start", font, 50);
+	sf::Text textExStart("extra start", font, 50);
 	sf::Text textOptions("options", font, 50);
 	sf::Text textQuit("Quit", font, 50);
 	sf::Text text5G("Use 5G", font, 50);
@@ -373,14 +383,15 @@ void Game::menu()
 	{
 		puts("Error: Load title failed!");
 	}
-	titleUI.setTexture(title);
+	titleBackground.setTexture(title);
 	menuMusic.play();
 	menuMusic.setLoop(true);
 	// 设置选项的位置
-	textStart.setPosition(100, 580);
-	textOptions.setPosition(110, 660);
-	textQuit.setPosition(120, 740);
-	text5G.setPosition(130, 820);
+	textStart.setPosition(100, 560);
+	textExStart.setPosition(110, 630);
+	textOptions.setPosition(120, 700);
+	textQuit.setPosition(130, 770);
+	text5G.setPosition(140, 840);
 	int selectedItem = 0;		// 记录当前选项，默认为textStart
 	// 主菜单主循环
 	while (mWindow.isOpen())
@@ -425,6 +436,7 @@ void Game::menu()
 					else if (selectedItem == 1)
 					{
 						printf("Options\n");
+						options();
 					}
 					else if (selectedItem == 3)
 					{
@@ -448,16 +460,217 @@ void Game::menu()
 			}
 		}
 		// 选中时高亮
-		textStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
+		textStart.setFillColor(sf::Color(166, 166, 166));
+		textExStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
 		textOptions.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
 		textQuit.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
 		text5G.setFillColor(selectedItem == 3 ? sf::Color::Yellow : sf::Color::White);
-		mWindow.draw(titleUI);
+		mWindow.draw(titleBackground);
 		mWindow.draw(textStart);
+		mWindow.draw(textExStart);
 		mWindow.draw(textOptions);
 		mWindow.draw(textQuit);
 		mWindow.draw(text5G);
 
+		mWindow.display();
+	}
+}
+
+void Game::loadOptionsUI()
+{
+	if (!optionsBg.loadFromFile("./res/options.png"))
+	{
+		puts("Error: Load options background failed.");
+	}
+	if (!optionsTitle.loadFromFile("./res/optionsTitle.png"))
+	{
+		puts("Error: Load options title failed.");
+	}
+	optionsBackground.setTexture(optionsBg);
+	optionsTitleUI.setTexture(optionsTitle);
+}
+
+void Game::options()
+{
+	// 音量和音效的值
+	static int volume = 10;
+	static int sfx = 10;
+	// 调整残机和雷（雷没有实现）
+	static int lifeDisplay = remnant;
+	static int bombDisplay = 2;
+
+	int selectedItem = 0;
+	loadOptionsUI();
+	optionsTitleUI.setScale(4, 4);
+	optionsTitleUI.setPosition(240, 50);
+
+	// UI（文本）
+	sf::Text textLife("", font, 50);
+	textLife.setPosition(200, 400);
+
+	sf::Text textBomb("", font, 50);
+	textBomb.setPosition(210, 460);
+
+	sf::Text textVolume("", font, 50);
+	textVolume.setPosition(220, 520);
+
+	sf::Text textSFX("", font, 50);
+	textSFX.setPosition(230, 580);
+
+	sf::Text textBack("Return to main menu", font, 50);
+	textBack.setPosition(240, 640);
+	while (mWindow.isOpen())
+	{
+		sf::Event event;
+		while (mWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				mWindow.close();
+				return;
+			}
+			if(event.type == sf::Event::KeyPressed)
+			{
+				// 切换选项
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					selectSound.play();
+					selectedItem = (selectedItem - 1 + 5) % 5;
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					selectSound.play();
+					selectedItem = (selectedItem + 1) % 5;
+				}
+				// 调整音量和音效
+				else if (event.key.code == sf::Keyboard::Left)
+				{
+					if (selectedItem == 2)  // 音量调小
+					{
+						if (volume > 0)
+							volume--;
+						selectSound.play();
+						menuMusic.setVolume(volume * 10);
+						stage1BGM.setVolume(volume * 10);
+						stage2BGM.setVolume(volume * 10);
+						stage3BGM.setVolume(volume * 10);
+					}
+					else if (selectedItem == 3)  // 音效调小
+					{
+						if (sfx > 0)
+							sfx--;
+						selectSound.setVolume(sfx * 5);
+						selectSound.play();
+						playerBulletSound.setVolume(sfx * 5);
+						enemyBulletSound.setVolume(sfx * 1.5);
+						breakSound.setVolume(sfx * 5);
+						playerDeadSound.setVolume(sfx * 5);
+						SCAnounce.setVolume(sfx * 5);
+						cardGet.setVolume(sfx * 5);
+					}
+					else if (selectedItem == 0)  // 调整残机
+					{
+						if (lifeDisplay > 0)
+						{
+							lifeDisplay--;
+							remnant = lifeDisplay;
+							printf("%lld\n", remnant);
+						}
+					}
+					else if (selectedItem == 1)  // 调整雷
+					{
+						if (bombDisplay > 0)
+						{
+							bombDisplay--;
+						}
+					}
+				}
+				else if (event.key.code == sf::Keyboard::Right)
+				{
+					if (selectedItem == 2)  // 音量调大
+					{
+						if (volume < 10)
+							volume++;
+						selectSound.play();
+						menuMusic.setVolume(volume * 10);
+						stage1BGM.setVolume(volume * 10);
+						stage2BGM.setVolume(volume * 10);
+						stage3BGM.setVolume(volume * 10);
+					}
+					else if (selectedItem == 3)  // 音效调大
+					{
+						if (sfx < 10)
+							sfx++;
+						selectSound.setVolume(sfx * 5);
+						selectSound.play();
+						playerBulletSound.setVolume(sfx * 5);
+						enemyBulletSound.setVolume(sfx * 1.5);
+						breakSound.setVolume(sfx * 5);
+						playerDeadSound.setVolume(sfx * 5);
+						SCAnounce.setVolume(sfx * 5);
+						cardGet.setVolume(sfx * 5);
+					}
+					else if (selectedItem == 0)  // 调整残机
+					{
+						if (lifeDisplay < MAX_LIFE)
+						{
+							lifeDisplay++;
+							remnant = lifeDisplay;
+							printf("%lld\n", remnant);
+						}
+					}
+					else if (selectedItem == 1)  // 调整雷
+					{
+						if (bombDisplay < MAX_BOMB)
+						{
+							bombDisplay++;
+						}
+					}
+				}
+				else if (event.key.code == sf::Keyboard::Z)
+				{
+					if (selectedItem == 4)
+					{
+						selectSound.play();
+						return;
+					}
+				}
+				// 按X退出 
+				else if (event.key.code == sf::Keyboard::X)
+				{
+					if (selectedItem == 4)
+					{
+						selectSound.play();
+						return;
+					}
+					else
+					{
+						selectedItem = 4;
+					}
+				}
+			}
+		}
+		// 更新显示文本
+		textVolume.setString("Music: " + std::to_string(volume));
+		textSFX.setString("SFX: " + std::to_string(sfx));
+		textLife.setString("Life: " + std::to_string(lifeDisplay));
+		textBomb.setString("Bomb: " + std::to_string(bombDisplay));
+
+		// 选中时高亮
+		textLife.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
+		textBomb.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
+		textVolume.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
+		textSFX.setFillColor(selectedItem == 3 ? sf::Color::Yellow : sf::Color::White);
+		textBack.setFillColor(selectedItem == 4 ? sf::Color::Yellow : sf::Color::White);
+
+		mWindow.clear();
+		mWindow.draw(optionsBackground);
+		mWindow.draw(optionsTitleUI);
+		mWindow.draw(textVolume);
+		mWindow.draw(textSFX);
+		mWindow.draw(textBack);
+		mWindow.draw(textLife);
+		mWindow.draw(textBomb);
 		mWindow.display();
 	}
 }
@@ -2335,6 +2548,7 @@ void Game::playerDisplay()
 		if (remnant > 1)
 		{
 			remnant--;
+			printf("remnant: %lld\n", remnant);
 		}
 		else
 		{
@@ -2407,15 +2621,32 @@ void Game::boardDisplay()			//显示血量和分数
 
 	switch (remnant)
 	{
+	case 8:
+		lifeBoard.setTextureRect(sf::IntRect(0, 0, 278, 36));
+		break;
+	case 7:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44, 278, 36));
+		break;
+	case 6:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 2, 278, 36));
+		break;
+	case 5:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 3, 278, 36));
+		break;
+	case 4:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 4, 278, 36));
+		break;
 	case 3:
-		lifeBoard.setTextureRect(sf::IntRect(0, 0, 272, 36));
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 5, 278, 36));
 		break;
 	case 2:
-		lifeBoard.setTextureRect(sf::IntRect(0, 44, 272, 36));
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 6, 278, 36));
 		break;
 	case 1:
-		lifeBoard.setTextureRect(sf::IntRect(0, 90, 272, 36));
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 7, 278, 36));
 		break;
+	case 0:
+		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 8, 278, 36));
 	default:
 		;
 	}

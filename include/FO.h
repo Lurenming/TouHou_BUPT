@@ -8,15 +8,15 @@ class FO
 public:
 	FO();
 	FO(int flag);
-	void setSButterfly(double x, double y);	//è®¾ç½®å‚æ•°
-	sf::Vector2f getJulgeArea();			//åˆ¤å®šåŒº
+	void setSButterfly(double x, double y);	//ÉèÖÃ²ÎÊı
+	sf::Vector2f getJulgeArea();			//ÅĞ¶¨Çø
 	~FO();
 	
 
 public:
-	sf::Vector2f velocity;				//é€Ÿåº¦å‘é‡
-	sf::Sprite hero, HSAmmo, LSAmmo;	//ç²¾çµ
-	sf::Texture Reimu, Marisa, Sanae, Enemy1, Enemy2;		//çº¹ç†
+	sf::Vector2f velocity;				//ËÙ¶ÈÏòÁ¿
+	sf::Sprite hero, HSAmmo, LSAmmo;	//¾«Áé
+	sf::Texture Reimu, Marisa, Sanae, Enemy1, Enemy2;		//ÎÆÀí
 	int HealthPoint, Score, width, height, staticFrame, dynamicFrame, phase;
 	int type, gap, born, score, bounds;
 	double damage, speed, theta;

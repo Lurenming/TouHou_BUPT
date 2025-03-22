@@ -5,7 +5,7 @@
 #include <SFML/Audio.hpp>
 
 FO::FO()
-{				//æ„é€ å‡½æ•°é»˜è®¤
+{				//¹¹Ôìº¯ÊıÄ¬ÈÏ
 	phase = 1;
 	bounds = 0;
 	staticFrame = 0;
@@ -19,7 +19,7 @@ FO::FO()
 }
 
 FO::FO(int flag)
-{				//æ„é€ å‡½æ•°
+{				//¹¹Ôìº¯Êı
 	phase = 1;
 	bounds = 0;
 	staticFrame = 0;
@@ -59,13 +59,13 @@ FO::FO(int flag)
 		width = 48;
 		height = 72;
 		speed = 10.0;
-		hero.setTexture(Marisa);						//è¿™é‡Œç›®å‰æ˜¯æ‰‹åŠ¨è®¾ç½®çš„äººç‰©ï¼Œä»¥åå¯æ‹“å±•ä¸ºå¤šäººç‰©é€‰æ‹©
+		hero.setTexture(Marisa);						//ÕâÀïÄ¿Ç°ÊÇÊÖ¶¯ÉèÖÃµÄÈËÎï£¬ÒÔºó¿ÉÍØÕ¹Îª¶àÈËÎïÑ¡Ôñ
 		hero.setTextureRect(sf::IntRect(0, 0, width, height));
 		hero.setPosition(sf::Vector2f(430, 820));
-		HSAmmo.setTexture(Marisa);					//ä¸»ç‚®
+		HSAmmo.setTexture(Marisa);					//Ö÷ÅÚ
 		HSAmmo.setTextureRect(sf::IntRect(0, 3 * height + 0, 25, 24));
 		HSAmmo.setRotation(270);
-		LSAmmo.setTexture(Marisa);					//åƒšæœº
+		LSAmmo.setTexture(Marisa);					//ÁÅ»ú
 		LSAmmo.setTextureRect(sf::IntRect(4 * width, 3 * height + 48, 2 * width, 24));
 		LSAmmo.setRotation(270);
 		break;

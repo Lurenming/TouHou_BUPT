@@ -40,6 +40,7 @@ FO::FO(int flag)
 		speed = 0.0;
 		theta = 0.0;
 		velocity = sf::Vector2f(0.0, 0.0);
+		break;  // 这里之前没有写 break，导致标题画面在下方小妖精代码里 type 成员被设成了 1，还有着小妖精的碰撞体积，为体术判定增添了麻烦。
 	case 1://player
 		type = 1;
 		if (!Reimu.loadFromFile("./res/pl00.png"))

@@ -45,6 +45,7 @@ Game::Game()
 	srand((unsigned)time(NULL));
 	remnant = 3;
 	score = 0;
+	clockForInvulnerability.restart();
 	mIsMovingUp = false;
 	mIsMovingDown = false;
 	mIsMovingLeft = false;
@@ -1046,7 +1047,7 @@ int Game::S1E1()
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1155,7 +1156,7 @@ int Game::S1E3()
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1183,7 +1184,7 @@ int Game::S1E3()
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1294,7 +1295,7 @@ int Game::S1E4()
 		//it->theta = -it->theta;
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 	wave2.remove_if(isFOOutOfBoard);
@@ -1322,7 +1323,7 @@ int Game::S1E4()
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 	wave3.remove_if(isFOOutOfBoard);
@@ -1361,7 +1362,7 @@ int Game::S1E4()
 
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1464,7 +1465,7 @@ int Game::S1E5()//mButter quit anime dierction
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1492,7 +1493,7 @@ int Game::S1E5()//mButter quit anime dierction
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1536,7 +1537,7 @@ int Game::S1E5()//mButter quit anime dierction
 		//it->theta = -it->theta;
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1573,7 +1574,7 @@ int Game::S1E5()//mButter quit anime dierction
 			it->hero.setTextureRect(sf::IntRect((int)(temp / 32 % 4 + 3) * it->width, 320 + 2 * it->height, it->width, it->height));
 		}
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1676,7 +1677,7 @@ int Game::S1E6()
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 	wave2.remove_if(isFOOutOfBoard);
@@ -1703,7 +1704,7 @@ int Game::S1E6()
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 	wave3.remove_if(isFOOutOfBoard);
@@ -1732,7 +1733,7 @@ int Game::S1E6()
 		standardSButterflyFrame(it, temp);
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 	wave4.remove_if(isFOOutOfBoard);
@@ -1762,7 +1763,7 @@ int Game::S1E6()
 		standardSButterflyFrame(it, temp);
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -1819,7 +1820,7 @@ int Game::S1E7()
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 	if (i1 > 10 * 60)
@@ -1910,7 +1911,7 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为boss
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 	if (i1 > 60 * 60)
@@ -1986,7 +1987,7 @@ int Game::S1E9()				//随机大蝴蝶，类似春终米粒弹，实现封位效果
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -2057,7 +2058,7 @@ int Game::S1E10()
 		standardMButterflyFrame(it, temp);
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -2133,7 +2134,7 @@ int Game::S1E11()			//顶端大量生成小怪，一阶段下落，二阶段随机跑路
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 	}
 
@@ -2360,7 +2361,7 @@ int Game::S1E13()			//测试用，第二面仅一个幽灵boss
 		}
 
 		enemyCollisionProcessing(it);
-
+		
 		enemiesPushToDraw(it);
 
 		if (i1 > 120 * 60)
@@ -2494,7 +2495,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌人的逻辑
 			}
 			it->hero.move(it->velocity);
 		}
-		enemies.push_back(it->hero);
+		enemies.push_back(*it);
 		return;
 		break;
 	}
@@ -2505,8 +2506,8 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌人的逻辑
 		it->velocity.y = it->speed * sin(it->theta);
 		it->hero.move(it->velocity);
 	}
-	
-	enemies.push_back(it->hero);
+
+	enemies.push_back(*it);
 }
 
 void Game::backEsPushToDraw(list<FO>::iterator it)			//管理更新背景特效
@@ -2605,9 +2606,9 @@ void Game::playerAmmoDisplay()			//处理自机的子弹
 //
 void Game::enemiesDisplay()		//敌人精灵绘制
 {
-	for (list<sf::Sprite>::iterator it = enemies.begin(); it != enemies.end(); it++)
+	for (list<FO>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
-		mWindow.draw(*it);
+		mWindow.draw(it->hero);
 	}
 	enemies.clear();
 }
@@ -2637,22 +2638,19 @@ void Game::enemyBulletsDisplay()			//处理敌方子弹的显示和移除超出边界的子弹
 //
 void Game::playerDisplay()
 {
-	//player
-	static sf::Time elapsed1 = clock.getElapsedTime();
-
 	pair<PlayerCollisionResult, list<FO>::iterator> collision = checkPlayerCollision();
 
-
-	// 这是被弹？
-	if (collision.first == PlayerCollisionResult::EnemyBullet && (clock.getElapsedTime().asSeconds() - elapsed1.asSeconds() > 1.0))		//检测碰撞（子弹或蓝点）并提供所谓无敌时间
+	if ((collision.first == PlayerCollisionResult::EnemyBullet          // 被弹
+		|| collision.first == PlayerCollisionResult::EnemyBody)         // 或者被体术
+		&& clockForInvulnerability.getElapsedTime().asSeconds() > 1.0)  // 而且不在无敌时间内
 	{
-		// 清空场上所有来自敌机的子弹？
+		// 清空场上所有来自敌机的子弹
 		for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
 		{
 			enemyCrash(it);
 		}
 
-		elapsed1 = clock.getElapsedTime();
+		clockForInvulnerability.restart();
 		playerDeadSound.play();
 
 		// 扣除残机
@@ -3679,7 +3677,7 @@ void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//读取输入
 		mIsFire = isPressed;
 	else if (key == sf::Keyboard::LShift)
 		mIsGrazing = isPressed;
-		player.speed = (mIsGrazing) ? 3.0 : 10.0;
+	player.speed = (mIsGrazing) ? 3.0 : 10.0;
 }
 /*
 bool isOutOfBoard(sf::Sprite value)
@@ -3753,22 +3751,13 @@ bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//检测精灵碰撞
 	return false;
 }
 
-pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//检测玩家是否与子弹或蓝点碰撞
+pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		// 检测玩家是否与子弹/敌机/蓝点碰撞
 {
 	sf::Vector2f JP = julgePoint.getPosition();
 	JP.x -= 8;
 	JP.y -= 8;
-	/*for (list<sf::Sprite>::iterator it = enemies.begin(); it != enemies.end(); it++)
-	{
-		sf::FloatRect f = it->getGlobalBounds();
 
-		f.width /= 2.0;
-		f.height /= 2.0;
-		if (f.contains(JP))
-		{
-			return true;
-		}
-	}*/
+	// 敌机子弹
 	for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
 	{
 		sf::FloatRect f = it->hero.getGlobalBounds();
@@ -3778,6 +3767,24 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		if (f.contains(JP))
 		{
 			return {PlayerCollisionResult::EnemyBullet, it};
+		}
+	}
+
+	// 敌机体术
+	for (list<FO>::iterator it = enemies.begin(); it != enemies.end(); it++)
+	{
+		if (it->type == 0)
+		{
+			continue;  // 孩子们，我不想被过场动画体术
+		}
+
+		sf::FloatRect f = it->hero.getGlobalBounds();
+
+		f.width /= 2.0;
+		f.height /= 2.0;
+		if (f.contains(JP))
+		{
+			return {PlayerCollisionResult::EnemyBody, it};
 		}
 	}
 

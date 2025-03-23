@@ -12,7 +12,7 @@ using namespace std;
 
 
 enum class PlayerCollisionResult {
-	NoCollision, EnemyBullet, BluePoint
+	NoCollision, EnemyBullet, BluePoint, EnemyBody
 };
 
 
@@ -137,10 +137,12 @@ private:
 	sf::Sound selectSound;
 	sf::Sound bluePointCollectedSound;
 	sf::Clock clock;
+	sf::Clock clockForInvulnerability;
 	FO player;
 	list<FO>  enemyBullets, enemyBulletsPre;
 	list<sf::Sprite> playerBullets, deathEffs;
-	list<sf::Sprite> enemies, playerBulletsEffs, backgroundEffs;
+	list<FO> enemies;
+	list<sf::Sprite> playerBulletsEffs, backgroundEffs;
 	list<FO> bluePoints;
 	long long remnant, score;
 };

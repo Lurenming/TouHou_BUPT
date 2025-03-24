@@ -37,6 +37,7 @@ Game::Game()
 	, font()
 	, player(1)
 {
+	// 构造函数，作用是初始化各项属性
 	loadMusicAndSounds();
 	NowLoading();
 
@@ -334,18 +335,22 @@ void Game::run()
 	//播放主菜单界面，展示主菜单
 	menu();
 	int level = 1;			//关卡选择，目前仅仅实装了sg1
+	isPaused = false;       //游戏开始时，认为游戏没有暂停
 	switch (level)
 	{
 	case 1:
-		stage1BGM.play();
-		stage1BGM.setLoop(true);
+		nowMusic = &stage1BGM;
 		break;
 	}
+	nowMusic->play();
+	nowMusic->setLoop(true);
 	//游戏进行的主循环
-	mWindow.setFramerateLimit(60);
+	mWindow.setFramerateLimit(60);      //60帧
 	mWindow.draw(player.hero);			//更新人物位置
 	frameDisplay();
 	/*HANDLE hThread_1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)BGMPlay, self, 0, NULL);*/
+	elapsed1 = sf::Time::Zero; // 初始化为零
+	secCount = 0;
 	while (mWindow.isOpen())
 	{
 		mWindow.clear();
@@ -353,11 +358,12 @@ void Game::run()
 		switch (level)
 		{
 		case 1:
-			Stage1();
+			Stage1();                    //进行第一关
 			break;
 		}
-		processTaps(); 
-		mainProcessing();
+		processTaps();                   //处理用户输入
+		mainProcessing();                //处理自机移动
+
 		
 		frameDisplay();
 	}
@@ -462,12 +468,149 @@ void Game::menu()
 	}
 }
 
+sf::Texture Game::captureScreenshot() {
+	sf::Texture screenshotTexture;
+	screenshotTexture.create(mWindow.getSize().x, mWindow.getSize().y);
+	screenshotTexture.update(mWindow); // 从当前窗口更新纹理
+	return screenshotTexture;
+}
+
+
+void Game::displayPauseMenu() {
+	if(isPaused){
+		// 暂停时，弹出暂停窗口，这一部分代码只会执行1次
+		printf("Stop!\n");
+		nowMusic->pause();
+
+		pausedBackground = captureScreenshot(); // 保存截图
+		sf::Sprite backgroundSprite(pausedBackground);
+
+		// 设置菜单上的字
+		sf::Text textPause("Game Pause!", font, 50);
+		sf::Text textReturn("Return to Game", font, 50);
+		sf::Text textBackToTitle("Quit and Return to Select", font, 50);
+		sf::Text textRetry("Retry this Game", font, 50);
+		// 设置选项的位置
+		textPause.setPosition(100, 580);
+		textReturn.setPosition(110, 660);
+		textBackToTitle.setPosition(120, 740);
+		textRetry.setPosition(130, 820);
+		// 创建一个矩形覆盖层
+		sf::RectangleShape overlay;
+		overlay.setSize(sf::Vector2f(1280, 960)); // 设置与窗口相同的大小
+		overlay.setFillColor(sf::Color(0, 0, 0, 150)); // 设置颜色为黑色，透明度为150
+
+		int selectedItem = 0;		// 记录当前选项，默认为textReturn
+		while (mWindow.isOpen())
+		{
+			sf::Event event;
+			// 案件和选中选项的事件处理
+			while (mWindow.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+				{
+					mWindow.close();
+					return;
+				}
+				// 读取上下方向键切换选项
+				if (event.type == sf::Event::KeyPressed)
+				{
+					if (event.key.code == sf::Keyboard::Up)
+					{
+						selectSound.play();
+						selectedItem = (selectedItem - 1 + 3) % 3;
+					}
+					else if (event.key.code == sf::Keyboard::Down)
+					{
+						selectSound.play();
+						selectedItem = (selectedItem + 1) % 3;
+					}
+					else if (event.key.code == sf::Keyboard::Z)
+					{
+						selectSound.play();
+						//回到游戏
+						if (selectedItem == 0)
+						{
+							isPaused = false;
+							nowMusic->play();
+							return;
+						}
+						//返回开头
+						else if (selectedItem == 1)
+						{
+							//清除现在的游戏状态，回到开头
+							menu();
+							restartGame();
+							return;
+						}
+						//从头开始
+						else if (selectedItem == 2)
+						{
+							//返回本关开头
+							restartGame();
+							return;
+						}
+					}
+				}
+			}
+
+			// 对这一帧的图像处理
+			// 选中时高亮
+			textPause.setFillColor(sf::Color::Yellow);
+			textReturn.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
+			textBackToTitle.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
+			textRetry.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
+			
+
+			mWindow.clear();
+			// 绘制截图作为背景
+			mWindow.draw(backgroundSprite);
+			mWindow.draw(overlay);
+			mWindow.draw(textPause);
+			mWindow.draw(textReturn);
+			mWindow.draw(textBackToTitle);
+			mWindow.draw(textRetry);
+
+			mWindow.display();
+		}
+	}
+	// 没有暂停，则无视此函数
+}
+
+void Game::restartGame() {
+	/*此函数的作用是，重新开始这一关的进行，所以需要重新初始化所有元素的位置*/
+	player.hero.setPosition(sf::Vector2f(430, 820)); // 设置主角的位置
+	int level = 1;			//关卡选择，目前仅仅实装了sg1
+	isPaused = false;       //游戏开始时，认为游戏没有暂停
+	nowMusic->stop();
+	nowMusic = &stage1BGM;
+
+	nowMusic->play();
+	nowMusic->setLoop(true);
+
+	// 关卡内部时间重新初始化
+	elapsed1 = sf::Time::Zero; // 初始化为零
+
+}
+
 void Game::Stage1()
 {
-	static sf::Time elapsed1 = clock.restart();		//游戏帧重置
-	elapsed1 = clock.getElapsedTime();
+
+	if (!isPaused) {
+		// 在未暂停时更新累积时间
+		elapsed1 += clock.restart();
+	}
+	else {
+		clock.restart(); // 在暂停时重置时钟，以避免计时
+	}
+
+	if (secCount < elapsed1.asSeconds()) {
+		printf("%d\n", (int)elapsed1.asSeconds());
+		secCount += 1;
+	}
+
 	
-	static int evts[20] = { 0 };
+	static int evts[20] = { 0 };                    //事件数组
 
 	static int curTime = 1;
 	if (curTime < elapsed1.asSeconds())
@@ -476,7 +619,7 @@ void Game::Stage1()
 		curTime++;
 	}
 
-	switch ((int)elapsed1.asSeconds() + 0)//test用，所有敌人生成都是以时间来判断
+	switch ((int)elapsed1.asSeconds() + 0)  //test用，所有敌人生成都是以时间来判断
 	{
 	case 1:
 		//pre
@@ -577,6 +720,7 @@ void Game::Stage1()
 	}
 	if (evts[8])
 	{
+		// 道中对话
 		if (S1E8())
 		{
 			evts[8] = 0;
@@ -673,7 +817,7 @@ int Game::S1E1()
 		{
 			if (rand() % 20 == 0)
 			{
-				setMultiRoundSnipe(it, 5.0, 5);
+				setMultiRoundSnipe(it, 5.0, 5);  
 			}
 			it->speed = 50.0 / (temp + 1.0);
 			it->theta = 0.5*PI;
@@ -2213,24 +2357,26 @@ void Game::frameDisplay()//ammo->front->player->jpoint
 								//用来渲染每一帧的显示效果
 	player.staticFrame = player.staticFrame % 56;
 	player.staticFrame++;
-	mWindow.clear();
+	mWindow.clear();           // 清空窗口，用来显示每一帧的内容
 	
-	backgroundDisplay();
+	backgroundDisplay();       // 渲染背景
 
-	playerAmmoDisplay();
+	playerAmmoDisplay();      //  渲染弹药信息
 
-	effsDisplay();
+	effsDisplay();            //  渲染特效
 	
-	playerDisplay();
+	playerDisplay();          // 渲染自机
 
-	enemiesDisplay();
+	enemiesDisplay();         //  渲染敌人
 	
-	enemyBulletsDisplay();
+	enemyBulletsDisplay();    //  渲染弹幕
 
-	boardDisplay();
+	boardDisplay();           //  渲染状态面板
 
 	
 	mWindow.draw(text);		//demo
+
+	displayPauseMenu();        // 检测现在是否暂停，如果暂停了，渲染暂停界面
 	
 	mWindow.display();		//刷新窗口
 }
@@ -2265,6 +2411,7 @@ void Game::backgroundDisplay()				//实现背景的滚动
 //
 void Game::playerAmmoDisplay()			//处理自机的子弹
 {
+
 	if (mIsFire)
 	{
 		//playerAmmo = (mIsGrazing) ? player.LSAmmo : player.HSAmmo;
@@ -2466,6 +2613,8 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//处理敌人被子
 					deathEffs.push_back(deathEff);
 					it->HealthPoint += 1500;
 				}
+
+				// 蓝点掉落函数
 			}
 		}
 	}
@@ -3278,7 +3427,7 @@ void Game::spellCard6(list<FO>::iterator it)				//6符
 	temp += PI / 240.0;
 }
 
-void Game::processTaps()		//玩家输入处理
+void Game::processTaps()		//对玩家输入进行处理
 {
 	sf::Event event;
 	while (mWindow.pollEvent(event))
@@ -3286,6 +3435,10 @@ void Game::processTaps()		//玩家输入处理
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
+			if (event.key.code == sf::Keyboard::Escape) {  // 按下了Esc键，游戏暂停
+				isPaused = !isPaused; // 切换暂停状态
+				printf("ESC\n");
+			}
 			playerInput(event.key.code, true);
 			break;
 		case sf::Event::KeyReleased:
@@ -3300,7 +3453,7 @@ void Game::processTaps()		//玩家输入处理
 	}
 }
 
-void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//读取输入
+void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//游戏进行时，对用户的各项输入进行相对应的操作
 {
 	if (key == sf::Keyboard::Up)
 		mIsMovingUp = isPressed;
@@ -3314,7 +3467,7 @@ void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//读取输入
 		mIsFire = isPressed;
 	else if (key == sf::Keyboard::LShift)
 		mIsGrazing = isPressed;
-		player.speed = (mIsGrazing) ? 3.0 : 10.0;
+		player.speed = (mIsGrazing) ? 3.0 : 7.5;
 }
 /*
 bool isOutOfBoard(sf::Sprite value)
@@ -3423,6 +3576,7 @@ void Game::GameOver()
 	exit(0);
 }
 */
+
 void Game::GameOver()
 {
     // 暂停游戏状态

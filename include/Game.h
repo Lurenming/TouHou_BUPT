@@ -19,6 +19,9 @@ public:
 	void loadMusicAndSounds();
 	void run();
 	void menu();
+	void displayPauseMenu();
+	void restartGame();
+	sf::Texture captureScreenshot();
 	void Stage1();
 	int S1E1();
 	int S1E2();
@@ -100,17 +103,18 @@ public:
 
 private:
 	Game* self = this;
-	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight, mIsGrazing, mIsFire;
+	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight, mIsGrazing, mIsFire, isPaused;
 	sf::RenderWindow mWindow;
 	sf::Font font;
 	sf::Text text, tempScore;
 	sf::Texture loading, nowLoading, stageSelect, front00, julgePointArray, Title1, Title2, allBullets1, allBullets2, whiteSpark;
 	sf::Texture bullets, buffetsEff, deathCircle, bg1, bgEff1, bg2, bgEff2, bg3, bgEff3, Enemy1, Enemy2, Enemy3, lifePieces, magicSquare;
 	sf::Texture title;
+	sf::Texture pausedBackground;
 	sf::Sprite loadingUI, loadingUISub, back[6], backEff[6], front01, front02, front03, front04;
 	sf::Sprite julgePoint, playerAmmo, AmmoEff, deathEff, lifeBoard;
 	sf::Sprite titleUI;
-	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM;
+	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM, *nowMusic;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
 	sf::SoundBuffer selectSoundBuffer;
@@ -118,10 +122,13 @@ private:
 	sf::Sound breakSound, playerDeadSound;
 	sf::Sound selectSound;
 	sf::Clock clock;
+	sf::Time elapsed1;
 	FO player;
 	list<FO>  enemyBullets, enemyBulletsPre;
 	list<sf::Sprite> playerBullets, deathEffs;
-	list<sf::Sprite> enemies, playerBulletsEffs, backgroundEffs;
+	list<sf::Sprite> enemies, pausedEnemies, playerBulletsEffs, backgroundEffs;
+	list<sf::Sprite> pausedBulletsEffs, pausedDeathEffs;
 	long long remnant, score;
+	long long secCount;
 };
 

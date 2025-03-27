@@ -1,0 +1,19 @@
+# 忽略 Visual Studio 解决方案和项目文件
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+
+# 忽略编译生成目录
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+.vs/
+lib/
+Touhou_BUPT/

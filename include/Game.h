@@ -5,7 +5,16 @@
 //#include <windows.h>
 #include "FO.h"
 #include <list>
+#include <utility> // for std::pair<>
 using namespace std;
+#define MAX_LIFE 8
+#define MAX_BOMB 8
+
+
+enum class PlayerCollisionResult {
+	NoCollision, EnemyBullet, BluePoint, EnemyBody
+};
+
 
 class Game
 {
@@ -15,10 +24,15 @@ public:
 	void loadBackgrounds();
 	void loadPrimeFrame();
 	void loadPointsAndEffs();
+	void loadBluePoints();
+	void displayBluePoints();
+	void setBluePointByEnemyType(list<FO>::iterator it);
 	void loadEnemy();
 	void loadMusicAndSounds();
+	void loadOptionsUI();
 	void run();
 	void menu();
+	void options();
 	void displayPauseMenu();
 	void restartGame();
 	sf::Texture captureScreenshot();
@@ -56,6 +70,7 @@ public:
 	void enemyCollisionProcessing(list<FO>::iterator it);
 	void enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator itAmmo);
 	void enemyCrash(list<FO>::iterator it);
+	void bluePointCollected(list<FO>::iterator it);
 	void standardSButterflyFrame(list<FO>::iterator it, int temp);
 	void standardMButterflyFrame(list<FO>::iterator it, int temp);
 
@@ -96,7 +111,8 @@ public:
 	//friend bool isFOOutOfBoard(FO value);//wait for updating
 	void mainProcessing();
 	bool checkCollision(sf::Sprite obj1, sf::Sprite obj2);
-	bool checkPlayerCollision();
+	pair<PlayerCollisionResult, list<FO>::iterator> checkPlayerCollision();
+
 	void GameOver();
 	/*friend DWORD WINAPI BGMPlay(LPVOID lpParameter);*/
 	~Game();
@@ -109,24 +125,31 @@ private:
 	sf::Text text, tempScore;
 	sf::Texture loading, nowLoading, stageSelect, front00, julgePointArray, Title1, Title2, allBullets1, allBullets2, whiteSpark;
 	sf::Texture bullets, buffetsEff, deathCircle, bg1, bgEff1, bg2, bgEff2, bg3, bgEff3, Enemy1, Enemy2, Enemy3, lifePieces, magicSquare;
-	sf::Texture title;
+	sf::Texture title,optionsBg,optionsTitle;
+	sf::Texture bluePointTexture;
 	sf::Texture pausedBackground;
 	sf::Sprite loadingUI, loadingUISub, back[6], backEff[6], front01, front02, front03, front04;
 	sf::Sprite julgePoint, playerAmmo, AmmoEff, deathEff, lifeBoard;
+	sf::Sprite titleBackground,optionsBackground,optionsTitleUI;
 	sf::Sprite titleUI;
 	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM, *nowMusic;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
 	sf::SoundBuffer selectSoundBuffer;
+	sf::SoundBuffer bluePointCollectedSoundBuffer;
 	sf::Sound playerBulletSound, playerBulletSound1, enemyBulletSound, collisionSound, spellCardSound, buttomSound, SCAnounce, cardGet;
 	sf::Sound breakSound, playerDeadSound;
 	sf::Sound selectSound;
+	sf::Sound bluePointCollectedSound;
 	sf::Clock clock;
+	sf::Clock clockForInvulnerability;
 	sf::Time elapsed1;
 	FO player;
 	list<FO>  enemyBullets, enemyBulletsPre;
 	list<sf::Sprite> playerBullets, deathEffs;
-	list<sf::Sprite> enemies, pausedEnemies, playerBulletsEffs, backgroundEffs;
+	list<FO> enemies;
+	list<FO> bluePoints;
+	list<sf::Sprite> pausedEnemies, playerBulletsEffs, backgroundEffs;
 	list<sf::Sprite> pausedBulletsEffs, pausedDeathEffs;
 	long long remnant, score;
 	long long secCount;

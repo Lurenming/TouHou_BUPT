@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "D:\\Touhou_BUPT\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|D:\\Touhou_BUPT\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|solutionrelative:Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|D:\\Touhou_BUPT\\include\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|solutionrelative:include\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|D:\\Touhou_BUPT\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|D:\\Touhou_BUPT\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|solutionrelative:Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|D:\\Touhou_BUPT\\include\\FO.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -21,6 +17,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|D:\\Touhou_BUPT\\FO.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|solutionrelative:FO.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|D:\\Touhou_BUPT\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BB27E09C-96F4-47EC-9D6A-C86CCF7D533A}|Touhou_BUPT.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,17 +30,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Game.h",
               "DocumentMoniker": "D:\\Touhou_BUPT\\include\\Game.h",
               "RelativeDocumentMoniker": "include\\Game.h",
-              "ToolTip": "D:\\Touhou_BUPT\\include\\Game.h",
-              "RelativeToolTip": "include\\Game.h",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAAAIQAAAASAAAAAAAAAA==",
+              "ToolTip": "D:\\Touhou_BUPT\\include\\Game.h*",
+              "RelativeToolTip": "include\\Game.h*",
+              "ViewState": "AgIAAI8AAAAAAAAAAAAqwJUAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-03-15T08:19:58.594Z",
               "IsPinned": true,
@@ -48,7 +48,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\Touhou_BUPT\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
@@ -62,7 +62,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "FO.h",
               "DocumentMoniker": "D:\\Touhou_BUPT\\include\\FO.h",
               "RelativeDocumentMoniker": "include\\FO.h",
@@ -75,20 +75,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Game.cpp",
               "DocumentMoniker": "D:\\Touhou_BUPT\\Game.cpp",
               "RelativeDocumentMoniker": "Game.cpp",
-              "ToolTip": "D:\\Touhou_BUPT\\Game.cpp*",
-              "RelativeToolTip": "Game.cpp*",
-              "ViewState": "AgIAAMoBAAAAAAAAAAAQwOABAAAfAAAAAAAAAA==",
+              "ToolTip": "D:\\Touhou_BUPT\\Game.cpp",
+              "RelativeToolTip": "Game.cpp",
+              "ViewState": "AgIAADwPAAAAAAAAAAAQwJoLAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-15T08:20:26.205Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "FO.cpp",
               "DocumentMoniker": "D:\\Touhou_BUPT\\FO.cpp",
               "RelativeDocumentMoniker": "FO.cpp",

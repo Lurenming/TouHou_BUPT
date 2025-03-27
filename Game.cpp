@@ -350,7 +350,9 @@ void Game::run()
 	frameDisplay();
 	/*HANDLE hThread_1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)BGMPlay, self, 0, NULL);*/
 	elapsed1 = sf::Time::Zero; // 初始化为零
+	clock.restart();
 	secCount = 0;
+	curTime = 1;
 	while (mWindow.isOpen())
 	{
 		mWindow.clear();
@@ -497,7 +499,7 @@ void Game::displayPauseMenu() {
 		textRetry.setPosition(130, 820);
 		// 创建一个矩形覆盖层
 		sf::RectangleShape overlay;
-		overlay.setSize(sf::Vector2f(1280, 960)); // 设置与窗口相同的大小
+		overlay.setSize(sf::Vector2f(mWindow.getSize().x, mWindow.getSize().y)); // 设置与窗口相同的大小
 		overlay.setFillColor(sf::Color(0, 0, 0, 150)); // 设置颜色为黑色，透明度为150
 
 		int selectedItem = 0;		// 记录当前选项，默认为textReturn
@@ -554,6 +556,7 @@ void Game::displayPauseMenu() {
 				}
 			}
 
+			clock.restart(); // 在暂停时重置时钟，以避免计时
 			// 对这一帧的图像处理
 			// 选中时高亮
 			textPause.setFillColor(sf::Color::Yellow);
@@ -590,32 +593,21 @@ void Game::restartGame() {
 
 	// 关卡内部时间重新初始化
 	elapsed1 = sf::Time::Zero; // 初始化为零
-
+	clock.restart();
+	curTime = 1;
 }
 
 void Game::Stage1()
 {
 
-	if (!isPaused) {
-		// 在未暂停时更新累积时间
-		elapsed1 += clock.restart();
-	}
-	else {
-		clock.restart(); // 在暂停时重置时钟，以避免计时
-	}
+	// 在未暂停时更新累积时间
+	elapsed1 += clock.restart();
 
-	if (secCount < elapsed1.asSeconds()) {
-		printf("%d\n", (int)elapsed1.asSeconds());
-		secCount += 1;
-	}
-
-	
 	static int evts[20] = { 0 };                    //事件数组
 
-	static int curTime = 1;
 	if (curTime < elapsed1.asSeconds())
 	{
-		printf("%.0f\n", elapsed1.asSeconds());
+		printf("%.f\n", elapsed1.asSeconds());
 		curTime++;
 	}
 

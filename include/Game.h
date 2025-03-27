@@ -130,5 +130,6 @@ private:
 	list<sf::Sprite> pausedBulletsEffs, pausedDeathEffs;
 	long long remnant, score;
 	long long secCount;
+	long long curTime;
 };
 

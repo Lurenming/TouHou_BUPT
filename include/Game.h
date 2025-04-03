@@ -32,6 +32,8 @@ public:
 	void loadOptionsUI();
 	void run();
 	void menu();
+	void gameClearFunction();
+	void playerSignName();
 	void options();
 	void Stage1();
 	int S1E1();
@@ -134,12 +136,12 @@ private:
 	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
-	sf::SoundBuffer selectSoundBuffer;
+	sf::SoundBuffer selectSoundBuffer, okSoundBuffer, cancelSoundBuffer;
 	sf::SoundBuffer bluePointCollectedSoundBuffer;
 	sf::SoundBuffer bombSoundBuffer;
 	sf::Sound playerBulletSound, playerBulletSound1, enemyBulletSound, collisionSound, spellCardSound, buttomSound, SCAnounce, cardGet;
 	sf::Sound breakSound, playerDeadSound;
-	sf::Sound selectSound;
+	sf::Sound selectSound,okSound,cancelSound;
 	sf::Sound bluePointCollectedSound;
 	sf::Sound bombSound;
 	sf::Clock clock;

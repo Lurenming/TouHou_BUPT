@@ -64,11 +64,11 @@ Game::Game()
 	loadEnemy();
 
 
-	if (!font.loadFromFile("./res/RobotoCondensed-Regular.ttf"))	//加载字体
+	if (!font.loadFromFile("./res/MapleMonoNL-NF-CN-Regular.ttf"))	//加载字体
 	{
-		puts("Error: Load RobotoCondensed-Regular.ttf failed!");
+		puts("Error: Load MapleMonoNL-NF-CN-Regular.ttf failed!");
 	}
-
+	
 	//text.setString("v0.1");
 	//text.setFont(font);
 	//text.setCharacterSize(50);
@@ -147,7 +147,7 @@ void Game::NowLoading()
 
 void Game::loadBackgrounds()		//加载背景纹理
 {
-	if (!bg1.loadFromFile("./stage02a.png"))
+	if (!bg1.loadFromFile("./res/stage02a.png"))
 	{
 		puts("Error: Load stage02a failed!");
 	}
@@ -299,6 +299,8 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//用于创建蓝点并使其下
 
 	bluePoint.theta = PI / 2;
 
+	bluePoint.type = 11035;
+
 	// printf("dead enemy position: (%f, %f)\n", it->hero.getPosition().x, it->hero.getPosition().y);
 	// ^^^^^^ 据此成功发现 bug 原因。
 	// 原先在敌机死亡后再调用 setBluePointByEnemyType()，但死亡代码过程中会把敌机的位置移到屏幕外边去，导致蓝点也生在屏幕外面了，所以看不见蓝点。
@@ -385,17 +387,34 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 	{
 		puts("Error: Open stage3.wav failed!");
 	}
+	if (!gameClearMusic.openFromFile("./res/game_clear.wav"))
+	{
+		puts("Error: Open game_clear.wav failed!");
+	}
 	menuMusic.setVolume(100);
 	stage1BGM.setVolume(100);
 	stage2BGM.setVolume(100);
 	stage3BGM.setVolume(100);
+	gameClearMusic.setVolume(100);
 
-	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))
+	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))			//加载菜单相关音效
 	{
 		puts("Error: Open se_select00.wav failed!");
 	}
 	selectSound.setBuffer(selectSoundBuffer);
 	selectSound.setVolume(50);
+	if (!okSoundBuffer.loadFromFile("./res/se_ok00.wav"))			//加载菜单相关音效
+	{
+		puts("Error: Open se_ok00.wav failed!");
+	}
+	okSound.setBuffer(okSoundBuffer);
+	okSound.setVolume(50);
+	if (!cancelSoundBuffer.loadFromFile("./res/se_cancel00.wav"))			//加载菜单相关音效
+	{
+		puts("Error: Open se_cancel00.wav failed!");
+	}
+	cancelSound.setBuffer(cancelSoundBuffer);
+	cancelSound.setVolume(50);
 	if (!playerBulletSoundBuffer.loadFromFile("./res/se_damage00.wav"))		//加载子弹音效
 	{
 		puts("Error: Open se_damage00.wav failed!");
@@ -483,11 +502,11 @@ void Game::run()
 
 void Game::menu()
 {
-	sf::Text textStart("start", font, 50);
-	sf::Text textExStart("extra start", font, 50);
-	sf::Text textOptions("options", font, 50);
-	sf::Text textQuit("Quit", font, 50);
-	sf::Text text5G("Use 5G", font, 50);
+	sf::Text textStart(L"开始", font, 50);
+	sf::Text textExStart(L"开始 Extra 面", font, 50);
+	sf::Text textOptions(L"选项", font, 50);
+	sf::Text textQuit(L"退出", font, 50);
+	sf::Text text5G(L"5G，启动", font, 50);
 	if (!title.loadFromFile("./res/title.png"))
 	{
 		puts("Error: Load title failed!");
@@ -528,34 +547,37 @@ void Game::menu()
 				}
 				else if (event.key.code == sf::Keyboard::Z)
 				{
-					selectSound.play();
 					//Quit
 					if (selectedItem == 2)
 					{
+						cancelSound.play();
 						mWindow.close();
 						return;
 					}
 					//Start
 					else if (selectedItem == 0)
 					{
+						okSound.play();
 						menuMusic.stop();
 						return;
 					}
 					//Options
 					else if (selectedItem == 1)
 					{
+						okSound.play();
 						printf("Options\n");
 						options();
 					}
 					else if (selectedItem == 3)
 					{
+						okSound.play();
 						printf("5G\n");
 					}
 				}
 				else if (event.key.code == sf::Keyboard::X)
 				{
 					// 模拟官作主菜单中的“按X跳转到Quit”操作
-					selectSound.play();
+					cancelSound.play();
 					if (selectedItem == 2)
 					{
 						mWindow.close();
@@ -581,6 +603,203 @@ void Game::menu()
 		mWindow.draw(textQuit);
 		mWindow.draw(text5G);
 
+		mWindow.display();
+	}
+}
+
+
+
+void Game::gameClearFunction()
+{
+	if (!gameClear.loadFromFile("./res/switch.png"))
+	{
+		puts("Error: Load switch.png failed!");
+	}
+	gameClearBackground.setTexture(gameClear);
+
+	gameClearMusic.play();
+	gameClearMusic.setLoop(true);
+	
+	vector<sf::Text> textList {
+		{L"游戏已结束~", font, 50},
+		{L"芝士第二行文字", font, 50},
+	};
+
+	int currentIndex = 0;
+
+	// 设置文字的位置
+	for (sf::Text & text : textList) {
+		text.setPosition(120, 720);
+	}
+
+	// 通关界面主循环
+	while (mWindow.isOpen())
+	{
+		sf::Event event;
+		while (mWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				mWindow.close();
+				return;
+			}
+			// 读取 Z 键切换文字
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Z)
+				{
+					currentIndex = (currentIndex + 1) % textList.size();
+				}
+			}
+		}
+
+		mWindow.draw(gameClearBackground);
+		mWindow.draw(textList[currentIndex]);
+
+		mWindow.display();
+	}
+}
+
+void Game::playerSignName()
+{
+	vector<wstring> keys {
+		L"ABCDEFGHIJKLM",
+		L"NOPQRSTUVWXYZ",
+		L"abcdefghijklm",
+		L"nopqrstuvwxyz",
+		L"0123456789+-=",
+		L",.!?@:;[]()_/",
+		L"{}|~^#$%&*□←終",
+	};
+
+	const int maxI = keys.size();
+	const int maxJ = keys.at(0).size();
+
+	vector<vector<sf::Text>> textGrid(keys.size());
+
+	for (int i = 0; i < maxI; ++i)
+	{
+		for (const wchar_t ch : keys.at(i))
+		{
+			sf::Text cell;
+			cell.setString(sf::String{ch});
+			cell.setFont(font);
+			cell.setCharacterSize(40);
+			textGrid.at(i).push_back(std::move(cell));
+		}
+	}
+
+	// TODO: change background and music
+	if (!gameClear.loadFromFile("./res/switch.png"))
+	{
+		puts("Error: Load switch.png failed!");
+	}
+	gameClearBackground.setTexture(gameClear);
+
+	gameClearMusic.play();
+	gameClearMusic.setLoop(true);
+
+	// 设置文字的位置
+	for (int i = 0; i < maxI; ++i)
+	{
+		for (int j = 0; j < maxJ; ++j)
+		{
+			textGrid.at(i).at(j).setPosition(200 + j * 40, 200 + i * 60);
+		}
+	}
+
+	int selectedI{0};
+	int selectedJ{0};
+
+	wstring playerName;
+	sf::Text playerNameText("", font, 40);
+	playerNameText.setPosition(200, 120);
+	
+
+	// 机签主循环
+	while (mWindow.isOpen())
+	{
+		sf::Event event;
+		while (mWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				mWindow.close();
+				return;
+			}
+			// 读取 Z 键切换文字
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Z)
+				{
+					selectSound.play();
+					const wchar_t wch = keys.at(selectedI).at(selectedJ);
+					if (wch == L'□')
+					{
+					    playerName.push_back(L' ');
+					}
+					else if (wch == L'←')
+					{
+						playerName.pop_back();
+					}
+					else if (wch == L'終')
+					{
+						return;
+					}
+					else
+					{
+						playerName.push_back(wch);
+					}
+					playerNameText.setString(playerName);
+				}
+				else if (event.key.code == sf::Keyboard::Up)
+				{
+					selectSound.play();
+					selectedI = (selectedI - 1 + maxI) % maxI;
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					selectSound.play();
+					selectedI = (selectedI + 1) % maxI;
+				}
+				else if (event.key.code == sf::Keyboard::Left)
+				{
+					selectSound.play();
+					selectedJ = (selectedJ - 1 + maxJ) % maxJ;
+				}
+				else if (event.key.code == sf::Keyboard::Right)
+				{
+					selectSound.play();
+					selectedJ = (selectedJ + 1) % maxJ;
+				}
+				else if (event.key.code == sf::Keyboard::X)
+				{
+					if (selectedI == maxI - 1 && selectedJ == maxJ - 1)
+					{
+					    return;
+					}
+					else
+					{
+						selectedI = maxI - 1;
+						selectedJ = maxJ - 1;
+					}
+				}
+			}
+		}
+
+		
+		mWindow.draw(gameClearBackground);
+		mWindow.draw(playerNameText);
+
+		// 选中时高亮
+		for (int i = 0; i < maxI; ++i)
+		{
+			for (int j = 0; j < maxJ; ++j)
+			{
+				textGrid.at(i).at(j).setFillColor(i == selectedI && j == selectedJ ? sf::Color::Yellow : sf::Color::White);
+				mWindow.draw(textGrid.at(i).at(j));
+			}
+		}
 		mWindow.display();
 	}
 }
@@ -626,7 +845,7 @@ void Game::options()
 	sf::Text textSFX("", font, 50);
 	textSFX.setPosition(230, 580);
 
-	sf::Text textBack("Return to main menu", font, 50);
+	sf::Text textBack(L"回到标题画面", font, 50);
 	textBack.setPosition(240, 640);
 	while (mWindow.isOpen())
 	{
@@ -654,22 +873,22 @@ void Game::options()
 				// 调整音量和音效
 				else if (event.key.code == sf::Keyboard::Left)
 				{
+					okSound.play();
 					if (selectedItem == 2)  // 音量调小
 					{
 						if (volume > 0)
 							volume--;
-						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
 						stage3BGM.setVolume(volume * 10);
+						gameClearMusic.setVolume(volume * 10);
 					}
 					else if (selectedItem == 3)  // 音效调小
 					{
 						if (sfx > 0)
 							sfx--;
 						selectSound.setVolume(sfx * 5);
-						selectSound.play();
 						playerBulletSound.setVolume(sfx * 5);
 						enemyBulletSound.setVolume(sfx * 1.5);
 						bluePointCollectedSound.setVolume(sfx * 5);
@@ -678,6 +897,8 @@ void Game::options()
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
+						okSound.setVolume(sfx * 5);
+						cancelSound.setVolume(sfx * 5);
 					}
 					else if (selectedItem == 0)  // 调整残机
 					{
@@ -700,15 +921,16 @@ void Game::options()
 				}
 				else if (event.key.code == sf::Keyboard::Right)
 				{
+					okSound.play();
 					if (selectedItem == 2)  // 音量调大
 					{
 						if (volume < 10)
 							volume++;
-						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
 						stage3BGM.setVolume(volume * 10);
+						menuMusic.setVolume(volume * 10);
 					}
 					else if (selectedItem == 3)  // 音效调大
 					{
@@ -723,6 +945,8 @@ void Game::options()
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
+						okSound.setVolume(sfx * 5);
+						cancelSound.setVolume(sfx * 5);
 					}
 					else if (selectedItem == 0)  // 调整残机
 					{
@@ -767,10 +991,10 @@ void Game::options()
 			}
 		}
 		// 更新显示文本
-		textVolume.setString("Music: " + std::to_string(volume));
-		textSFX.setString("SFX: " + std::to_string(sfx));
-		textLife.setString("Life: " + std::to_string(lifeDisplay));
-		textBomb.setString("Bomb: " + std::to_string(bombDisplay));
+		textVolume.setString(L"音乐: " + std::to_wstring(volume));
+		textSFX.setString(L"音效: " + std::to_wstring(sfx));
+		textLife.setString(L"残机: " + std::to_wstring(lifeDisplay));
+		textBomb.setString(L"Bomb: " + std::to_wstring(bombDisplay));
 
 		// 选中时高亮
 		textLife.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
@@ -2455,6 +2679,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌人的逻辑
 				it->bounds++;
 			}
 		}
+		return;
 		break;
 	case 103:			//发射弹幕类
 		it->HealthPoint++;
@@ -2731,7 +2956,7 @@ void Game::playerDisplay()
 		playerDeadSound.play();
 
 		// 扣除残机
-		if (remnant > 1)
+		if (remnant > 0)
 		{
 			remnant--;
 			printf("remnant: %lld\n", remnant);
@@ -3852,6 +4077,28 @@ void Game::mainProcessing()			//处理移动
 			playerBulletSound.play();
 		}
 	}
+
+	// 上线了，场上所有蓝点（11035）变成“会追踪玩家的蓝点”（11036）
+	if (player.hero.getPosition().y < 200)
+	{
+	    for (FO & bp : bluePoints)
+		{
+			if (bp.type != 11036)
+			{
+				bp.type = 11036;
+				bp.speed *= 5;
+			}
+		}
+	}
+
+	// 对会追踪玩家的蓝点不断地设置角度
+	for (FO & bp : bluePoints)
+	{
+	    if (bp.type == 11036)
+		{
+		    bp.theta = atan2(julgePoint.getPosition().y - bp.hero.getPosition().y, julgePoint.getPosition().x - bp.hero.getPosition().x);
+		}
+	}
 }
 
 bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//检测精灵碰撞
@@ -3905,16 +4152,48 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 	// 蓝点
 	for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
 	{
-		sf::FloatRect f1 = player.hero.getGlobalBounds();
-		sf::FloatRect f2 = it->hero.getGlobalBounds();
+		sf::FloatRect f = it->hero.getGlobalBounds();
+		
+		f.width /= 2.0;
+		f.height /= 2.0;
 
-		f1.height -= 12;
-		f1.top += 12;
-		f2.width = f2.height = 1;
+		sf::FloatRect rectFromJP(JP, sf::Vector2f(player.width, player.height));
 
-		if (f1.intersects(f2))
+		rectFromJP.left -= player.width / 2;
+		rectFromJP.top -= player.height / 2;
+
+		if (f.intersects(rectFromJP))
 		{
 			return {PlayerCollisionResult::BluePoint, it};
+		}
+	}
+
+	// 顺便，在按 Shift 时，收蓝点的范围大一些（不是立刻收，而是使蓝点变为“追踪玩家”的状态。）
+	if (mIsGrazing)
+	{
+		for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
+		{
+			sf::FloatRect f = it->hero.getGlobalBounds();
+		
+			f.width /= 2.0;
+			f.height /= 2.0;
+
+			sf::FloatRect rectFromJP(JP, sf::Vector2f(player.width, player.height));
+
+			rectFromJP.left -= player.width / 2;
+			rectFromJP.top -= player.height / 2;
+
+			rectFromJP.left -= 32, rectFromJP.width  += 64;
+			rectFromJP.top  -= 32, rectFromJP.height += 64;
+
+			if (f.intersects(rectFromJP))
+			{
+				if (it->type != 11036)
+				{
+					it->type = 11036;
+					it->speed *= 2;
+				}
+			}
 		}
 	}
 

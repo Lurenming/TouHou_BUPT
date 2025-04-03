@@ -1,4 +1,4 @@
-#include "Game.h"
+ï»¿#include "Game.h"
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -33,7 +33,7 @@ bool isFOOutOfBoard(const FO value)
 }
 
 Game::Game()
-	:mWindow(sf::VideoMode(1280, 960), "TouHou114.0-chs")			//Éú³É´°¿Ú
+	:mWindow(sf::VideoMode(1280, 960), "TouHou114.0-chs")			//ç”Ÿæˆçª—å£
 	, font()
 	, player(1)
 {
@@ -44,7 +44,6 @@ Game::Game()
 
 	srand((unsigned)time(NULL));
 	remnant = 3;
-	bomb = 2;
 	score = 0;
 	clockForInvulnerability.restart();
 	mIsMovingUp = false;
@@ -53,7 +52,6 @@ Game::Game()
 	mIsMovingRight = false;
 	mIsGrazing = false;
 	mIsFire = false;
-	mIsUsingBomb = false;
 
 	loadPrimeFrame();
 
@@ -64,19 +62,19 @@ Game::Game()
 	loadEnemy();
 
 
-	if (!font.loadFromFile("./res/MapleMonoNL-NF-CN-Regular.ttf"))	//¼ÓÔØ×ÖÌå
+	if (!font.loadFromFile("./res/MapleMonoNL-NF-CN-Regular.ttf"))	//åŠ è½½å­—ä½“
 	{
 		puts("Error: Load MapleMonoNL-NF-CN-Regular.ttf failed!");
 	}
-	
+
 	//text.setString("v0.1");
 	//text.setFont(font);
 	//text.setCharacterSize(50);
 
-	
+
 
 }
-/*		version1   ÎŞ¹Ì¶¨¼ÓÔØ¹ı³Ì£¬ÒÑ·ÏÆú
+/*		version1   æ— å›ºå®šåŠ è½½è¿‡ç¨‹ï¼Œå·²åºŸå¼ƒ
 
 void Game::NowLoading()
 {
@@ -104,48 +102,48 @@ void Game::NowLoading()
 
 void Game::NowLoading()
 {
-    // ´´½¨¼ÓÔØ´°¿ÚºÍ¼ÓÔØÎÆÀí
-    if (!loading.loadFromFile("./res/sig.png"))
-    {
-        puts("Error: Load loading failed!");
-    }
-    if (!nowLoading.loadFromFile("./res/loading.png", sf::IntRect(0, 0, 128, 64)))
-    {
-        puts("Error: Load nowloading failed!");
-    }
-    //menuMusic.play();
-    loadingUI.setTexture(loading);
-    loadingUISub.setTexture(nowLoading);
-    loadingUISub.setScale(1.5f, 1.5f);
-    loadingUISub.setPosition(sf::Vector2f(1000, 800));
-    
-    // ÉèÖÃ½¥±äÉÁË¸Ïà¹Ø±äÁ¿
-    sf::Clock clock;
-    float duration = 4.0f; // ¼ÓÔØ³ÖĞøÊ±¼ä
-    float elapsedTime = 0.0f;
-    
-    // ½¥±äÉÁË¸Ğ§¹û
-    while (elapsedTime < duration)
-    {
-        elapsedTime = clock.getElapsedTime().asSeconds();
-        
-        // ¼ÆËãÍ¸Ã÷¶È
-        float alpha = (sin(elapsedTime * 6.0f) + 1.0f) / 2.0f * 255; // 0µ½255Ö®¼äµÄÖµ
-        loadingUISub.setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha))); // ÉèÖÃÍ¸Ã÷¶È
-        
-        mWindow.clear();
-        mWindow.draw(loadingUI);
-        mWindow.draw(loadingUISub);
-        mWindow.display();
-        
-        // ¿ØÖÆÖ¡ÂÊ
-        sf::sleep(sf::milliseconds(16)); // ´óÔ¼60FPS
-    }
+	// åˆ›å»ºåŠ è½½çª—å£å’ŒåŠ è½½çº¹ç†
+	if (!loading.loadFromFile("./res/sig.png"))
+	{
+		puts("Error: Load loading failed!");
+	}
+	if (!nowLoading.loadFromFile("./res/loading.png", sf::IntRect(0, 0, 128, 64)))
+	{
+		puts("Error: Load nowloading failed!");
+	}
+	//menuMusic.play();
+	loadingUI.setTexture(loading);
+	loadingUISub.setTexture(nowLoading);
+	loadingUISub.setScale(1.5f, 1.5f);
+	loadingUISub.setPosition(sf::Vector2f(1000, 800));
 
-	 //menuMusic.stop();
+	// è®¾ç½®æ¸å˜é—ªçƒç›¸å…³å˜é‡
+	sf::Clock clock;
+	float duration = 4.0f; // åŠ è½½æŒç»­æ—¶é—´
+	float elapsedTime = 0.0f;
+
+	// æ¸å˜é—ªçƒæ•ˆæœ
+	while (elapsedTime < duration)
+	{
+		elapsedTime = clock.getElapsedTime().asSeconds();
+
+		// è®¡ç®—é€æ˜åº¦
+		float alpha = (sin(elapsedTime * 6.0f) + 1.0f) / 2.0f * 255; // 0åˆ°255ä¹‹é—´çš„å€¼
+		loadingUISub.setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha))); // è®¾ç½®é€æ˜åº¦
+
+		mWindow.clear();
+		mWindow.draw(loadingUI);
+		mWindow.draw(loadingUISub);
+		mWindow.display();
+
+		// æ§åˆ¶å¸§ç‡
+		sf::sleep(sf::milliseconds(16)); // å¤§çº¦60FPS
+	}
+
+	//menuMusic.stop();
 }
 
-void Game::loadBackgrounds()		//¼ÓÔØ±³¾°ÎÆÀí
+void Game::loadBackgrounds()		//åŠ è½½èƒŒæ™¯çº¹ç†
 {
 	if (!bg1.loadFromFile("./res/stage02a.png"))
 	{
@@ -158,7 +156,7 @@ void Game::loadBackgrounds()		//¼ÓÔØ±³¾°ÎÆÀí
 	if (!bg2.loadFromFile("./res/stage02a.png"))
 	{
 		puts("Error: Load stage3bg failed!");
-	}												//bg2½ö½öÊµÏÖÁËº¯Êı£¬Î´Êµ×°
+	}												//bg2ä»…ä»…å®ç°äº†å‡½æ•°ï¼Œæœªå®è£…
 	if (!bgEff2.loadFromFile("./res/stage02b.png"))
 	{
 		puts("Error: Load stage3bg failed!");
@@ -167,10 +165,10 @@ void Game::loadBackgrounds()		//¼ÓÔØ±³¾°ÎÆÀí
 	{
 		back[i].setTexture(bg1);
 		back[i].setScale(sf::Vector2f(1.5, 1.5));
-		back[i].setPosition((float)65.0, (float)(i - 1)*192.0 + 35.0);
+		back[i].setPosition((float)65.0, (float)(i - 1) * 192.0 + 35.0);
 		backEff[i].setTexture(bgEff1);
-		backEff[i].setScale(sf::Vector2f(1.5, 1.5));			//Ä£Äâ¹ö¶¯±³¾°
-		backEff[i].setPosition(65.0, (i - 1)*384.0 + 35.0);
+		backEff[i].setScale(sf::Vector2f(1.5, 1.5));			//æ¨¡æ‹Ÿæ»šåŠ¨èƒŒæ™¯
+		backEff[i].setPosition(65.0, (i - 1) * 384.0 + 35.0);
 	}
 
 	/*for (int i = 0; i < 6; i++)
@@ -185,30 +183,26 @@ void Game::loadBackgrounds()		//¼ÓÔØ±³¾°ÎÆÀí
 
 	if (!lifePieces.loadFromFile("./res/lifePieces.png"))
 	{
-		puts("Error: Load lifePieces failed!");			//ÉúÃüÌõ¼ÓÔØ
+		puts("Error: Load lifePieces failed!");			//ç”Ÿå‘½æ¡åŠ è½½
 	}
 	lifeBoard.setTexture(lifePieces);
-	if (!bombPieces.loadFromFile("./res/bombPieces.png"))
-	{
-		puts("Error: load bombPieces failed!");
-	}
-	bombBoard.setTexture(bombPieces);
+
 	if (!Title1.loadFromFile("./res/stg01logo.png"))
 	{
-		puts("Error: Load stg01logo failed!");			//logo¼ÓÔØ
+		puts("Error: Load stg01logo failed!");			//logoåŠ è½½
 	}
 	if (!Title2.loadFromFile("./res/front01.png"))
 	{
-		puts("Error: Load clear failed!");				//clearÍ¼Æ¬¼ÓÔØ
+		puts("Error: Load clear failed!");				//clearå›¾ç‰‡åŠ è½½
 	}
 	if (!whiteSpark.loadFromFile("./res/White.png"))
 	{
-		puts("Error: Load White failed!");		
+		puts("Error: Load White failed!");
 	}
 }
 //
-void Game::loadPrimeFrame()					//°ÑÖ÷½çÃæµÄÍ¼Æ¬ÇĞ¸îÕ¹Ê¾
-{	
+void Game::loadPrimeFrame()					//æŠŠä¸»ç•Œé¢çš„å›¾ç‰‡åˆ‡å‰²å±•ç¤º
+{
 	if (!front00.loadFromFile("./res/front00.png"))
 	{
 		puts("Error: Load front failed!");
@@ -227,9 +221,9 @@ void Game::loadPrimeFrame()					//°ÑÖ÷½çÃæµÄÍ¼Æ¬ÇĞ¸îÕ¹Ê¾
 	front04.setPosition(sf::Vector2f(0, 0));
 }
 //
-void Game::loadPointsAndEffs()		//¼ÓÔØ×Óµ¯ºÍÅĞ¶¨µã
+void Game::loadPointsAndEffs()		//åŠ è½½å­å¼¹å’Œåˆ¤å®šç‚¹
 {
-	if (!julgePointArray.loadFromFile("./res/etama2.png"))	//ÅĞ¶¨µã¼ÓÔØ
+	if (!julgePointArray.loadFromFile("./res/etama2.png"))	//åˆ¤å®šç‚¹åŠ è½½
 	{
 		puts("Error: Load julgePointArray failed!");
 	}
@@ -238,7 +232,7 @@ void Game::loadPointsAndEffs()		//¼ÓÔØ×Óµ¯ºÍÅĞ¶¨µã
 	julgePoint.setTextureRect(sf::IntRect(0, 16, 64, 64));
 	julgePoint.setScale(1.5, 1.5);
 
-	if (!bullets.loadFromFile("./res/etama.png"))		//µ¯Ä»¼ÓÔØ
+	if (!bullets.loadFromFile("./res/etama.png"))		//å¼¹å¹•åŠ è½½
 	{
 		puts("Error: Load bullets failed!");
 	}
@@ -246,7 +240,7 @@ void Game::loadPointsAndEffs()		//¼ÓÔØ×Óµ¯ºÍÅĞ¶¨µã
 	{
 		puts("Error: Load buffetsEff failed!");
 	}
-	if (!deathCircle.loadFromFile("./res/eff_deadcircle.png"))		//ËÀÍöÌØĞ§¼ÓÔØ
+	if (!deathCircle.loadFromFile("./res/eff_deadcircle.png"))		//æ­»äº¡ç‰¹æ•ˆåŠ è½½
 	{
 		puts("Error: Load deathCircle failed!");
 	}
@@ -272,7 +266,7 @@ void Game::loadBluePoints()
 	}
 }
 
-void Game::displayBluePoints()			//´¦ÀíÀ¶µãµÄÏÔÊ¾ºÍÒÆ³ı³¬³ö±ß½çµÄÀ¶µã
+void Game::displayBluePoints()			//å¤„ç†è“ç‚¹çš„æ˜¾ç¤ºå’Œç§»é™¤è¶…å‡ºè¾¹ç•Œçš„è“ç‚¹
 {
 	//printf("len of bluePoints: %llu before remove_if\n", (unsigned long long) bluePoints.size());
 	bluePoints.remove_if(isFOOutOfBoard);
@@ -280,14 +274,14 @@ void Game::displayBluePoints()			//´¦ÀíÀ¶µãµÄÏÔÊ¾ºÍÒÆ³ı³¬³ö±ß½çµÄÀ¶µã
 
 	for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
 	{
-	    //puts("enemiesPushToDraw(it) for blue point");
+		//puts("enemiesPushToDraw(it) for blue point");
 		enemiesPushToDraw(it);
 	}
 }
 
-void Game::setBluePointByEnemyType(list<FO>::iterator it)	//ÓÃÓÚ´´½¨À¶µã²¢Ê¹ÆäÏÂÂä
+void Game::setBluePointByEnemyType(list<FO>::iterator it)	//ç”¨äºåˆ›å»ºè“ç‚¹å¹¶ä½¿å…¶ä¸‹è½
 {
-	// ²»ÓÃ²¥·ÅÒôĞ§
+	// ä¸ç”¨æ’­æ”¾éŸ³æ•ˆ
 	FO bluePoint;
 	bluePoint.speed = 4;
 	bluePoint.width = 16;
@@ -302,9 +296,9 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//ÓÃÓÚ´´½¨À¶µã²¢Ê¹ÆäÏÂ
 	bluePoint.type = 11035;
 
 	// printf("dead enemy position: (%f, %f)\n", it->hero.getPosition().x, it->hero.getPosition().y);
-	// ^^^^^^ ¾İ´Ë³É¹¦·¢ÏÖ bug Ô­Òò¡£
-	// Ô­ÏÈÔÚµĞ»úËÀÍöºóÔÙµ÷ÓÃ setBluePointByEnemyType()£¬µ«ËÀÍö´úÂë¹ı³ÌÖĞ»á°ÑµĞ»úµÄÎ»ÖÃÒÆµ½ÆÁÄ»Íâ±ßÈ¥£¬µ¼ÖÂÀ¶µãÒ²ÉúÔÚÆÁÄ»ÍâÃæÁË£¬ËùÒÔ¿´²»¼ûÀ¶µã¡£
-	// ÔÚµĞ»úËÀÍöÇ°µ÷ÓÃ setBluePoint() ¼´¿É¡£
+	// ^^^^^^ æ®æ­¤æˆåŠŸå‘ç° bug åŸå› ã€‚
+	// åŸå…ˆåœ¨æ•Œæœºæ­»äº¡åå†è°ƒç”¨ setBluePointByEnemyType()ï¼Œä½†æ­»äº¡ä»£ç è¿‡ç¨‹ä¸­ä¼šæŠŠæ•Œæœºçš„ä½ç½®ç§»åˆ°å±å¹•å¤–è¾¹å»ï¼Œå¯¼è‡´è“ç‚¹ä¹Ÿç”Ÿåœ¨å±å¹•å¤–é¢äº†ï¼Œæ‰€ä»¥çœ‹ä¸è§è“ç‚¹ã€‚
+	// åœ¨æ•Œæœºæ­»äº¡å‰è°ƒç”¨ setBluePoint() å³å¯ã€‚
 	// bluePoint.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
 	// printf("new blue point position: (%f, %f)\n", bluePoint.hero.getPosition().x, bluePoint.hero.getPosition().y);
 
@@ -330,7 +324,7 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//ÓÃÓÚ´´½¨À¶µã²¢Ê¹ÆäÏÂ
 		bluePoints.push_back(bluePoint);
 		break;
 	case 5://mButterfly
-		// Éú³É 3 ¸öÀ¶µã£¬Î»ÖÃ·ÖÉ¢Ò»Ğ©
+		// ç”Ÿæˆ 3 ä¸ªè“ç‚¹ï¼Œä½ç½®åˆ†æ•£ä¸€äº›
 		for (int i = 0; i < 3; i++)
 		{
 			bluePoint.hero.setPosition(it->hero.getPosition().x + (rand() % 64 - 32), it->hero.getPosition().y + it->height + (rand() % 64 - 32));
@@ -338,7 +332,7 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//ÓÃÓÚ´´½¨À¶µã²¢Ê¹ÆäÏÂ
 		}
 		break;
 	case 6://Ghost
-		// Éú³É 15 ¸öÀ¶µã£¬Î»ÖÃ·ÖÉ¢Ò»Ğ©
+		// ç”Ÿæˆ 15 ä¸ªè“ç‚¹ï¼Œä½ç½®åˆ†æ•£ä¸€äº›
 		for (int i = 0; i < 15; i++)
 		{
 			bluePoint.hero.setPosition(it->hero.getPosition().x + (rand() % 128 - 64), it->hero.getPosition().y + it->height + (rand() % 128 - 64));
@@ -347,13 +341,13 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//ÓÃÓÚ´´½¨À¶µã²¢Ê¹ÆäÏÂ
 		break;
 	}
 
-    // printf("len of bluePoints: %llu\n", (unsigned long long) bluePoints.size());
+	// printf("len of bluePoints: %llu\n", (unsigned long long) bluePoints.size());
 }
 
 
 //
 void Game::loadEnemy()
-{							//¼ÓÔØµĞÈËÍ»ÆÆ
+{							//åŠ è½½æ•Œäººçªç ´
 	// Load a enemy to display
 	if (!Enemy1.loadFromFile("./res/enemy.png"))
 	{
@@ -369,19 +363,19 @@ void Game::loadEnemy()
 	}
 }
 //
-void Game::loadMusicAndSounds()		//¼ÓÔØ±³¾°ÒôÀÖºÍÒôĞ§
+void Game::loadMusicAndSounds()		//åŠ è½½èƒŒæ™¯éŸ³ä¹å’ŒéŸ³æ•ˆ
 {
 	if (!menuMusic.openFromFile("./res/menu.wav"))
 	{
 		puts("Error: Open menu.wav failed!");
 	}
-	if (!stage1BGM.openFromFile("./res/stage1.wav"))
+	if (!stage1BGM.openFromFile("./res/BOssHe.mp3"))
 	{
-		puts("Error: Open stage1.wav failed!");
+		puts("Error: Open BOssHe.mp3 failed!");
 	}
-	if (!stage2BGM.openFromFile("./res/stage2.wav"))
+	if (!stage2BGM.openFromFile("./res/YAU.mp3"))
 	{
-		puts("Error: Open stage2.wav failed!");
+		puts("Error: Open YAU.mp3 failed!");
 	}
 	if (!stage3BGM.openFromFile("./res/stage3.wav"))
 	{
@@ -397,54 +391,38 @@ void Game::loadMusicAndSounds()		//¼ÓÔØ±³¾°ÒôÀÖºÍÒôĞ§
 	stage3BGM.setVolume(100);
 	gameClearMusic.setVolume(100);
 
-	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))			//¼ÓÔØ²Ëµ¥Ïà¹ØÒôĞ§
+	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))
 	{
 		puts("Error: Open se_select00.wav failed!");
 	}
 	selectSound.setBuffer(selectSoundBuffer);
 	selectSound.setVolume(50);
-	if (!okSoundBuffer.loadFromFile("./res/se_ok00.wav"))			//¼ÓÔØ²Ëµ¥Ïà¹ØÒôĞ§
-	{
-		puts("Error: Open se_ok00.wav failed!");
-	}
-	okSound.setBuffer(okSoundBuffer);
-	okSound.setVolume(50);
-	if (!cancelSoundBuffer.loadFromFile("./res/se_cancel00.wav"))			//¼ÓÔØ²Ëµ¥Ïà¹ØÒôĞ§
-	{
-		puts("Error: Open se_cancel00.wav failed!");
-	}
-	cancelSound.setBuffer(cancelSoundBuffer);
-	cancelSound.setVolume(50);
-	if (!playerBulletSoundBuffer.loadFromFile("./res/se_damage00.wav"))		//¼ÓÔØ×Óµ¯ÒôĞ§
+	if (!playerBulletSoundBuffer.loadFromFile("./res/se_damage00.wav"))		//åŠ è½½å­å¼¹éŸ³æ•ˆ
 	{
 		puts("Error: Open se_damage00.wav failed!");
 	}
 	playerBulletSound.setBuffer(playerBulletSoundBuffer);
 	playerBulletSound.setVolume(50);
-	if (!enemyBulletSoundBuffer.loadFromFile("./res/se_tan00.wav"))		//¼ÓÔØµ¯Ä»ÒôĞ§
+	if (!enemyBulletSoundBuffer.loadFromFile("./res/se_tan00.wav"))		//åŠ è½½å¼¹å¹•éŸ³æ•ˆ
 	{
 		puts("Error: Open se_tan00.wav failed!");
 	}
 	enemyBulletSound.setBuffer(enemyBulletSoundBuffer);
 	enemyBulletSound.setVolume(15);
-	if (!breakSoundBuffer.loadFromFile("./res/se_enep00.wav"))			//¼ÓÔØÖĞµ¯ÒôĞ§
+	if (!breakSoundBuffer.loadFromFile("./res/se_enep00.wav"))			//åŠ è½½ä¸­å¼¹éŸ³æ•ˆ
 	{
 		puts("Error: Open se_enep00.wav failed!");
 	}
 
 	bluePointCollectedSound.setBuffer(bluePointCollectedSoundBuffer);
 	bluePointCollectedSound.setVolume(50);
-	if (!bluePointCollectedSoundBuffer.loadFromFile("./res/se_item00.wav"))			//¼ÓÔØÀ¶µãÊÕ¼¯ÒôĞ§
+	if (!bluePointCollectedSoundBuffer.loadFromFile("./res/se_item00.wav"))			//åŠ è½½è“ç‚¹æ”¶é›†éŸ³æ•ˆ
 	{
 		puts("Error: Open se_item00.wav failed!");
 	}
-	bombSound.setBuffer(bombSoundBuffer);
-	bombSound.setVolume(100);
-	if (!bombSoundBuffer.loadFromFile("./res/se_bomb00.wav"))			//¼ÓÔØÀ×ÒôĞ§
-	{
-		puts("Error: Open se_bomb00.wav failed!");
-	}
-	breakSound.setBuffer(breakSoundBuffer);							//¼ÓÔØËÀÍöÒôĞ§
+
+
+	breakSound.setBuffer(breakSoundBuffer);							//åŠ è½½æ­»äº¡éŸ³æ•ˆ
 	breakSound.setVolume(50);
 	if (!playerDeadSoundBuffer.loadFromFile("./res/se_pldead00.wav"))
 	{
@@ -452,13 +430,13 @@ void Game::loadMusicAndSounds()		//¼ÓÔØ±³¾°ÒôÀÖºÍÒôĞ§
 	}
 	playerDeadSound.setBuffer(playerDeadSoundBuffer);
 	playerDeadSound.setVolume(50);
-	if (!SCAnounceBuffer.loadFromFile("./res/se_cat00.wav"))		//¼ÓÔØSCÒôĞ§
+	if (!SCAnounceBuffer.loadFromFile("./res/se_cat00.wav"))		//åŠ è½½SCéŸ³æ•ˆ
 	{
 		puts("Error: Open se_cat00.wav failed!");
 	}
 	SCAnounce.setBuffer(SCAnounceBuffer);
 	SCAnounce.setVolume(50);
-	if (!cardGetBuffer.loadFromFile("./res/se_cardget.wav"))		//¼ÓÔØÊÕÈ¡ÒôĞ§
+	if (!cardGetBuffer.loadFromFile("./res/se_cardget.wav"))		//åŠ è½½æ”¶å–éŸ³æ•ˆ
 	{
 		puts("Error: Open se_cardget.wav failed!");
 	}
@@ -468,45 +446,56 @@ void Game::loadMusicAndSounds()		//¼ÓÔØ±³¾°ÒôÀÖºÍÒôĞ§
 
 void Game::run()
 {
-	//²¥·ÅÖ÷²Ëµ¥½çÃæ£¬Õ¹Ê¾Ö÷²Ëµ¥
+	//æ’­æ”¾ä¸»èœå•ç•Œé¢ï¼Œå±•ç¤ºä¸»èœå•
 	menu();
-	int level = 1;			//¹Ø¿¨Ñ¡Ôñ£¬Ä¿Ç°½ö½öÊµ×°ÁËsg1
+	lifeDisplay = remnant;
+	bombDisplay = 2;
+	int level = 1;			//å…³å¡é€‰æ‹©ï¼Œç›®å‰ä»…ä»…å®è£…äº†sg1
+	isPaused = false;
+
 	switch (level)
 	{
 	case 1:
-		stage1BGM.play();
-		stage1BGM.setLoop(true);
+		nowMusic = &stage1BGM;
 		break;
 	}
-	//ÓÎÏ·½øĞĞµÄÖ÷Ñ­»·
-	mWindow.setFramerateLimit(60);
-	mWindow.draw(player.hero);			//¸üĞÂÈËÎïÎ»ÖÃ
+	nowMusic->play();
+	nowMusic->setLoop(true);
+	//æ¸¸æˆè¿›è¡Œçš„ä¸»å¾ªç¯
+	mWindow.setFramerateLimit(60);      //60å¸§
+	mWindow.draw(player.hero);			//æ›´æ–°äººç‰©ä½ç½®
+
 	frameDisplay();
 	/*HANDLE hThread_1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)BGMPlay, self, 0, NULL);*/
+	elapsed1 = sf::Time::Zero;
+	clock.restart();
+	secCount = 0;
+	curTime = 1;
 	while (mWindow.isOpen())
 	{
 		mWindow.clear();
-		
+
 		switch (level)
 		{
 		case 1:
 			Stage1();
 			break;
 		}
-		processTaps(); 
+		processTaps();
 		mainProcessing();
-		
+
+
 		frameDisplay();
 	}
 }
 
 void Game::menu()
 {
-	sf::Text textStart(L"¿ªÊ¼", font, 50);
-	sf::Text textExStart(L"¿ªÊ¼ Extra Ãæ", font, 50);
-	sf::Text textOptions(L"Ñ¡Ïî", font, 50);
-	sf::Text textQuit(L"ÍË³ö", font, 50);
-	sf::Text text5G(L"5G£¬Æô¶¯", font, 50);
+	sf::Text textStart(L"å¼€å§‹", font, 50);
+	sf::Text textExStart(L"å¼€å§‹ Extra é¢", font, 50);
+	sf::Text textOptions(L"é€‰é¡¹", font, 50);
+	sf::Text textQuit(L"é€€å‡º", font, 50);
+	sf::Text text5G(L"5Gï¼Œå¯åŠ¨", font, 50);
 	if (!title.loadFromFile("./res/title.png"))
 	{
 		puts("Error: Load title failed!");
@@ -514,14 +503,14 @@ void Game::menu()
 	titleBackground.setTexture(title);
 	menuMusic.play();
 	menuMusic.setLoop(true);
-	// ÉèÖÃÑ¡ÏîµÄÎ»ÖÃ
+	// è®¾ç½®é€‰é¡¹çš„ä½ç½®
 	textStart.setPosition(100, 560);
 	textExStart.setPosition(110, 630);
 	textOptions.setPosition(120, 700);
 	textQuit.setPosition(130, 770);
 	text5G.setPosition(140, 840);
-	int selectedItem = 0;		// ¼ÇÂ¼µ±Ç°Ñ¡Ïî£¬Ä¬ÈÏÎªtextStart
-	// Ö÷²Ëµ¥Ö÷Ñ­»·
+	int selectedItem = 0;		// è®°å½•å½“å‰é€‰é¡¹ï¼Œé»˜è®¤ä¸ºtextStart
+	// ä¸»èœå•ä¸»å¾ªç¯
 	while (mWindow.isOpen())
 	{
 		sf::Event event;
@@ -532,7 +521,7 @@ void Game::menu()
 				mWindow.close();
 				return;
 			}
-			// ¶ÁÈ¡ÉÏÏÂ·½Ïò¼üÇĞ»»Ñ¡Ïî
+			// è¯»å–ä¸Šä¸‹æ–¹å‘é”®åˆ‡æ¢é€‰é¡¹
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Up)
@@ -547,37 +536,34 @@ void Game::menu()
 				}
 				else if (event.key.code == sf::Keyboard::Z)
 				{
+					selectSound.play();
 					//Quit
 					if (selectedItem == 2)
 					{
-						cancelSound.play();
 						mWindow.close();
 						return;
 					}
 					//Start
 					else if (selectedItem == 0)
 					{
-						okSound.play();
 						menuMusic.stop();
 						return;
 					}
 					//Options
 					else if (selectedItem == 1)
 					{
-						okSound.play();
 						printf("Options\n");
 						options();
 					}
 					else if (selectedItem == 3)
 					{
-						okSound.play();
 						printf("5G\n");
 					}
 				}
 				else if (event.key.code == sf::Keyboard::X)
 				{
-					// Ä£Äâ¹Ù×÷Ö÷²Ëµ¥ÖĞµÄ¡°°´XÌø×ªµ½Quit¡±²Ù×÷
-					cancelSound.play();
+					// æ¨¡æ‹Ÿå®˜ä½œä¸»èœå•ä¸­çš„â€œæŒ‰Xè·³è½¬åˆ°Quitâ€æ“ä½œ
+					selectSound.play();
 					if (selectedItem == 2)
 					{
 						mWindow.close();
@@ -590,7 +576,7 @@ void Game::menu()
 				}
 			}
 		}
-		// Ñ¡ÖĞÊ±¸ßÁÁ
+		// é€‰ä¸­æ—¶é«˜äº®
 		textStart.setFillColor(sf::Color(166, 166, 166));
 		textExStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
 		textOptions.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
@@ -607,7 +593,158 @@ void Game::menu()
 	}
 }
 
+sf::Texture Game::captureScreenshot() {
+	sf::Texture screenshotTexture;
+	screenshotTexture.create(mWindow.getSize().x, mWindow.getSize().y);
+	screenshotTexture.update(mWindow);
+	return screenshotTexture;
+}
 
+
+void Game::displayPauseMenu() {
+	if (isPaused) {
+
+		printf("Stop!\n");
+		nowMusic->pause();
+
+		pausedBackground = captureScreenshot();
+		sf::Sprite backgroundSprite(pausedBackground);
+
+
+		sf::Text textPause("Game Pause!", font, 50);
+		sf::Text textReturn("Return to Game", font, 50);
+		sf::Text textBackToTitle("Quit and Return to Select", font, 50);
+		sf::Text textRetry("Retry this Game", font, 50);
+
+		textPause.setPosition(100, 580);
+		textReturn.setPosition(110, 660);
+		textBackToTitle.setPosition(120, 740);
+		textRetry.setPosition(130, 820);
+
+		sf::RectangleShape overlay;
+		overlay.setSize(sf::Vector2f(mWindow.getSize().x, mWindow.getSize().y));
+		overlay.setFillColor(sf::Color(0, 0, 0, 150));
+
+		int selectedItem = 0;
+		while (mWindow.isOpen())
+		{
+			sf::Event event;
+
+			while (mWindow.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+				{
+					mWindow.close();
+					return;
+				}
+
+				if (event.type == sf::Event::KeyPressed)
+				{
+					if (event.key.code == sf::Keyboard::Up)
+					{
+						selectSound.play();
+						selectedItem = (selectedItem - 1 + 3) % 3;
+					}
+					else if (event.key.code == sf::Keyboard::Down)
+					{
+						selectSound.play();
+						selectedItem = (selectedItem + 1) % 3;
+					}
+					else if (event.key.code == sf::Keyboard::Z)
+					{
+						selectSound.play();
+
+						if (selectedItem == 0)
+						{
+							isPaused = false;
+							nowMusic->play();
+							return;
+						}
+
+						else if (selectedItem == 1)
+						{
+
+							menu();
+							restartGame();
+							return;
+						}
+
+						else if (selectedItem == 2)
+						{
+
+							restartGame();
+							return;
+						}
+					}
+				}
+			}
+
+			clock.restart();
+
+
+			textPause.setFillColor(sf::Color::Yellow);
+			textReturn.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
+			textBackToTitle.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
+			textRetry.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
+
+
+			mWindow.clear();
+
+			mWindow.draw(backgroundSprite);
+			mWindow.draw(overlay);
+			mWindow.draw(textPause);
+			mWindow.draw(textReturn);
+			mWindow.draw(textBackToTitle);
+			mWindow.draw(textRetry);
+
+			mWindow.display();
+		}
+	}
+	// æ²¡æœ‰æš‚åœï¼Œå°±ç›´æ¥ç»“æŸ
+}
+
+void Game::restartGame() {
+
+	player.hero.setPosition(sf::Vector2f(430, 820)); // ä½ç½®åˆå§‹åŒ–ä¸ºå±å¹•ä¸­å¿ƒ
+	int level = 1;
+	isPaused = false;
+	nowMusic->stop();
+	nowMusic = &stage1BGM;
+
+	nowMusic->play();
+	nowMusic->setLoop(true);
+
+
+	elapsed1 = sf::Time::Zero;
+	clock.restart();
+	curTime = 1;
+	remnant = lifeDisplay;
+	// actual bomb number = bombdisplay
+	enemyBullets.clear();
+	bluePoints.clear();
+	memset(evts, 0, sizeof(evts));
+	restartI1s = true;
+	restartAllWaves();
+	restartI1s = false;
+}
+
+void Game::restartAllWaves()
+{
+	S1E1();
+	S1E2();
+	S1E3();
+	S1E4();
+	S1E5();
+	S1E6();
+	S1E7();
+	S1E8();
+	S1E9();
+	S1E10();
+	S1E11();
+	S1E12();
+	S1E13();
+	S1E14();
+}
 
 void Game::gameClearFunction()
 {
@@ -619,20 +756,20 @@ void Game::gameClearFunction()
 
 	gameClearMusic.play();
 	gameClearMusic.setLoop(true);
-	
-	vector<sf::Text> textList {
-		{L"ÓÎÏ·ÒÑ½áÊø~", font, 50},
-		{L"Ö¥Ê¿µÚ¶şĞĞÎÄ×Ö", font, 50},
+
+	vector<sf::Text> textList{
+		{L"æ¸¸æˆå·²ç»“æŸ~", font, 50},
+		{L"èŠå£«ç¬¬äºŒè¡Œæ–‡å­—", font, 50},
 	};
 
 	int currentIndex = 0;
 
-	// ÉèÖÃÎÄ×ÖµÄÎ»ÖÃ
-	for (sf::Text & text : textList) {
+	// è®¾ç½®æ–‡å­—çš„ä½ç½®
+	for (sf::Text& text : textList) {
 		text.setPosition(120, 720);
 	}
 
-	// Í¨¹Ø½çÃæÖ÷Ñ­»·
+	// é€šå…³ç•Œé¢ä¸»å¾ªç¯
 	while (mWindow.isOpen())
 	{
 		sf::Event event;
@@ -643,7 +780,7 @@ void Game::gameClearFunction()
 				mWindow.close();
 				return;
 			}
-			// ¶ÁÈ¡ Z ¼üÇĞ»»ÎÄ×Ö
+			// è¯»å– Z é”®åˆ‡æ¢æ–‡å­—
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Z)
@@ -662,14 +799,14 @@ void Game::gameClearFunction()
 
 void Game::playerSignName()
 {
-	vector<wstring> keys {
+	vector<wstring> keys{
 		L"ABCDEFGHIJKLM",
 		L"NOPQRSTUVWXYZ",
 		L"abcdefghijklm",
 		L"nopqrstuvwxyz",
 		L"0123456789+-=",
 		L",.!?@:;[]()_/",
-		L"{}|~^#$%&*¡õ¡û½K",
+		L"{}|~^#$%&*â–¡â†çµ‚",
 	};
 
 	const int maxI = keys.size();
@@ -682,7 +819,7 @@ void Game::playerSignName()
 		for (const wchar_t ch : keys.at(i))
 		{
 			sf::Text cell;
-			cell.setString(sf::String{ch});
+			cell.setString(sf::String{ ch });
 			cell.setFont(font);
 			cell.setCharacterSize(40);
 			textGrid.at(i).push_back(std::move(cell));
@@ -699,7 +836,7 @@ void Game::playerSignName()
 	gameClearMusic.play();
 	gameClearMusic.setLoop(true);
 
-	// ÉèÖÃÎÄ×ÖµÄÎ»ÖÃ
+	// è®¾ç½®æ–‡å­—çš„ä½ç½®
 	for (int i = 0; i < maxI; ++i)
 	{
 		for (int j = 0; j < maxJ; ++j)
@@ -708,15 +845,15 @@ void Game::playerSignName()
 		}
 	}
 
-	int selectedI{0};
-	int selectedJ{0};
+	int selectedI{ 0 };
+	int selectedJ{ 0 };
 
 	wstring playerName;
 	sf::Text playerNameText("", font, 40);
 	playerNameText.setPosition(200, 120);
-	
 
-	// »úÇ©Ö÷Ñ­»·
+
+	// æœºç­¾ä¸»å¾ªç¯
 	while (mWindow.isOpen())
 	{
 		sf::Event event;
@@ -727,22 +864,22 @@ void Game::playerSignName()
 				mWindow.close();
 				return;
 			}
-			// ¶ÁÈ¡ Z ¼üÇĞ»»ÎÄ×Ö
+			// è¯»å– Z é”®åˆ‡æ¢æ–‡å­—
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Z)
 				{
 					selectSound.play();
 					const wchar_t wch = keys.at(selectedI).at(selectedJ);
-					if (wch == L'¡õ')
+					if (wch == L'â–¡')
 					{
-					    playerName.push_back(L' ');
+						playerName.push_back(L' ');
 					}
-					else if (wch == L'¡û')
+					else if (wch == L'â†')
 					{
 						playerName.pop_back();
 					}
-					else if (wch == L'½K')
+					else if (wch == L'çµ‚')
 					{
 						return;
 					}
@@ -776,7 +913,7 @@ void Game::playerSignName()
 				{
 					if (selectedI == maxI - 1 && selectedJ == maxJ - 1)
 					{
-					    return;
+						return;
 					}
 					else
 					{
@@ -787,11 +924,11 @@ void Game::playerSignName()
 			}
 		}
 
-		
+
 		mWindow.draw(gameClearBackground);
 		mWindow.draw(playerNameText);
 
-		// Ñ¡ÖĞÊ±¸ßÁÁ
+		// é€‰ä¸­æ—¶é«˜äº®
 		for (int i = 0; i < maxI; ++i)
 		{
 			for (int j = 0; j < maxJ; ++j)
@@ -820,19 +957,19 @@ void Game::loadOptionsUI()
 
 void Game::options()
 {
-	// ÒôÁ¿ºÍÒôĞ§µÄÖµ
+	// éŸ³é‡å’ŒéŸ³æ•ˆçš„å€¼
 	static int volume = 10;
 	static int sfx = 10;
-	// µ÷Õû²Ğ»úºÍÀ×
-	static int lifeDisplay = remnant;
-	static int bombDisplay = bomb;
+	// è°ƒæ•´æ®‹æœºå’Œé›·ï¼ˆé›·æ²¡æœ‰å®ç°ï¼‰
+	lifeDisplay = remnant;
+	bombDisplay = 2;
 
 	int selectedItem = 0;
 	loadOptionsUI();
 	optionsTitleUI.setScale(4, 4);
 	optionsTitleUI.setPosition(240, 50);
 
-	// UI£¨ÎÄ±¾£©
+	// UIï¼ˆæ–‡æœ¬ï¼‰
 	sf::Text textLife("", font, 50);
 	textLife.setPosition(200, 400);
 
@@ -845,7 +982,7 @@ void Game::options()
 	sf::Text textSFX("", font, 50);
 	textSFX.setPosition(230, 580);
 
-	sf::Text textBack(L"»Øµ½±êÌâ»­Ãæ", font, 50);
+	sf::Text textBack(L"å›åˆ°æ ‡é¢˜ç”»é¢", font, 50);
 	textBack.setPosition(240, 640);
 	while (mWindow.isOpen())
 	{
@@ -857,9 +994,9 @@ void Game::options()
 				mWindow.close();
 				return;
 			}
-			if(event.type == sf::Event::KeyPressed)
+			if (event.type == sf::Event::KeyPressed)
 			{
-				// ÇĞ»»Ñ¡Ïî
+				// åˆ‡æ¢é€‰é¡¹
 				if (event.key.code == sf::Keyboard::Up)
 				{
 					selectSound.play();
@@ -870,37 +1007,35 @@ void Game::options()
 					selectSound.play();
 					selectedItem = (selectedItem + 1) % 5;
 				}
-				// µ÷ÕûÒôÁ¿ºÍÒôĞ§
+				// è°ƒæ•´éŸ³é‡å’ŒéŸ³æ•ˆ
 				else if (event.key.code == sf::Keyboard::Left)
 				{
-					okSound.play();
-					if (selectedItem == 2)  // ÒôÁ¿µ÷Ğ¡
+					if (selectedItem == 2)  // éŸ³é‡è°ƒå°
 					{
 						if (volume > 0)
 							volume--;
+						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
 						stage3BGM.setVolume(volume * 10);
 						gameClearMusic.setVolume(volume * 10);
 					}
-					else if (selectedItem == 3)  // ÒôĞ§µ÷Ğ¡
+					else if (selectedItem == 3)  // éŸ³æ•ˆè°ƒå°
 					{
 						if (sfx > 0)
 							sfx--;
 						selectSound.setVolume(sfx * 5);
+						selectSound.play();
 						playerBulletSound.setVolume(sfx * 5);
 						enemyBulletSound.setVolume(sfx * 1.5);
 						bluePointCollectedSound.setVolume(sfx * 5);
-						bombSound.setVolume(sfx * 10);
 						breakSound.setVolume(sfx * 5);
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
-						okSound.setVolume(sfx * 5);
-						cancelSound.setVolume(sfx * 5);
 					}
-					else if (selectedItem == 0)  // µ÷Õû²Ğ»ú
+					else if (selectedItem == 0)  // è°ƒæ•´æ®‹æœº
 					{
 						if (lifeDisplay > 0)
 						{
@@ -909,30 +1044,28 @@ void Game::options()
 							printf("%lld\n", remnant);
 						}
 					}
-					else if (selectedItem == 1)  // µ÷ÕûÀ×
+					else if (selectedItem == 1)  // è°ƒæ•´é›·
 					{
 						if (bombDisplay > 0)
 						{
 							bombDisplay--;
-							bomb = bombDisplay;
-							printf("%lld\n", bomb);
 						}
 					}
 				}
 				else if (event.key.code == sf::Keyboard::Right)
 				{
-					okSound.play();
-					if (selectedItem == 2)  // ÒôÁ¿µ÷´ó
+					if (selectedItem == 2)  // éŸ³é‡è°ƒå¤§
 					{
 						if (volume < 10)
 							volume++;
+						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
 						stage3BGM.setVolume(volume * 10);
 						menuMusic.setVolume(volume * 10);
 					}
-					else if (selectedItem == 3)  // ÒôĞ§µ÷´ó
+					else if (selectedItem == 3)  // éŸ³æ•ˆè°ƒå¤§
 					{
 						if (sfx < 10)
 							sfx++;
@@ -945,10 +1078,8 @@ void Game::options()
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
-						okSound.setVolume(sfx * 5);
-						cancelSound.setVolume(sfx * 5);
 					}
-					else if (selectedItem == 0)  // µ÷Õû²Ğ»ú
+					else if (selectedItem == 0)  // è°ƒæ•´æ®‹æœº
 					{
 						if (lifeDisplay < MAX_LIFE)
 						{
@@ -957,13 +1088,11 @@ void Game::options()
 							printf("%lld\n", remnant);
 						}
 					}
-					else if (selectedItem == 1)  // µ÷ÕûÀ×
+					else if (selectedItem == 1)  // è°ƒæ•´é›·
 					{
 						if (bombDisplay < MAX_BOMB)
 						{
 							bombDisplay++;
-							bomb = bombDisplay;
-							printf("%lld\n", bomb);
 						}
 					}
 				}
@@ -971,16 +1100,16 @@ void Game::options()
 				{
 					if (selectedItem == 4)
 					{
-						cancelSound.play();
+						selectSound.play();
 						return;
 					}
 				}
-				// °´XÍË³ö 
+				// æŒ‰Xé€€å‡º 
 				else if (event.key.code == sf::Keyboard::X)
 				{
 					if (selectedItem == 4)
 					{
-						cancelSound.play();
+						selectSound.play();
 						return;
 					}
 					else
@@ -990,13 +1119,13 @@ void Game::options()
 				}
 			}
 		}
-		// ¸üĞÂÏÔÊ¾ÎÄ±¾
-		textVolume.setString(L"ÒôÀÖ: " + std::to_wstring(volume));
-		textSFX.setString(L"ÒôĞ§: " + std::to_wstring(sfx));
-		textLife.setString(L"²Ğ»ú: " + std::to_wstring(lifeDisplay));
+		// æ›´æ–°æ˜¾ç¤ºæ–‡æœ¬
+		textVolume.setString(L"éŸ³ä¹: " + std::to_wstring(volume));
+		textSFX.setString(L"éŸ³æ•ˆ: " + std::to_wstring(sfx));
+		textLife.setString(L"æ®‹æœº: " + std::to_wstring(lifeDisplay));
 		textBomb.setString(L"Bomb: " + std::to_wstring(bombDisplay));
 
-		// Ñ¡ÖĞÊ±¸ßÁÁ
+		// é€‰ä¸­æ—¶é«˜äº®
 		textLife.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
 		textBomb.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
 		textVolume.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
@@ -1017,19 +1146,16 @@ void Game::options()
 
 void Game::Stage1()
 {
-	static sf::Time elapsed1 = clock.restart();		//ÓÎÏ·Ö¡ÖØÖÃ
-	elapsed1 = clock.getElapsedTime();
-	
-	static int evts[20] = { 0 };
+	elapsed1 += clock.restart();
+	evts[20] = { 0 };
 
-	static int curTime = 1;
 	if (curTime < elapsed1.asSeconds())
 	{
-		printf("%.0f\n", elapsed1.asSeconds());
+		printf("%.f\n", elapsed1.asSeconds());
 		curTime++;
 	}
 
-	switch ((int)elapsed1.asSeconds() + 0)//testÓÃ£¬ËùÓĞµĞÈËÉú³É¶¼ÊÇÒÔÊ±¼äÀ´ÅĞ¶Ï
+	switch ((int)elapsed1.asSeconds() + 0)//testç”¨ï¼Œæ‰€æœ‰æ•Œäººç”Ÿæˆéƒ½æ˜¯ä»¥æ—¶é—´æ¥åˆ¤æ–­
 	{
 	case 1:
 		//pre
@@ -1070,7 +1196,7 @@ void Game::Stage1()
 		evts[11] = 1;
 		break;
 	case 100:
-		//ÇĞ»»³¡¾°ÖÁ²âÊÔ2Ãæ
+		//åˆ‡æ¢åœºæ™¯è‡³æµ‹è¯•2é¢
 		evts[12] = 1;
 		break;
 	case 105:
@@ -1079,7 +1205,7 @@ void Game::Stage1()
 		break;
 	}
 
-	if (evts[1])
+	if (evts[1]) // å€¼ä¸º1
 	{
 		if (S1E1())
 		{
@@ -1130,6 +1256,7 @@ void Game::Stage1()
 	}
 	if (evts[8])
 	{
+		// é–¬æ’²è…‘ç€µç¡…ç˜½
 		if (S1E8())
 		{
 			evts[8] = 0;
@@ -1179,23 +1306,32 @@ void Game::Stage1()
 		}
 	}
 }
-//Éú³ÉµĞÈËµÄº¯Êı   S±íÊ¾¹Ø¿¨£¬EÖ¸´ú²¨Êı£¬±È½ÏÖØ¸´µÄ´úÂë²»×÷×¢ÊÍ£¬ÈÎºÎĞĞÎª¶¼ÊÇ»ùÓÚÓÎÏ·Ö¡À´Ö´ĞĞ
+//ç”Ÿæˆæ•Œäººçš„å‡½æ•°   Sè¡¨ç¤ºå…³å¡ï¼ŒEæŒ‡ä»£æ³¢æ•°ï¼Œæ¯”è¾ƒé‡å¤çš„ä»£ç ä¸ä½œæ³¨é‡Šï¼Œä»»ä½•è¡Œä¸ºéƒ½æ˜¯åŸºäºæ¸¸æˆå¸§æ¥æ‰§è¡Œ
 int Game::S1E1()
 {
-	static int i1 = 0;			//¼ÇÂ¼Ö¡
+	static int i1 = 0;			//è®°å½•å¸§
 	i1++;
-	static list<FO> wave1, wave2;		//ÓÃÓÚ´æ·ÅµĞ»ú¶ÔÏóµÄÁ´±í
-	double gapTime = 0.4;				//Éú³ÉÊ±¼ä¼ä¸ô
-	int gapFrame = gapTime * 60;		//Éú³ÉÖ¡¼ä¸ô
-	static int gap = 0, temp = 0;		//gapÓÃÀ´Çø·ÖÃ¿¸öµĞÈËÉú³ÉµÄÊ±¼ä£¬È·±£·Ö¿ªÉú³É
+	static list<FO> wave1, wave2;		//ç”¨äºå­˜æ”¾æ•Œæœºå¯¹è±¡çš„é“¾è¡¨
+	double gapTime = 0.4;				//ç”Ÿæˆæ—¶é—´é—´éš”
+	int gapFrame = gapTime * 60;		//ç”Ÿæˆå¸§é—´éš”
+	static int gap = 0, temp = 0;		//gapç”¨æ¥åŒºåˆ†æ¯ä¸ªæ•Œäººç”Ÿæˆçš„æ—¶é—´ï¼Œç¡®ä¿åˆ†å¼€ç”Ÿæˆ
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 % gapFrame == 1 && i1 < 15 * gapFrame)
 	{
-		FO sButterfly(2);						//Éú³ÉµÚÒ»ÀàĞ¡¹Ö
+		FO sButterfly(2);						//ç”Ÿæˆç¬¬ä¸€ç±»å°æ€ª
 		sButterfly.hero.setTexture(Enemy1);
 		sButterfly.hero.setTextureRect(sf::IntRect(0, 320, sButterfly.width, sButterfly.height));
 		sButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		sButterfly.hero.setPosition(sf::Vector2f(400 + pow(-1.0, i1 / gapFrame) * 0.8 * i1, 20.0));		//¸ù¾İµ±Ç°Ê±¼äÖ¡¼ÆËãµĞÈËµÄÎ»ÖÃ£¨×óÓÒ½»Ìæ£©
+		sButterfly.hero.setPosition(sf::Vector2f(400 + pow(-1.0, i1 / gapFrame) * 0.8 * i1, 20.0));		//æ ¹æ®å½“å‰æ—¶é—´å¸§è®¡ç®—æ•Œäººçš„ä½ç½®ï¼ˆå·¦å³äº¤æ›¿ï¼‰
 		//sButterfly.setSButterfly(400 + pow(-1.0, i1 / gapFrame) * i1, 20.0);
 		sButterfly.born = i1;
 		sButterfly.gap = gap;
@@ -1204,12 +1340,12 @@ int Game::S1E1()
 		wave1.push_back(sButterfly);
 	}
 	if (i1 == 270)
-	{								//Éú³ÉµÚ¶şÀàµĞÈË£¬´óºûµû
+	{								//ç”Ÿæˆç¬¬äºŒç±»æ•Œäººï¼Œå¤§è´è¶
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
 		mButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterfly.hero.setOrigin(mButterfly.width*0.5, mButterfly.height*0.5 - 24);
+		mButterfly.hero.setOrigin(mButterfly.width * 0.5, mButterfly.height * 0.5 - 24);
 		mButterfly.hero.setPosition(sf::Vector2f(400 + 200, -20.0));
 		mButterfly.born = i1;
 		wave2.push_back(mButterfly);
@@ -1217,25 +1353,25 @@ int Game::S1E1()
 		wave2.push_back(mButterfly);
 	}
 
-	wave1.remove_if(isFOOutOfBoard);		//µÚÒ»ÀàµĞÈËµÄĞĞÎª
+	wave1.remove_if(isFOOutOfBoard);		//ç¬¬ä¸€ç±»æ•Œäººçš„è¡Œä¸º
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
-		
+
 		temp = i1 - it->gap * gapFrame;
-		if (temp < 200)//phase1			//Õı³£ÊÇÏòÏÂÒÆ¶¯£¬Å¼¶û·¢Éä×Óµ¯
+		if (temp < 200)//phase1			//æ­£å¸¸æ˜¯å‘ä¸‹ç§»åŠ¨ï¼Œå¶å°”å‘å°„å­å¼¹
 		{
 			if (rand() % 20 == 0)
 			{
 				setMultiRoundSnipe(it, 5.0, 5);
 			}
 			it->speed = 50.0 / (temp + 1.0);
-			it->theta = 0.5*PI;
+			it->theta = 0.5 * PI;
 			it->hero.setTextureRect(sf::IntRect(i1 % 35 / 7 * it->width, 320, it->width, it->height));
 		}
-		else//phase2				//Ê±¼ä¹ıÁË£¬Ğ¡¹Ö×¼±¸Àë³¡
+		else//phase2				//æ—¶é—´è¿‡äº†ï¼Œå°æ€ªå‡†å¤‡ç¦»åœº
 		{
 			it->speed = (temp - 200) / 10.0;
-			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0*PI / 360.0;
+			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0 * PI / 360.0;
 
 			if (it->speed <= 11)
 			{
@@ -1251,33 +1387,33 @@ int Game::S1E1()
 
 				if (!it->isSym)
 				{
-					it->hero.move(1.5*it->width, 0);
+					it->hero.move(1.5 * it->width, 0);
 					it->isSym = true;
 				}
 			}
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
-	wave2.remove_if(isFOOutOfBoard);		//µÚ¶şÀàµĞÈËµÄĞĞÎª
+	wave2.remove_if(isFOOutOfBoard);		//ç¬¬äºŒç±»æ•Œäººçš„è¡Œä¸º
 	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)
-	{					//ÏòÏÂËæ»ú½Ç¶È·¢Éä×Óµ¯
+	{					//å‘ä¸‹éšæœºè§’åº¦å‘å°„å­å¼¹
 		it->hero.setTextureRect(sf::IntRect(i1 % 50 / 10 * it->width, 448, it->width, it->height));
-		if (i1 < 400)							
+		if (i1 < 400)
 		{
 			it->speed = (650.0 - i1) / 240;
-			it->theta = 0.5 * PI;		
+			it->theta = 0.5 * PI;
 		}
 		else if (i1 >= 400 && i1 < 500)
 		{
 			it->speed = 0.0;
-			
+
 			setSharpRandom(it, 3.0);
 			setSharpRandom(it, 3.0);
-			
+
 		}
 		else
 		{
@@ -1286,29 +1422,35 @@ int Game::S1E1()
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
-	if (i1 > 15 * 60)			//¹Ø¿¨½áÊøÅĞ¶Ï
+	if (i1 > 15 * 60)			//å…³å¡ç»“æŸåˆ¤æ–­
 	{
 		wave1.clear();//Final clear for accident
 		wave2.clear();
 		return 1;
-	}				
+	}
 	return 0;
 }
 
-int Game::S1E2()			//E2±È½ÏÌØÊâ£¬ÕâÀïÉæ¼°Ò»¸öĞ¡¹ı³¡
+int Game::S1E2()			//E2æ¯”è¾ƒç‰¹æ®Šï¼Œè¿™é‡Œæ¶‰åŠä¸€ä¸ªå°è¿‡åœº
 {
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
+
 	if (i1 == 1)
 	{
 		FO mainTitle(0);
-		mainTitle.hero.setTexture(Title1);		//¼ÓÔØ¹ı³¡logo
+		mainTitle.hero.setTexture(Title1);		//åŠ è½½è¿‡åœºlogo
 		mainTitle.hero.setTextureRect(sf::IntRect(0, 0, 512, 256));
 		//mainTitle.hero.setScale(sf::Vector2f(1.5, 1.5));
 		mainTitle.speed = 0.0;
@@ -1320,25 +1462,35 @@ int Game::S1E2()			//E2±È½ÏÌØÊâ£¬ÕâÀïÉæ¼°Ò»¸öĞ¡¹ı³¡
 
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
-		it->hero.setColor(sf::Color(255, 255, 255, -i1*(i1-301) / (151.0*150.0) * 255));
-		enemiesPushToDraw(it);			//ÊµÏÖlogoµÄ½¥±ä³öÏÖ
+		it->hero.setColor(sf::Color(255, 255, 255, -i1 * (i1 - 301) / (151.0 * 150.0) * 255));
+		enemiesPushToDraw(it);			//å®ç°logoçš„æ¸å˜å‡ºç°
 	}
 	if (i1 > 5 * 60)
 	{
-		wave1.clear();			//¶¯»­½áÊø¼ì²âµÄ
+		wave1.clear();			//åŠ¨ç”»ç»“æŸæ£€æµ‹çš„
 		return 1;
 	}
 	return 0;
 }
 
 int Game::S1E3()
-{				//µÚÒ»´®Ğ¡¹Ö
+{				//ç¬¬ä¸€ä¸²å°æ€ª
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1, wave2;
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
+
 	if (i1 % gapFrame == 1 && i1 < 15 * gapFrame)
 	{
 		FO sButterfly(2);
@@ -1354,12 +1506,12 @@ int Game::S1E3()
 		wave1.push_back(sButterfly);
 	}
 	if (i1 == 21)
-	{				//´óºûµû
+	{				//å¤§è´è¶
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
 		mButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterfly.hero.setOrigin(mButterfly.width*0.5, mButterfly.height*0.5 - 24);
+		mButterfly.hero.setOrigin(mButterfly.width * 0.5, mButterfly.height * 0.5 - 24);
 		mButterfly.born = i1;
 		mButterfly.hero.setPosition(sf::Vector2f(200.0, -20.0));
 		wave2.push_back(mButterfly);
@@ -1375,7 +1527,7 @@ int Game::S1E3()
 		{
 			setRoundRandom(it, 4.0, 5, 60, 90);//setMultiRoundSnipe(it, 8.0, 5);
 		}
-		it->theta = 0.5*PI + temp * temp / 20000.0 * 0.2 * PI;
+		it->theta = 0.5 * PI + temp * temp / 20000.0 * 0.2 * PI;
 		if (it->theta >= 0.9 * PI)
 		{
 			it->theta = 0.9 * PI;
@@ -1395,7 +1547,7 @@ int Game::S1E3()
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -1423,7 +1575,7 @@ int Game::S1E3()
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -1437,13 +1589,23 @@ int Game::S1E3()
 }
 
 int Game::S1E4()
-{				//Èı²¨´®¹Ö
+{				//ä¸‰æ³¢ä¸²æ€ª
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1, wave2, wave3;
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		wave3.clear();
+		return 0;
+	}
 
 	if (i1 % gapFrame == 1 && i1 < 10 * gapFrame)
 	{
@@ -1507,13 +1669,13 @@ int Game::S1E4()
 
 		if (it->hero.getPosition().y >= 400)
 		{
-			it->theta = -0.5*PI;
+			it->theta = -0.5 * PI;
 		}
 		else if (it->hero.getPosition().y < 400)
 		{
 			it->theta -= (0.5 * PI / 180.0);
 		}
-		
+
 		if (it->theta >= -0.7 * PI && it->hero.getPosition().y >= 400)
 		{
 			it->hero.setTextureRect(sf::IntRect((int)(temp / 8 % 4) * it->width, 320, it->width, it->height));
@@ -1534,7 +1696,7 @@ int Game::S1E4()
 		//it->theta = -it->theta;
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 	wave2.remove_if(isFOOutOfBoard);
@@ -1547,7 +1709,7 @@ int Game::S1E4()
 		{
 			setRandom(it, 4.0, 1, 5, 60, 90); //setRoundRandom(it, 4.0, 5, 60, 90);//setMultiRoundSnipe(it, 8.0, 5);
 		}
-		it->theta = 0.5*PI - temp * temp / 20000.0 * 0.2 * PI;
+		it->theta = 0.5 * PI - temp * temp / 20000.0 * 0.2 * PI;
 		if (it->theta <= 0.1 * PI)
 		{
 			it->theta = 0.1 * PI;
@@ -1562,7 +1724,7 @@ int Game::S1E4()
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 	wave3.remove_if(isFOOutOfBoard);
@@ -1578,7 +1740,7 @@ int Game::S1E4()
 
 		if (it->hero.getPosition().y >= 400)
 		{
-			it->theta = -0.5*PI;
+			it->theta = -0.5 * PI;
 		}
 		else if (it->hero.getPosition().y < 400)
 		{
@@ -1601,13 +1763,13 @@ int Game::S1E4()
 
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
 	if (i1 > 15 * 60)
 	{
-		wave1.clear();		//Ê±¼äµ½ÁËĞ¡¹ÖÅÜÂ·£¬µ½ÆÁÄ»ÍâÈ»ºóÇå³ı
+		wave1.clear();		//æ—¶é—´åˆ°äº†å°æ€ªè·‘è·¯ï¼Œåˆ°å±å¹•å¤–ç„¶åæ¸…é™¤
 		wave2.clear();
 		wave3.clear();
 		return 1;
@@ -1624,13 +1786,24 @@ int Game::S1E5()//mButter quit anime dierction
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		wave3.clear();
+		wave4.clear();
+		return 0;
+	}
+
 	if (i1 == 1)
 	{
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
 		mButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterfly.hero.setOrigin(mButterfly.width*0.5, mButterfly.height*0.5 - 24);
+		mButterfly.hero.setOrigin(mButterfly.width * 0.5, mButterfly.height * 0.5 - 24);
 		mButterfly.born = i1;
 		mButterfly.hero.setPosition(sf::Vector2f(250.0, -20.0));
 		wave1.push_back(mButterfly);
@@ -1641,7 +1814,7 @@ int Game::S1E5()//mButter quit anime dierction
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
 		mButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterfly.hero.setOrigin(mButterfly.width*0.5, mButterfly.height*0.5 - 24);
+		mButterfly.hero.setOrigin(mButterfly.width * 0.5, mButterfly.height * 0.5 - 24);
 		mButterfly.born = i1;
 		mButterfly.hero.setPosition(sf::Vector2f(600.0, -20.0));
 		mButterfly.HealthPoint = 60;
@@ -1704,7 +1877,7 @@ int Game::S1E5()//mButter quit anime dierction
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -1732,7 +1905,7 @@ int Game::S1E5()//mButter quit anime dierction
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -1749,7 +1922,7 @@ int Game::S1E5()//mButter quit anime dierction
 
 		if (it->hero.getPosition().y >= 400)
 		{
-			it->theta = -0.5*PI;
+			it->theta = -0.5 * PI;
 		}
 		else if (it->hero.getPosition().y < 400)
 		{
@@ -1776,7 +1949,7 @@ int Game::S1E5()//mButter quit anime dierction
 		//it->theta = -it->theta;
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -1793,7 +1966,7 @@ int Game::S1E5()//mButter quit anime dierction
 
 		if (it->hero.getPosition().y >= 400)
 		{
-			it->theta = -0.5*PI;
+			it->theta = -0.5 * PI;
 		}
 		else if (it->hero.getPosition().y < 400)
 		{
@@ -1813,7 +1986,7 @@ int Game::S1E5()//mButter quit anime dierction
 			it->hero.setTextureRect(sf::IntRect((int)(temp / 32 % 4 + 3) * it->width, 320 + 2 * it->height, it->width, it->height));
 		}
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -1834,14 +2007,25 @@ int Game::S1E6()
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
-	
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		wave3.clear();
+		wave4.clear();
+		return 0;
+	}
+
 	if (i1 == 41)
 	{
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
 		mButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterfly.hero.setOrigin(mButterfly.width*0.5, mButterfly.height*0.5 - 24);
+		mButterfly.hero.setOrigin(mButterfly.width * 0.5, mButterfly.height * 0.5 - 24);
 		mButterfly.born = i1;
 		mButterfly.hero.setPosition(sf::Vector2f(250.0, -20.0));
 		wave1.push_back(mButterfly);
@@ -1852,7 +2036,7 @@ int Game::S1E6()
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
 		mButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterfly.hero.setOrigin(mButterfly.width*0.5, mButterfly.height*0.5 - 24);
+		mButterfly.hero.setOrigin(mButterfly.width * 0.5, mButterfly.height * 0.5 - 24);
 		mButterfly.born = i1;
 		mButterfly.hero.setPosition(sf::Vector2f(600.0, -20.0));
 		wave2.push_back(mButterfly);
@@ -1916,7 +2100,7 @@ int Game::S1E6()
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 	wave2.remove_if(isFOOutOfBoard);
@@ -1943,7 +2127,7 @@ int Game::S1E6()
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 	wave3.remove_if(isFOOutOfBoard);
@@ -1972,7 +2156,7 @@ int Game::S1E6()
 		standardSButterflyFrame(it, temp);
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 	wave4.remove_if(isFOOutOfBoard);
@@ -2002,7 +2186,7 @@ int Game::S1E6()
 		standardSButterflyFrame(it, temp);
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -2022,14 +2206,20 @@ int Game::S1E7()
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1;
-	
+
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
+
 	if (i1 == 1)
 	{
 		FO mButterflt(5);
 		mButterflt.hero.setTexture(Enemy1);
 		mButterflt.hero.setTextureRect(sf::IntRect(0, 448, mButterflt.width, mButterflt.height));
 		mButterflt.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterflt.hero.setOrigin(mButterflt.width*0.5, mButterflt.height*0.5 - 24);
+		mButterflt.hero.setOrigin(mButterflt.width * 0.5, mButterflt.height * 0.5 - 24);
 		mButterflt.born = i1;
 		mButterflt.hero.setPosition(sf::Vector2f(450.0, -20.0));
 		mButterflt.HealthPoint *= 4;
@@ -2042,15 +2232,15 @@ int Game::S1E7()
 		it->hero.setTextureRect(sf::IntRect(i1 % 50 / 10 * it->width, 448, it->width, it->height));
 		if (i1 < 80)
 		{
-			it->speed = (80 - i1) / 16.0;			//·Ç³£ìÅ¿áµÄ¶Ô³ÆĞ¡¿ª»¨µ¯Ä»
+			it->speed = (80 - i1) / 16.0;			//éå¸¸ç‚«é…·çš„å¯¹ç§°å°å¼€èŠ±å¼¹å¹•
 			it->theta = 0.5 * PI;
 		}
 		else if (i1 >= 80 && i1 < 400)
 		{
 			it->speed = 0.0;
-			
+
 			setSharpFlower1(it, 4.0, 4, 0);
-			
+
 		}
 		else
 		{
@@ -2059,7 +2249,7 @@ int Game::S1E7()
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 	if (i1 > 10 * 60)
@@ -2070,19 +2260,27 @@ int Game::S1E7()
 	return 0;
 }
 
-int Game::S1E8()				//ÕâÒ»²¨ÊÇµÚÒ»ÃæµÄ½áÊø£¬Éú³ÉÒ»¸öÓÄÁé×÷Îªboss
+int Game::S1E8()				//è¿™ä¸€æ³¢æ˜¯ç¬¬ä¸€é¢çš„ç»“æŸï¼Œç”Ÿæˆä¸€ä¸ªå¹½çµä½œä¸ºboss
 {
 	static int i1 = 0, stp = 0;
 	i1++;
-	static list<FO> wave1, wave2;	//wave1´æ´¢ÓÄÁé±¾Ìå£¬wave2´æ´¢Ò»¸öÈÆ×Å×ªµÄ±³¾°Ä§·¨Õó
+	static list<FO> wave1, wave2;	//wave1å­˜å‚¨å¹½çµæœ¬ä½“ï¼Œwave2å­˜å‚¨ä¸€ä¸ªç»•ç€è½¬çš„èƒŒæ™¯é­”æ³•é˜µ
+
+	if (restartI1s == true) {
+		i1 = 0;
+		stp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 == 1)
-	{						//Éú³É
+	{						//ç”Ÿæˆ
 		FO ghost(6);
 		ghost.hero.setTexture(Enemy2);
 		ghost.hero.setTextureRect(sf::IntRect(0, 64, ghost.width, ghost.height));
 		ghost.hero.setScale(sf::Vector2f(1.5, 1.5));
-		ghost.hero.setOrigin(ghost.width*0.5, ghost.height*0.5 - 24);
+		ghost.hero.setOrigin(ghost.width * 0.5, ghost.height * 0.5 - 24);
 		ghost.born = i1;
 		ghost.hero.setPosition(sf::Vector2f(450.0, -20.0));
 		FO spellBoard;
@@ -2095,12 +2293,12 @@ int Game::S1E8()				//ÕâÒ»²¨ÊÇµÚÒ»ÃæµÄ½áÊø£¬Éú³ÉÒ»¸öÓÄÁé×÷Îªboss
 		wave2.push_back(spellBoard);
 	}
 	if (wave1.size() == 0)
-	{				//ÅĞ¶ÏÊÇ·ñ»÷ÆÆ£¬»÷ÆÆÖ®ºóÄ§·¨ÕóÇå³ı
+	{				//åˆ¤æ–­æ˜¯å¦å‡»ç ´ï¼Œå‡»ç ´ä¹‹åé­”æ³•é˜µæ¸…é™¤
 		wave2.clear();
 		return 1;
 	}
 	wave2.remove_if(isFOOutOfBoard);
-	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)		//¿ØÖÆÄ§·¨ÕóµÄĞı×ªĞ§¹û
+	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)		//æ§åˆ¶é­”æ³•é˜µçš„æ—‹è½¬æ•ˆæœ
 	{
 		it->hero.setPosition(wave1.begin()->hero.getPosition().x, wave1.begin()->hero.getPosition().y + 32);
 		it->theta += PI / 100.0;
@@ -2121,13 +2319,13 @@ int Game::S1E8()				//ÕâÒ»²¨ÊÇµÚÒ»ÃæµÄ½áÊø£¬Éú³ÉÒ»¸öÓÄÁé×÷Îªboss
 			it->speed = (80 - i1) / 16.0;
 			it->theta = 0.5 * PI;
 		}
-		else if (i1 >= 80 && i1 < 1200)				//´¦ÀíbossµÄ¹¥»÷ĞĞÎª´¦ÓÚÄÄ¸ö½×¶Î
+		else if (i1 >= 80 && i1 < 1200)				//å¤„ç†bossçš„æ”»å‡»è¡Œä¸ºå¤„äºå“ªä¸ªé˜¶æ®µ
 		{
 			it->speed = 0.0;
 			switch (it->phase)
 			{
 			case 2:
-				nonSpellCard1(it);		//1·Ç
+				nonSpellCard1(it);		//1é
 				break;
 			case 1:
 				if (i1 == 141)
@@ -2136,11 +2334,11 @@ int Game::S1E8()				//ÕâÒ»²¨ÊÇµÚÒ»ÃæµÄ½áÊø£¬Éú³ÉÒ»¸öÓÄÁé×÷Îªboss
 				}
 				if (i1 > 3 * 60)
 				{
-					spellCard1(it);		//1·û
+					spellCard1(it);		//1ç¬¦
 				}
 				break;
 			}
-			
+
 
 		}
 		else
@@ -2150,18 +2348,18 @@ int Game::S1E8()				//ÕâÒ»²¨ÊÇµÚÒ»ÃæµÄ½áÊø£¬Éú³ÉÒ»¸öÓÄÁé×÷Îªboss
 		}
 
 		enemyCollisionProcessing(it);
-		//enemyBombProcessing(it);
+
 		enemiesPushToDraw(it);
 	}
 	if (i1 > 60 * 60)
 	{
-		wave1.clear();			//µ½µãÅÜÂ·
+		wave1.clear();			//åˆ°ç‚¹è·‘è·¯
 		return 1;
 	}
 	return 0;
 }
 
-int Game::S1E9()				//Ëæ»ú´óºûµû£¬ÀàËÆ´ºÖÕÃ×Á£µ¯£¬ÊµÏÖ·âÎ»Ğ§¹û
+int Game::S1E9()				//éšæœºå¤§è´è¶ï¼Œç±»ä¼¼æ˜¥ç»ˆç±³ç²’å¼¹ï¼Œå®ç°å°ä½æ•ˆæœ
 {
 	static int i1 = 0;
 	i1++;
@@ -2169,6 +2367,15 @@ int Game::S1E9()				//Ëæ»ú´óºûµû£¬ÀàËÆ´ºÖÕÃ×Á£µ¯£¬ÊµÏÖ·âÎ»Ğ§¹û
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 % gapFrame == 1 && i1 < 30 * gapFrame)
 	{
@@ -2197,13 +2404,13 @@ int Game::S1E9()				//Ëæ»ú´óºûµû£¬ÀàËÆ´ºÖÕÃ×Á£µ¯£¬ÊµÏÖ·âÎ»Ğ§¹û
 				setMultiRoundSnipe(it, 5.0, 5);
 			}
 			it->speed = 50.0 / (temp + 1.0);
-			it->theta = 0.5*PI;
+			it->theta = 0.5 * PI;
 			it->hero.setTextureRect(sf::IntRect(i1 % 35 / 7 * it->width, 320, it->width, it->height));
 		}
 		else					//phase2
 		{
 			it->speed = (temp - 200) / 10.0;
-			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0*PI / 360.0;
+			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0 * PI / 360.0;
 
 			if (it->speed <= 11)
 			{
@@ -2219,14 +2426,14 @@ int Game::S1E9()				//Ëæ»ú´óºûµû£¬ÀàËÆ´ºÖÕÃ×Á£µ¯£¬ÊµÏÖ·âÎ»Ğ§¹û
 
 				if (!it->isSym)
 				{
-					it->hero.move(1.5*it->width, 0);
+					it->hero.move(1.5 * it->width, 0);
 					it->isSym = true;
 				}
 			}
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -2239,8 +2446,8 @@ int Game::S1E9()				//Ëæ»ú´óºûµû£¬ÀàËÆ´ºÖÕÃ×Á£µ¯£¬ÊµÏÖ·âÎ»Ğ§¹û
 	return 0;
 }
 
-int Game::S1E10()					
-{						
+int Game::S1E10()
+{
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1, wave2;
@@ -2248,14 +2455,23 @@ int Game::S1E10()
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
+
 	if (i1 % gapFrame == 1 && i1 < 5 * gapFrame)
 	{
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
 		mButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		mButterfly.hero.setOrigin(mButterfly.width*0.5, mButterfly.height*0.5 - 24);
-		mButterfly.hero.setPosition(sf::Vector2f(450 + pow(-1, gap)*200, -20.0));
+		mButterfly.hero.setOrigin(mButterfly.width * 0.5, mButterfly.height * 0.5 - 24);
+		mButterfly.hero.setPosition(sf::Vector2f(450 + pow(-1, gap) * 200, -20.0));
 		mButterfly.born = i1;
 		mButterfly.gap = gap;
 		wave1.push_back(mButterfly);
@@ -2269,7 +2485,7 @@ int Game::S1E10()
 		if (temp < 120)			//phase1
 		{
 			it->speed = 70.0 / (temp + 1.0);
-			it->theta = 0.5*PI;
+			it->theta = 0.5 * PI;
 		}
 		else				//phase2
 		{
@@ -2297,7 +2513,7 @@ int Game::S1E10()
 		standardMButterflyFrame(it, temp);
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -2310,7 +2526,7 @@ int Game::S1E10()
 	return 0;
 }
 
-int Game::S1E11()			//¶¥¶Ë´óÁ¿Éú³ÉĞ¡¹Ö£¬Ò»½×¶ÎÏÂÂä£¬¶ş½×¶ÎËæ»úÅÜÂ·
+int Game::S1E11()			//é¡¶ç«¯å¤§é‡ç”Ÿæˆå°æ€ªï¼Œä¸€é˜¶æ®µä¸‹è½ï¼ŒäºŒé˜¶æ®µéšæœºè·‘è·¯
 {
 	static int i1 = 0;
 	i1++;
@@ -2318,6 +2534,15 @@ int Game::S1E11()			//¶¥¶Ë´óÁ¿Éú³ÉĞ¡¹Ö£¬Ò»½×¶ÎÏÂÂä£¬¶ş½×¶ÎËæ»úÅÜÂ·
 	double gapTime = 0.1;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 % gapFrame == 1 && i1 < 60 * gapFrame)
 	{
@@ -2344,13 +2569,13 @@ int Game::S1E11()			//¶¥¶Ë´óÁ¿Éú³ÉĞ¡¹Ö£¬Ò»½×¶ÎÏÂÂä£¬¶ş½×¶ÎËæ»úÅÜÂ·
 				setRoundRandom(it, 6.0, 5, 0, PI);
 			}
 			it->speed = 50.0 / (temp + 1.0);
-			it->theta = 0.5*PI;
+			it->theta = 0.5 * PI;
 			it->hero.setTextureRect(sf::IntRect(i1 % 35 / 7 * it->width, 320, it->width, it->height));
 		}
 		else//phase2
 		{
 			it->speed = (temp - 200) / 10.0;
-			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0*PI / 360.0;
+			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0 * PI / 360.0;
 
 			if (it->speed <= 11)
 			{
@@ -2366,14 +2591,14 @@ int Game::S1E11()			//¶¥¶Ë´óÁ¿Éú³ÉĞ¡¹Ö£¬Ò»½×¶ÎÏÂÂä£¬¶ş½×¶ÎËæ»úÅÜÂ·
 
 				if (!it->isSym)
 				{
-					it->hero.move(1.5*it->width, 0);
+					it->hero.move(1.5 * it->width, 0);
 					it->isSym = true;
 				}
 			}
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 	}
 
@@ -2386,11 +2611,17 @@ int Game::S1E11()			//¶¥¶Ë´óÁ¿Éú³ÉĞ¡¹Ö£¬Ò»½×¶ÎÏÂÂä£¬¶ş½×¶ÎËæ»úÅÜÂ·
 	return 0;
 }
 
-int Game::S1E12()			//µÚÒ»Ãæ½áÊø£¬½øÈëµÚ¶şÃæ£¬µ«·½±ã²âÊÔ¿ÉÒÔ¿´×÷¶¼ÊÇµÚÒ»Ãæ
+int Game::S1E12()			//ç¬¬ä¸€é¢ç»“æŸï¼Œè¿›å…¥ç¬¬äºŒé¢ï¼Œä½†æ–¹ä¾¿æµ‹è¯•å¯ä»¥çœ‹ä½œéƒ½æ˜¯ç¬¬ä¸€é¢
 {
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
 
 	if (i1 == 1)
 	{
@@ -2406,22 +2637,22 @@ int Game::S1E12()			//µÚÒ»Ãæ½áÊø£¬½øÈëµÚ¶şÃæ£¬µ«·½±ã²âÊÔ¿ÉÒÔ¿´×÷¶¼ÊÇµÚÒ»Ãæ
 
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
-		double alpha = -i1*(i1 - 301) / (151.0*150.0) * 255;
+		double alpha = -i1 * (i1 - 301) / (151.0 * 150.0) * 255;
 		it->hero.setColor(sf::Color(255, 255, 255, alpha));
 		if (i1 < 151)
 		{
-			stage1BGM.setVolume((255 - alpha) / 255.0*100.0);			//µÚÒ»ÃæµÄbgm½¥±ä½µµÍ
+			stage1BGM.setVolume((255 - alpha) / 255.0 * 100.0);			//ç¬¬ä¸€é¢çš„bgmæ¸å˜é™ä½
 			if (alpha > 240)
 			{
 				stage1BGM.pause();
 				for (int i = 0; i < 6; i++)
 				{
-					back[i].setTexture(bg2);					//ÇĞ»»±³¾°ÖÁµÚ¶şÃæ
+					back[i].setTexture(bg2);					//åˆ‡æ¢èƒŒæ™¯è‡³ç¬¬äºŒé¢
 					back[i].setScale(sf::Vector2f(1.5, 1.5));
-					back[i].setPosition((float)65.0, (float)(i - 1)*192.0 + 35.0);
+					back[i].setPosition((float)65.0, (float)(i - 1) * 192.0 + 35.0);
 					backEff[i].setTexture(bgEff2);
 					backEff[i].setScale(sf::Vector2f(1.5, 1.5));
-					backEff[i].setPosition(65.0, (i - 1)*384.0 + 35.0);
+					backEff[i].setPosition(65.0, (i - 1) * 384.0 + 35.0);
 				}
 			}
 		}
@@ -2430,7 +2661,7 @@ int Game::S1E12()			//µÚÒ»Ãæ½áÊø£¬½øÈëµÚ¶şÃæ£¬µ«·½±ã²âÊÔ¿ÉÒÔ¿´×÷¶¼ÊÇµÚÒ»Ãæ
 	if (i1 == 200)
 	{
 		stage2BGM.play();
-		stage2BGM.setLoop(true);		//µÚ¶şÃæµÄbgm
+		stage2BGM.setLoop(true);		//ç¬¬äºŒé¢çš„bgm
 	}
 	if (i1 > 5 * 60)
 	{
@@ -2440,11 +2671,19 @@ int Game::S1E12()			//µÚÒ»Ãæ½áÊø£¬½øÈëµÚ¶şÃæ£¬µ«·½±ã²âÊÔ¿ÉÒÔ¿´×÷¶¼ÊÇµÚÒ»Ãæ
 	return 0;
 }
 
-int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
+int Game::S1E13()			//æµ‹è¯•ç”¨ï¼Œç¬¬äºŒé¢ä»…ä¸€ä¸ªå¹½çµboss
 {
 	static int i1 = 0, stp = 0;
 	i1++;
 	static list<FO> wave1, wave2;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		stp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 == 1)
 	{
@@ -2452,7 +2691,7 @@ int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
 		ghost.hero.setTexture(Enemy2);
 		ghost.hero.setTextureRect(sf::IntRect(0, 64, ghost.width, ghost.height));
 		ghost.hero.setScale(sf::Vector2f(1.5, 1.5));
-		ghost.hero.setOrigin(ghost.width*0.5, ghost.height*0.5 - 24);
+		ghost.hero.setOrigin(ghost.width * 0.5, ghost.height * 0.5 - 24);
 		ghost.born = i1;
 		ghost.hero.setPosition(sf::Vector2f(450.0, -20.0));
 		FO spellBoard;
@@ -2461,7 +2700,7 @@ int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
 		spellBoard.hero.setPosition(ghost.hero.getPosition());
 		spellBoard.theta = 0;
 		spellBoard.hero.setColor(sf::Color(255, 255, 255, 127));
-		ghost.phase = 10;			//³õÊ¼½×¶Î¶¨Òå£¬Ä¿Ç°ÊÇ2·Ç
+		ghost.phase = 10;			//åˆå§‹é˜¶æ®µå®šä¹‰ï¼Œç›®å‰æ˜¯2é
 		wave1.push_back(ghost);
 		wave2.push_back(spellBoard);
 	}
@@ -2475,14 +2714,14 @@ int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
 	{
 		it->hero.setPosition(wave1.begin()->hero.getPosition().x, wave1.begin()->hero.getPosition().y + 32);
 		it->theta += PI / 100.0;
-		it->hero.setScale(1.0 + 0.1*sin(i1 / 11.0), 1.0 + 0.1*sin(i1 / 11.0));
+		it->hero.setScale(1.0 + 0.1 * sin(i1 / 11.0), 1.0 + 0.1 * sin(i1 / 11.0));
 		it->hero.setRotation(it->theta / PI * 180.0 + 90);
 		backEsPushToDraw(it);
 	}
 	wave1.remove_if(isFOOutOfBoard);
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
-		if (it->phase + stp == 9)				//ÅĞ¶ÏÄ¿Ç°µÄ½×¶Î²¢Ö´ĞĞ
+		if (it->phase + stp == 9)				//åˆ¤æ–­ç›®å‰çš„é˜¶æ®µå¹¶æ‰§è¡Œ
 		{
 			stp++;
 			i1 = 80;
@@ -2600,7 +2839,7 @@ int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
 		}
 
 		enemyCollisionProcessing(it);
-		
+
 		enemiesPushToDraw(it);
 
 		if (i1 > 120 * 60)
@@ -2610,7 +2849,7 @@ int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
 				cardGet.play();
 				breakSound.play();
 				score += it->score;
-				//ËÀÍöĞ§¹û
+				//æ­»äº¡æ•ˆæœ
 				deathEff.setTexture(deathCircle);
 				deathEff.setTextureRect(sf::IntRect(64, 0, 64, 64));
 				deathEff.setOrigin(32, 32);
@@ -2626,7 +2865,7 @@ int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
 			{
 				wave1.clear();
 			}
-				
+
 			return 1;
 		}
 	}
@@ -2635,11 +2874,17 @@ int Game::S1E13()			//²âÊÔÓÃ£¬µÚ¶şÃæ½öÒ»¸öÓÄÁéboss
 
 
 
-int Game::S1E14()			//Î´Êµ×°
+int Game::S1E14()			//æœªå®è£…
 {
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
 
 	if (i1 == 1)
 	{
@@ -2655,7 +2900,7 @@ int Game::S1E14()			//Î´Êµ×°
 
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
-		it->hero.setColor(sf::Color(255, 255, 255, -i1*(i1 - 301) / (151.0*150.0) * 255));
+		it->hero.setColor(sf::Color(255, 255, 255, -i1 * (i1 - 301) / (151.0 * 150.0) * 255));
 		enemiesPushToDraw(it);
 	}
 	if (i1 > 5 * 60)
@@ -2666,13 +2911,13 @@ int Game::S1E14()			//Î´Êµ×°
 	return 0;
 }
 
-void Game::enemiesPushToDraw(list<FO>::iterator it)			//´¦Àí²»Í¬ÀàĞÍµÄµĞÈËµÄÂß¼­ºÍµ¯Ä»·¢Éä
+void Game::enemiesPushToDraw(list<FO>::iterator it)			//å¤„ç†ä¸åŒç±»å‹çš„æ•Œäººçš„é€»è¾‘å’Œå¼¹å¹•å‘å°„
 {
 	switch (it->type)
 	{
-	case 101:				//±ß½ç·´µ¯Àà
+	case 101:				//è¾¹ç•Œåå¼¹ç±»
 		if (it->hero.getPosition().y < 60 || it->hero.getPosition().y > 900)
-		{	
+		{
 			if (it->bounds < 3)
 			{
 				it->theta += PI;
@@ -2681,7 +2926,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//´¦Àí²»Í¬ÀàĞÍµÄµĞÈËµÄÂß¼­
 		}
 		return;
 		break;
-	case 103:			//·¢Éäµ¯Ä»Àà
+	case 103:			//å‘å°„å¼¹å¹•ç±»
 		it->HealthPoint++;
 		if (it->HealthPoint > 60 && it->phase > 0)
 		{
@@ -2710,11 +2955,11 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//´¦Àí²»Í¬ÀàĞÍµÄµĞÈËµÄÂß¼­
 			nonSpell1.hero.setScale(1.5, 1.5);
 			nonSpell1.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y);
 			nonSpell1.type = 103;
-			nonSpell1.phase = it->phase-1;
+			nonSpell1.phase = it->phase - 1;
 			for (int i = 0; i < 5; i++)
 			{
 				nonSpell1.speed += i / 10.0;
-				nonSpell1.theta = it->theta + PI - 18 / 180.0*PI + i*18.0 / 180.0*PI;
+				nonSpell1.theta = it->theta + PI - 18 / 180.0 * PI + i * 18.0 / 180.0 * PI;
 				nonSpell1.hero.setRotation(nonSpell1.theta / PI * 180.0 + 90);
 				enemyBullets.push_back(nonSpell1);
 			}
@@ -2722,12 +2967,12 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//´¦Àí²»Í¬ÀàĞÍµÄµĞÈËµÄÂß¼­
 			return;
 		}
 		break;
-	case 104:			//Å×ÎïÏßÔË¶¯Àà
+	case 104:			//æŠ›ç‰©çº¿è¿åŠ¨ç±»
 		it->HealthPoint++;
 		if (it->speed > EPS)
 		{
 			it->velocity.x = it->speed * cos(it->theta);
-			it->velocity.y = it->speed * sin(it->theta) + 4.9*it->HealthPoint*it->HealthPoint/7200.0;
+			it->velocity.y = it->speed * sin(it->theta) + 4.9 * it->HealthPoint * it->HealthPoint / 7200.0;
 			it->hero.setRotation(atan2(it->velocity.y, it->velocity.x) / PI * 180.0 + 90);
 			if (it->velocity.y >= 8)
 			{
@@ -2739,7 +2984,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//´¦Àí²»Í¬ÀàĞÍµÄµĞÈËµÄÂß¼­
 		return;
 		break;
 	}
-			//Í¨ÓÃÀà
+	//é€šç”¨ç±»
 	if (it->speed > EPS)
 	{
 		it->velocity.x = it->speed * cos(it->theta);
@@ -2750,7 +2995,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//´¦Àí²»Í¬ÀàĞÍµÄµĞÈËµÄÂß¼­
 	enemies.push_back(*it);
 }
 
-void Game::backEsPushToDraw(list<FO>::iterator it)			//¹ÜÀí¸üĞÂ±³¾°ÌØĞ§
+void Game::backEsPushToDraw(list<FO>::iterator it)			//ç®¡ç†æ›´æ–°èƒŒæ™¯ç‰¹æ•ˆ
 {
 	if (it->speed > EPS)
 	{
@@ -2764,38 +3009,38 @@ void Game::backEsPushToDraw(list<FO>::iterator it)			//¹ÜÀí¸üĞÂ±³¾°ÌØĞ§
 
 void Game::frameDisplay()//ammo->front->player->jpoint
 {
-								//ÓÃÀ´äÖÈ¾Ã¿Ò»Ö¡µÄÏÔÊ¾Ğ§¹û
+	//ç”¨æ¥æ¸²æŸ“æ¯ä¸€å¸§çš„æ˜¾ç¤ºæ•ˆæœ
 	player.staticFrame = player.staticFrame % 56;
 	player.staticFrame++;
 	mWindow.clear();
-	
+
 	backgroundDisplay();
 
 	playerAmmoDisplay();
 
-	playerBombDisplay();
-
 	effsDisplay();
-	
+
 	playerDisplay();
 
 	enemiesDisplay();
-	
+
 	enemyBulletsDisplay();
 
 	displayBluePoints();
 
 	boardDisplay();
 
-	
+
 	mWindow.draw(text);		//demo
-	
-	mWindow.display();		//Ë¢ĞÂ´°¿Ú
+
+	displayPauseMenu();
+
+	mWindow.display();		//åˆ·æ–°çª—å£
 }
 //
-void Game::backgroundDisplay()				//ÊµÏÖ±³¾°µÄ¹ö¶¯
+void Game::backgroundDisplay()				//å®ç°èƒŒæ™¯çš„æ»šåŠ¨
 {
-	for (int i = 0; i < 6; i++)					//¹ö¶¯±³¾°
+	for (int i = 0; i < 6; i++)					//æ»šåŠ¨èƒŒæ™¯
 	{
 		if (back[i].getPosition().y >= 5 * 192 + 35)
 		{
@@ -2805,7 +3050,7 @@ void Game::backgroundDisplay()				//ÊµÏÖ±³¾°µÄ¹ö¶¯
 		mWindow.draw(back[i]);
 
 	}
-	for (int i = 0; i < 4; i++)					//¹ö¶¯±³¾°ÌØĞ§
+	for (int i = 0; i < 4; i++)					//æ»šåŠ¨èƒŒæ™¯ç‰¹æ•ˆ
 	{
 		if (backEff[i].getPosition().y >= 3 * 384 + 35)
 		{
@@ -2821,12 +3066,12 @@ void Game::backgroundDisplay()				//ÊµÏÖ±³¾°µÄ¹ö¶¯
 	backgroundEffs.clear();
 }
 //
-void Game::playerAmmoDisplay()			//´¦Àí×Ô»úµÄ×Óµ¯
+void Game::playerAmmoDisplay()			//å¤„ç†è‡ªæœºçš„å­å¼¹
 {
 	if (mIsFire)
 	{
 		//playerAmmo = (mIsGrazing) ? player.LSAmmo : player.HSAmmo;
-		if (player.staticFrame % 2 == 1)		//Ã¿Ö¡Éä»÷
+		if (player.staticFrame % 2 == 1)		//æ¯å¸§å°„å‡»
 		{
 			player.LSAmmo.setPosition(sf::Vector2f(player.hero.getPosition().x + 4, player.hero.getPosition().y + 80));
 			playerBullets.push_back(player.LSAmmo);
@@ -2841,72 +3086,12 @@ void Game::playerAmmoDisplay()			//´¦Àí×Ô»úµÄ×Óµ¯
 	playerBullets.remove_if(isOutOfBoard);
 	for (list<sf::Sprite>::iterator it = playerBullets.begin(); it != playerBullets.end(); it++)
 	{
-		it->move(0.0, - 60.0);	//×Óµ¯µÄÒÆ¶¯
+		it->move(0.0, -60.0);	//å­å¼¹çš„ç§»åŠ¨
 		mWindow.draw(*it);
 	}
 }
 //
-void Game::playerBombDisplay()			// ´¦Àí½ÇÉ«µÄÀ×
-{
-	if (mIsUsingBomb)
-	{
-		if (bomb > 0)
-		{
-			bombSound.play();
-			printf("bomb\n");
-			bomb--;
-			// ÔİÊ±µÄĞ§¹û£ºÏû³ıÈ«ÆÁ×Óµ¯ & ÔİÊ±ÎŞµĞ & È«ÆÁÉËº¦
-			clockForInvulnerability.restart();
-			for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
-			{
-				enemyCrash(it);
-			}
-			//for (list<FO>::iterator itEnemy = enemies.begin(); itEnemy != enemies.end(); itEnemy++)
-			//{
-			//	printf("%d ", itEnemy->type);
-			//	enemyBombProcessing(itEnemy);
-			//}
-		}
-		// SFMLÖ»ÄÜÅĞ¶¨¡°¼üÅÌŞôÏÂ¡±£¬¶øÀ×µÄ¹¦ÄÜĞèÒª¡±¼üÅÌŞôÏÂ½ö´¥·¢Ò»´Î¡°
-		mIsUsingBomb = false;
-	}
-}
-//void Game::enemyBombProcessing(list<FO>::iterator it)		// ´¦ÀíÊ¹ÓÃÀ×Ê±µÄµĞÈËÊÜ»÷ÅĞ¶¨£¬¸´ÓÃ±»µ¯ÅĞ¶¨µÄ´úÂë
-//{
-//	it->HealthPoint -= 10000;
-//	score += 10;
-//	printf("%d ", it->type);
-//	if (it->HealthPoint <= 0)
-//	{
-//		it->phase--;
-//		// ±¬À¶µãà¶
-//		//puts("setBluePointByEnemyType(it);");
-//		setBluePointByEnemyType(it);
-//		if (it->phase <= 0)
-//		{	// µĞ»ú»÷»Ù£¿
-//			enemyCrash(it);
-//		}
-//		else
-//		{	// µĞ»úÊÇ boss£¬½øÈëÁËÏÂÒ»½×¶Î£¿
-//			cardGet.play();
-//			breakSound.play();
-//			score += it->score;
-//			deathEff.setTexture(deathCircle);
-//			deathEff.setTextureRect(sf::IntRect(64, 0, 64, 64));
-//			deathEff.setOrigin(32, 32);
-//			deathEff.setPosition(it->hero.getPosition().x + it->width * 0.25, it->hero.getPosition().y + it->height * 0.25);
-//			deathEff.setScale(0.1, 0.1);
-//			deathEffs.push_back(deathEff);
-//			deathEff.setScale(0.3, 0.06);
-//			deathEff.setRotation(rand() % 360);
-//			deathEffs.push_back(deathEff);
-//			it->HealthPoint += 1500;
-//		}
-//	}
-//
-//}
-//
-void Game::enemiesDisplay()		//µĞÈË¾«Áé»æÖÆ
+void Game::enemiesDisplay()		//æ•Œäººç²¾çµç»˜åˆ¶
 {
 	for (list<FO>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
@@ -2929,7 +3114,7 @@ void Game::enemiesDisplay()		//µĞÈË¾«Áé»æÖÆ
 	}
 }*/
 //
-void Game::enemyBulletsDisplay()			//´¦ÀíµĞ·½×Óµ¯µÄÏÔÊ¾ºÍÒÆ³ı³¬³ö±ß½çµÄ×Óµ¯
+void Game::enemyBulletsDisplay()			//å¤„ç†æ•Œæ–¹å­å¼¹çš„æ˜¾ç¤ºå’Œç§»é™¤è¶…å‡ºè¾¹ç•Œçš„å­å¼¹
 {
 	enemyBullets.remove_if(isFOOutOfBoard);
 	for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
@@ -2942,11 +3127,11 @@ void Game::playerDisplay()
 {
 	pair<PlayerCollisionResult, list<FO>::iterator> collision = checkPlayerCollision();
 
-	if ((collision.first == PlayerCollisionResult::EnemyBullet          // ±»µ¯
-		|| collision.first == PlayerCollisionResult::EnemyBody)         // »òÕß±»ÌåÊõ
-		&& clockForInvulnerability.getElapsedTime().asSeconds() > 1.0)  // ¶øÇÒ²»ÔÚÎŞµĞÊ±¼äÄÚ
+	if ((collision.first == PlayerCollisionResult::EnemyBullet          // è¢«å¼¹
+		|| collision.first == PlayerCollisionResult::EnemyBody)         // æˆ–è€…è¢«ä½“æœ¯
+		&& clockForInvulnerability.getElapsedTime().asSeconds() > 1.0)  // è€Œä¸”ä¸åœ¨æ— æ•Œæ—¶é—´å†…
 	{
-		// Çå¿Õ³¡ÉÏËùÓĞÀ´×ÔµĞ»úµÄ×Óµ¯
+		// æ¸…ç©ºåœºä¸Šæ‰€æœ‰æ¥è‡ªæ•Œæœºçš„å­å¼¹
 		for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
 		{
 			enemyCrash(it);
@@ -2955,7 +3140,7 @@ void Game::playerDisplay()
 		clockForInvulnerability.restart();
 		playerDeadSound.play();
 
-		// ¿Û³ı²Ğ»ú
+		// æ‰£é™¤æ®‹æœº
 		if (remnant > 0)
 		{
 			remnant--;
@@ -2968,7 +3153,7 @@ void Game::playerDisplay()
 		}
 	}
 
-	// ÕâÊÇ³Ôµ½À¶µã¡£
+	// è¿™æ˜¯åƒåˆ°è“ç‚¹ã€‚
 	if (collision.first == PlayerCollisionResult::BluePoint)
 	{
 		bluePointCollected(collision.second);
@@ -2976,10 +3161,10 @@ void Game::playerDisplay()
 
 	if (collision.first == PlayerCollisionResult::NoCollision)
 	{
-		;  // noop¡£
+		;  // noopã€‚
 	}
 
-	if (mIsMovingLeft)			//¼ì²â×óÒÆ
+	if (mIsMovingLeft)			//æ£€æµ‹å·¦ç§»
 	{
 		if (player.dynamicFrame < 14)
 		{
@@ -2987,7 +3172,7 @@ void Game::playerDisplay()
 		}
 		player.hero.setTextureRect(sf::IntRect(player.width * (player.dynamicFrame / 2), player.height, player.width, player.height));
 	}
-	else if (mIsMovingRight)		//¼ì²âÓÒÒÆ
+	else if (mIsMovingRight)		//æ£€æµ‹å³ç§»
 	{
 		if (player.dynamicFrame < 14)
 		{
@@ -3001,7 +3186,7 @@ void Game::playerDisplay()
 		player.dynamicFrame = 0;
 	}
 
-	mWindow.draw(player.hero);		//¸üĞÂÈËÎïÎ»ÖÃ
+	mWindow.draw(player.hero);		//æ›´æ–°äººç‰©ä½ç½®
 
 	static int julgeRotate = 0;
 	julgeRotate++;
@@ -3009,13 +3194,13 @@ void Game::playerDisplay()
 	julgePoint.setOrigin(32, 32);
 	julgePoint.setRotation(julgeRotate);
 	julgePoint.setPosition(sf::Vector2f(player.hero.getPosition().x - 24 + 48, player.hero.getPosition().y - 8 + 48));
-	if (mIsGrazing)			//¼ì²âµÍËÙ
-	{	
+	if (mIsGrazing)			//æ£€æµ‹ä½é€Ÿ
+	{
 		mWindow.draw(julgePoint);
 	}
 }
 //
-void Game::effsDisplay()		//´¦Àí×Óµ¯Ğ§¹ûºÍËÀÍöĞ§¹û
+void Game::effsDisplay()		//å¤„ç†å­å¼¹æ•ˆæœå’Œæ­»äº¡æ•ˆæœ
 {
 	for (list<sf::Sprite>::iterator it = playerBulletsEffs.begin(); it != playerBulletsEffs.end(); it++)
 	{
@@ -3026,21 +3211,21 @@ void Game::effsDisplay()		//´¦Àí×Óµ¯Ğ§¹ûºÍËÀÍöĞ§¹û
 	{
 		double i = it->getScale().x, j = it->getScale().y / it->getScale().x;
 		i += 0.1;
-		it->setScale(i, i*j);
-		it->setColor(sf::Color(255, 255, 255, 255 * (1.2 - 0.5*i)));
-		
+		it->setScale(i, i * j);
+		it->setColor(sf::Color(255, 255, 255, 255 * (1.2 - 0.5 * i)));
+
 		mWindow.draw(*it);
 	}
 	deathEffs.remove_if([](sf::Sprite obj) { if (obj.getScale().x > 2.3 || (obj.getRotation() < EPS && obj.getScale().x > 2.0)) return true; else return false; });
 }
 //
-void Game::boardDisplay()			//ÏÔÊ¾ÑªÁ¿¡¢À×ºÍ·ÖÊı
+void Game::boardDisplay()			//æ˜¾ç¤ºè¡€é‡å’Œåˆ†æ•°
 {
 	mWindow.draw(front01);
 	mWindow.draw(front02);
 	mWindow.draw(front03);
 	mWindow.draw(front04);
-	// ÑªÁ¿
+
 	switch (remnant)
 	{
 	case 8:
@@ -3072,45 +3257,11 @@ void Game::boardDisplay()			//ÏÔÊ¾ÑªÁ¿¡¢À×ºÍ·ÖÊı
 	default:
 		;
 	}
+
 	lifeBoard.setScale(1.5, 1.5);
 	lifeBoard.setPosition(830, 300);
 	mWindow.draw(lifeBoard);
-	// À×
-	switch (bomb)
-	{
-	case 8:
-		bombBoard.setTextureRect(sf::IntRect(0, 0, 278, 36));
-		break;
-	case 7:
-		bombBoard.setTextureRect(sf::IntRect(0, 44, 278, 36));
-		break;
-	case 6:
-		bombBoard.setTextureRect(sf::IntRect(0, 44 * 2, 278, 36));
-		break;
-	case 5:
-		bombBoard.setTextureRect(sf::IntRect(0, 44 * 3, 278, 36));
-		break;
-	case 4:
-		bombBoard.setTextureRect(sf::IntRect(0, 44 * 4, 278, 36));
-		break;
-	case 3:
-		bombBoard.setTextureRect(sf::IntRect(0, 44 * 5, 278, 36));
-		break;
-	case 2:
-		bombBoard.setTextureRect(sf::IntRect(0, 44 * 6, 278, 36));
-		break;
-	case 1:
-		bombBoard.setTextureRect(sf::IntRect(0, 44 * 7, 278, 36));
-		break;
-	case 0:
-		bombBoard.setTextureRect(sf::IntRect(0, 44 * 8, 278, 36));
-	default:
-		;
-	}
-	bombBoard.setScale(1.5, 1.5);
-	bombBoard.setPosition(830, 350);
-	mWindow.draw(bombBoard);
-	// ·ÖÊı
+
 	static string scoreStr;
 	scoreStr = "Score:             ";
 	scoreStr += to_string(score);
@@ -3122,7 +3273,7 @@ void Game::boardDisplay()			//ÏÔÊ¾ÑªÁ¿¡¢À×ºÍ·ÖÊı
 	mWindow.draw(tempScore);
 }
 
-void Game::enemyCollisionProcessing(list<FO>::iterator it)		//´¦ÀíµĞÈË±»×Óµ¯»÷ÖĞµÄÊµÏÖ
+void Game::enemyCollisionProcessing(list<FO>::iterator it)		//å¤„ç†æ•Œäººè¢«å­å¼¹å‡»ä¸­çš„å®ç°
 {
 	for (list<sf::Sprite>::iterator itAmmo = playerBullets.begin(); itAmmo != playerBullets.end(); itAmmo++)
 	{
@@ -3133,16 +3284,15 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//´¦ÀíµĞÈË±»×Óµ¯»÷ÖĞ
 			if (it->HealthPoint <= 0)
 			{
 				it->phase--;
-				// ±¬À¶µãà¶
+				// çˆ†è“ç‚¹å–½
 				//puts("setBluePointByEnemyType(it);");
 				setBluePointByEnemyType(it);
 				if (it->phase <= 0)
-				{	// µĞ»ú»÷»Ù£¿
-					//printf("%d ", it->type);
+				{	// æ•Œæœºå‡»æ¯ï¼Ÿ
 					enemyCrash(it);
 				}
 				else
-				{	// µĞ»úÊÇ boss£¬½øÈëÁËÏÂÒ»½×¶Î£¿
+				{	// æ•Œæœºæ˜¯ bossï¼Œè¿›å…¥äº†ä¸‹ä¸€é˜¶æ®µï¼Ÿ
 					cardGet.play();
 					breakSound.play();
 					score += it->score;
@@ -3162,7 +3312,7 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//´¦ÀíµĞÈË±»×Óµ¯»÷ÖĞ
 	}
 }
 
-void Game::enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator itAmmo)		//´¦ÀíµĞÈË±»»÷ÖĞºóµÄĞ§¹û
+void Game::enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator itAmmo)		//å¤„ç†æ•Œäººè¢«å‡»ä¸­åçš„æ•ˆæœ
 {
 	score++;
 	it->HealthPoint -= player.damage;
@@ -3173,7 +3323,7 @@ void Game::enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator it
 	itAmmo->setPosition(-100, -100);
 }
 
-void Game::enemyCrash(list<FO>::iterator it)		//´¦ÀíµĞÈË±»»÷»Ù
+void Game::enemyCrash(list<FO>::iterator it)		//å¤„ç†æ•Œäººè¢«å‡»æ¯
 {
 	breakSound.play();
 	score += it->score;
@@ -3189,33 +3339,33 @@ void Game::enemyCrash(list<FO>::iterator it)		//´¦ÀíµĞÈË±»»÷»Ù
 	it->hero.setPosition(-100, -100);
 }
 
-void Game::bluePointCollected(list<FO>::iterator it)		//´¦ÀíÀ¶µã±»³Ôµô
+void Game::bluePointCollected(list<FO>::iterator it)		//å¤„ç†è“ç‚¹è¢«åƒæ‰
 {
 	bluePointCollectedSound.play();
-	// Íæ¼ÒÔ½¸ß£¬·ÖÊıÔ½´ó
+	// ç©å®¶è¶Šé«˜ï¼Œåˆ†æ•°è¶Šå¤§
 	score += 50 + static_cast<int>(100 * (1 - static_cast<double>(player.hero.getPosition().y - 40) / (850 - 40)));
 
 	it->hero.setPosition(-100, -100);
 }
 
-void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//ÉèÖÃºûµûµÄ¶¯»­Ö¡ºÍ·½Ïò
+void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//è®¾ç½®è´è¶çš„åŠ¨ç”»å¸§å’Œæ–¹å‘
 {
 	double t1 = it->theta - 0.5 * PI;
-	double t2 = it->theta - 1.5 * PI;			//¼ÆËã½Ç¶È
+	double t2 = it->theta - 1.5 * PI;			//è®¡ç®—è§’åº¦
 	int he = 320;
-	if (fabs(t1) < EPS || fabs(t2) * PI < EPS)			//ÅĞ¶Ïºûµû·½Ïò²¢ÉèÖÃ¶ÔÓ¦µÄÎÆÀí
+	if (fabs(t1) < EPS || fabs(t2) * PI < EPS)			//åˆ¤æ–­è´è¶æ–¹å‘å¹¶è®¾ç½®å¯¹åº”çš„çº¹ç†
 	{
 		it->hero.setTextureRect(sf::IntRect((int)(temp / 8 % 5) * it->width, he, it->width, it->height));
 	}
-	else if ((fabs(t1) > EPS &&  fabs(t1) < PI / 8.0) || (fabs(t2) > EPS &&  fabs(t2) < PI / 8.0))
+	else if ((fabs(t1) > EPS && fabs(t1) < PI / 8.0) || (fabs(t2) > EPS && fabs(t2) < PI / 8.0))
 	{
 		it->hero.setTextureRect(sf::IntRect(5 * it->width, he, it->width, it->height));
 	}
-	else if ((fabs(t1) > PI / 8.0 &&  fabs(t1) < PI / 4.0) || (fabs(t2) > PI / 8.0 &&  fabs(t2) < PI / 4.0))
+	else if ((fabs(t1) > PI / 8.0 && fabs(t1) < PI / 4.0) || (fabs(t2) > PI / 8.0 && fabs(t2) < PI / 4.0))
 	{
 		it->hero.setTextureRect(sf::IntRect(6 * it->width, he, it->width, it->height));
 	}
-	else if ((fabs(t1) > PI / 4.0 &&  fabs(t1) < PI / 2.0) || (fabs(t2) > PI / 4.0 &&  fabs(t2) < PI / 2.0))
+	else if ((fabs(t1) > PI / 4.0 && fabs(t1) < PI / 2.0) || (fabs(t2) > PI / 4.0 && fabs(t2) < PI / 2.0))
 	{
 		it->hero.setTextureRect(sf::IntRect(7 * it->width, he, it->width, it->height));
 	}
@@ -3234,7 +3384,7 @@ void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//ÉèÖÃºûµûµÄ
 	}
 }
 
-void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//ºÍÉÏÒ»¸öº¯ÊıÀàËÆ£¬µ«´¦ÀíµÄÊÇÖĞĞÍºûµû
+void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//å’Œä¸Šä¸€ä¸ªå‡½æ•°ç±»ä¼¼ï¼Œä½†å¤„ç†çš„æ˜¯ä¸­å‹è´è¶
 {
 	double t1 = it->theta - 0.5 * PI;
 	double t2 = it->theta - 1.5 * PI;
@@ -3243,11 +3393,11 @@ void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//ºÍÉÏÒ»¸öº¯
 	{
 		it->hero.setTextureRect(sf::IntRect((int)(temp / 8 % 5) * it->width, he, it->width, it->height));
 	}
-	else if ((fabs(t1) > EPS &&  fabs(t1) < PI / 8.0) || (fabs(t2) > EPS &&  fabs(t2) < PI / 8.0))
+	else if ((fabs(t1) > EPS && fabs(t1) < PI / 8.0) || (fabs(t2) > EPS && fabs(t2) < PI / 8.0))
 	{
 		it->hero.setTextureRect(sf::IntRect(5 * it->width, he, it->width, it->height));
 	}
-	else if ((fabs(t1) > PI / 8.0 &&  fabs(t1) < PI / 4.0) || (fabs(t2) > PI / 8.0 &&  fabs(t2) < PI / 4.0))
+	else if ((fabs(t1) > PI / 8.0 && fabs(t1) < PI / 4.0) || (fabs(t2) > PI / 8.0 && fabs(t2) < PI / 4.0))
 	{
 		it->hero.setTextureRect(sf::IntRect(6 * it->width, he, it->width, it->height));
 	}
@@ -3255,7 +3405,7 @@ void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//ºÍÉÏÒ»¸öº¯
 	{
 		it->hero.setTextureRect(sf::IntRect(7 * it->width, he + (temp / 8 % 3 - 2) * it->height, it->width, it->height));
 	}
-	
+
 	if ((it->theta > 0.5 * PI && it->theta < 1.5 * PI) || (it->theta < -0.5 * PI && it->theta > -1.5 * PI))
 	{
 		it->hero.setScale(-1.5, 1.5);
@@ -3266,7 +3416,7 @@ void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//ºÍÉÏÒ»¸öº¯
 	}
 }
 
-void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//ÓÃÓÚ´´½¨ºÍ·¢ÉäµĞÈËµÄ×Óµ¯
+void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//ç”¨äºåˆ›å»ºå’Œå‘å°„æ•Œäººçš„å­å¼¹
 {
 	enemyBulletSound.play();
 	FO Snipe;
@@ -3283,7 +3433,7 @@ void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//
 	enemyBullets.push_back(Snipe);
 }
 
-void Game::setRoundSnipe(list<FO>::iterator it, double speed)			//Ô²ĞÎµ¯²ÎÊıÉèÖÃ
+void Game::setRoundSnipe(list<FO>::iterator it, double speed)			//åœ†å½¢å¼¹å‚æ•°è®¾ç½®
 {
 	enemyBulletSound.play();
 	FO RoundSnipe;
@@ -3296,11 +3446,11 @@ void Game::setRoundSnipe(list<FO>::iterator it, double speed)			//Ô²ĞÎµ¯²ÎÊıÉèÖÃ
 	RoundSnipe.hero.setScale(1.5, 1.5);
 	RoundSnipe.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
 	RoundSnipe.theta = atan2(julgePoint.getPosition().y - RoundSnipe.hero.getPosition().y, julgePoint.getPosition().x - RoundSnipe.hero.getPosition().x);
-	
+
 	enemyBullets.push_back(RoundSnipe);
 }
 
-void Game::setMultiRoundSnipe(list<FO>::iterator it, double speed, int color)	
+void Game::setMultiRoundSnipe(list<FO>::iterator it, double speed, int color)
 {
 	enemyBulletSound.play();
 	FO MultiRoundSnipe;
@@ -3340,7 +3490,7 @@ void Game::setGeneralMultiSnipe(list<FO>::iterator it, double speed, int type, i
 	enemyBullets.push_back(GeneralMultiSnipe);
 }
 
-void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, double leftBoarder, double range)	//Ëæ»úµ¯ÉèÖÃ
+void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, double leftBoarder, double range)	//éšæœºå¼¹è®¾ç½®
 {
 	enemyBulletSound.play();
 	FO Random;
@@ -3357,7 +3507,7 @@ void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, d
 	enemyBullets.push_back(Random);
 }
 
-void Game::setRoundRandom(list<FO>::iterator it, double speed, int color, double leftBoarder, double range)	//Ëæ»úµ¯
+void Game::setRoundRandom(list<FO>::iterator it, double speed, int color, double leftBoarder, double range)	//éšæœºå¼¹
 {
 	enemyBulletSound.play();
 	FO RoundRandom;
@@ -3379,7 +3529,7 @@ void Game::setSharpRandom(list<FO>::iterator it, double speed)
 	enemyBulletSound.play();
 	FO SharpRandom;
 	SharpRandom.speed = speed;
-	SharpRandom.theta = rand()%360;
+	SharpRandom.theta = rand() % 360;
 	SharpRandom.width = 16;
 	SharpRandom.height = 16;
 	SharpRandom.hero.setTexture(allBullets1);
@@ -3387,7 +3537,7 @@ void Game::setSharpRandom(list<FO>::iterator it, double speed)
 	SharpRandom.hero.setOrigin(8, 8);
 	SharpRandom.hero.setScale(1.5, 1.5);
 	SharpRandom.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
-	SharpRandom.hero.setRotation(SharpRandom.theta  / PI * 180.0 + 90);
+	SharpRandom.hero.setRotation(SharpRandom.theta / PI * 180.0 + 90);
 	enemyBullets.push_back(SharpRandom);
 }
 
@@ -3416,7 +3566,7 @@ void Game::setSharpLine(list<FO>::iterator it, double speed)
 	enemyBullets.push_back(SharpLine);
 }
 
-void Game::setSharpFlower1(list<FO>::iterator it, double speed, int type, int color)		//¿ª»¨µ¯
+void Game::setSharpFlower1(list<FO>::iterator it, double speed, int type, int color)		//å¼€èŠ±å¼¹
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3473,7 +3623,7 @@ void Game::setSharpFlower1(list<FO>::iterator it, double speed, int type, int co
 	}
 }
 
-void Game::nonSpellCard1(list<FO>::iterator it)			//Ò»ÃæĞı×ªµ¯£¬·Ç·û£¬¾ßÌåÔ­Àí²Î¿¼THB wiki/bÕ¾
+void Game::nonSpellCard1(list<FO>::iterator it)			//ä¸€é¢æ—‹è½¬å¼¹ï¼Œéç¬¦ï¼Œå…·ä½“åŸç†å‚è€ƒTHB wiki/bç«™
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3494,7 +3644,7 @@ void Game::nonSpellCard1(list<FO>::iterator it)			//Ò»ÃæĞı×ªµ¯£¬·Ç·û£¬¾ßÌåÔ­Àí²Î
 	nonSpell1.hero.setOrigin(8, 8);
 	nonSpell1.hero.setScale(1.5, 1.5);
 	nonSpell1.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
-	
+
 	for (int i = 0; i < 5; i++)
 	{
 		nonSpell1.theta = theta1 + PI * 2 * i / 5.0;
@@ -3506,46 +3656,93 @@ void Game::nonSpellCard1(list<FO>::iterator it)			//Ò»ÃæĞı×ªµ¯£¬·Ç·û£¬¾ßÌåÔ­Àí²Î
 	temp += PI / 120.0;
 }
 
-void Game::nonSpellCard2(list<FO>::iterator it)		//2·Ç
+void Game::nonSpellCard2(list<FO>::iterator it)
 {
-	static double theta1 = PI / 6.0;
-	static double theta2 = PI / 2.0;
-	static double temp = 0.0;
+	static int time = 0;
 	static int cts = 0;
+	static double theta1 = PI / 6.0;
+	static double theta2 = 2 * PI / 3;
+	static double theta3 = PI / 6.0;
 	cts++;
-	if (fabs(temp - 2 * PI) < EPS)
-	{
-		temp = 0.0;
-	}
-	
 	FO nonSpell2;
-	nonSpell2.speed = 4.0;
+	nonSpell2.speed = 0.0;
 	nonSpell2.width = 16;
 	nonSpell2.height = 16;
 	nonSpell2.hero.setTexture(allBullets1);
-	nonSpell2.hero.setTextureRect(sf::IntRect(80, 128, 16, 16));
+	nonSpell2.hero.setTextureRect(sf::IntRect(48, 48, 16, 16));
 	nonSpell2.hero.setOrigin(8, 8);
 	nonSpell2.hero.setScale(1.5, 1.5);
 	nonSpell2.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
-	if (cts % 360 <= 120)
+
+	if (cts == 1)
 	{
-		if (cts % 24 == 0)
+		nonSpell2.speed = 0.0;
+		nonSpell2.hero.setPosition(300, 80);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 80);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(200, 200);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(700, 200);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(300, 300);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 300);
+		enemyBullets.push_back(nonSpell2);
+
+	}
+
+	if (cts % 10 == 0)
+	{
+		nonSpell2.speed = 4.0;
+		nonSpell2.hero.setPosition(300, 80);
+		nonSpell2.theta = theta1;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 80);
+		nonSpell2.theta = PI - theta1;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(200, 200);
+		nonSpell2.theta = theta2;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(700, 200);
+		nonSpell2.theta = PI - theta2;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(300, 320);
+		nonSpell2.theta = theta3;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 320);
+		nonSpell2.theta = PI - theta3;
+		enemyBullets.push_back(nonSpell2);
+
+		theta1 = theta1 + PI / 27;
+		theta2 = theta2 - PI / 54;
+		theta3 = theta3 + PI / 27;
+		if (theta1 >= 2 * PI)
 		{
-			enemyBulletSound.play();
-			nonSpell2.hero.setPosition((rand() % 300) * 2 + 100, (rand() % 100) + 60);
-			for (int i = 0; i < 72; i++)
-			{
-				nonSpell2.theta = theta1 + PI * 2 * i / 72.0;
-				nonSpell2.hero.setRotation(nonSpell2.theta / PI * 180.0 + 90);
-				enemyBullets.push_back(nonSpell2);
-			}
+			theta1 = 0.0;
+		}
+		if (theta2 <= PI / 6.0)
+		{
+			theta2 = 2 * PI / 3;
+		}
+		if (theta3 >= PI * 5 / 6)
+		{
+			theta3 = PI / 6.0;
 		}
 	}
-	theta1 += 0.04 * PI * sin(temp);
-	temp += PI / 240.0;
 }
 
-void Game::nonSpellCard3(list<FO>::iterator it)		//3·Ç
+void Game::nonSpellCard3(list<FO>::iterator it)		//3é
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3580,7 +3777,7 @@ void Game::nonSpellCard3(list<FO>::iterator it)		//3·Ç
 }
 
 
-void Game::nonSpellCard4(list<FO>::iterator it)				//4·Ç
+void Game::nonSpellCard4(list<FO>::iterator it)				//4é
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3622,7 +3819,7 @@ void Game::nonSpellCard4(list<FO>::iterator it)				//4·Ç
 	temp += PI / 240.0;
 }
 
-void Game::nonSpellCard5(list<FO>::iterator it)		//5·Ç
+void Game::nonSpellCard5(list<FO>::iterator it)		//5é
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3648,7 +3845,7 @@ void Game::nonSpellCard5(list<FO>::iterator it)		//5·Ç
 		if (cts % 8 == 0)
 		{
 			enemyBulletSound.play();
-			nonSpell5.hero.setPosition(it->hero.getPosition().x + 100*sin(cts/20.0), it->hero.getPosition().y + it->height);
+			nonSpell5.hero.setPosition(it->hero.getPosition().x + 100 * sin(cts / 20.0), it->hero.getPosition().y + it->height);
 			for (int i = 0; i < 36; i++)
 			{
 				nonSpell5.theta = theta1 + PI * 2 * i / 36.0;
@@ -3662,7 +3859,7 @@ void Game::nonSpellCard5(list<FO>::iterator it)		//5·Ç
 	temp += PI / 240.0;
 }
 
-void Game::nonSpellCard6(list<FO>::iterator it)			//6·Ç
+void Game::nonSpellCard6(list<FO>::iterator it)			//6é
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = -PI / 6.0;
@@ -3715,7 +3912,7 @@ void Game::nonSpellCard6(list<FO>::iterator it)			//6·Ç
 	temp += PI / 240.0;
 }
 
-void Game::spellCard1(list<FO>::iterator it)		//1·û
+void Game::spellCard1(list<FO>::iterator it)		//1ç¬¦
 {
 	static double range = 0, x1 = rand() % 200 + 250;
 	static int ct = 0, temp = 0;
@@ -3743,7 +3940,7 @@ void Game::spellCard1(list<FO>::iterator it)		//1·û
 		enemyBullets.push_back(Card1);
 	}
 
-	(ct % 2) ? range -= 16 : range += 16;			//ÅĞ¶ÏÊÇ·ñ¹ıµÍ£¬ÊµÏÖµ¯·´µÄĞ§¹û
+	(ct % 2) ? range -= 16 : range += 16;			//åˆ¤æ–­æ˜¯å¦è¿‡ä½ï¼Œå®ç°å¼¹åçš„æ•ˆæœ
 	temp++;
 	if (range >= 350 || range <= 0)
 	{
@@ -3751,7 +3948,7 @@ void Game::spellCard1(list<FO>::iterator it)		//1·û
 	}
 }
 
-void Game::spellCard2(list<FO>::iterator it)			//2·û
+void Game::spellCard2(list<FO>::iterator it)			//2ç¬¦
 {
 	double speed = 4;
 	int type = 4, color = 0;
@@ -3809,7 +4006,7 @@ void Game::spellCard2(list<FO>::iterator it)			//2·û
 	}
 }
 
-void Game::spellCard3(list<FO>::iterator it)			//3·û
+void Game::spellCard3(list<FO>::iterator it)			//3ç¬¦
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3820,7 +4017,7 @@ void Game::spellCard3(list<FO>::iterator it)			//3·û
 	{
 		temp = 0.0;
 	}
-	
+
 	FO Card3;
 	Card3.speed = 2.0;
 	Card3.width = 16;
@@ -3846,7 +4043,7 @@ void Game::spellCard3(list<FO>::iterator it)			//3·û
 	temp += PI / 240.0;
 }
 
-void Game::spellCard4(list<FO>::iterator it)			//4·û
+void Game::spellCard4(list<FO>::iterator it)			//4ç¬¦
 {
 	enemyBulletSound.play();
 	FO Card4;
@@ -3855,7 +4052,7 @@ void Game::spellCard4(list<FO>::iterator it)			//4·û
 	Card4.width = 16;
 	Card4.height = 16;
 	Card4.hero.setTexture(allBullets1);
-	Card4.hero.setTextureRect(sf::IntRect(rand()%15 * 16, 4 * 16, 16, 16));
+	Card4.hero.setTextureRect(sf::IntRect(rand() % 15 * 16, 4 * 16, 16, 16));
 	Card4.hero.setOrigin(8, 8);
 	Card4.hero.setScale(1.5, 1.5);
 	Card4.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
@@ -3866,7 +4063,7 @@ void Game::spellCard4(list<FO>::iterator it)			//4·û
 	enemyBullets.push_back(Card4);
 }
 
-void Game::spellCard5(list<FO>::iterator it)				//5·û
+void Game::spellCard5(list<FO>::iterator it)				//5ç¬¦
 {
 	static double theta1 = PI / 2.0;
 	static double theta2 = PI / 2.0;
@@ -3920,7 +4117,7 @@ void Game::spellCard5(list<FO>::iterator it)				//5·û
 	temp += PI / 240.0;
 }
 
-void Game::spellCard6(list<FO>::iterator it)				//6·û
+void Game::spellCard6(list<FO>::iterator it)				//6ç¬¦
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3952,33 +4149,33 @@ void Game::spellCard6(list<FO>::iterator it)				//6·û
 			enemyBullets.push_back(Card6);
 		}
 	}
-	if ((cts % (2*cc)) < cc)
+	if ((cts % (2 * cc)) < cc)
 	{
 		if (cts % 19 == 0)
 		{
 			Card6.hero.setTextureRect(sf::IntRect(224, 96, 32, 32));
 			Card6.speed = 8.0;
 			enemyBulletSound.play();
-			Card6.hero.setPosition(it->hero.getPosition().x+100, it->hero.getPosition().y + it->height);
+			Card6.hero.setPosition(it->hero.getPosition().x + 100, it->hero.getPosition().y + it->height);
 			Card6.theta = atan2(julgePoint.getPosition().y - Card6.hero.getPosition().y, julgePoint.getPosition().x - Card6.hero.getPosition().x);
 			Card6.hero.setRotation(Card6.theta / PI * 180.0 + 90);
 			enemyBullets.push_back(Card6);
-			Card6.hero.setPosition(it->hero.getPosition().x-100, it->hero.getPosition().y + it->height);
+			Card6.hero.setPosition(it->hero.getPosition().x - 100, it->hero.getPosition().y + it->height);
 			Card6.theta = atan2(julgePoint.getPosition().y - Card6.hero.getPosition().y, julgePoint.getPosition().x - Card6.hero.getPosition().x);
 			Card6.hero.setRotation(Card6.theta / PI * 180.0 + 90);
 			enemyBullets.push_back(Card6);
 			if (cc <= 300)
 			{
 				cc++;
-			}	
+			}
 		}
 	}
-	
+
 	theta1 += 0.04 * PI * sin(temp);
 	temp += PI / 240.0;
 }
 
-void Game::processTaps()		//Íæ¼ÒÊäÈë´¦Àí
+void Game::processTaps()		//ç©å®¶è¾“å…¥å¤„ç†
 {
 	sf::Event event;
 	while (mWindow.pollEvent(event))
@@ -3986,6 +4183,14 @@ void Game::processTaps()		//Íæ¼ÒÊäÈë´¦Àí
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
+			if (event.key.code == sf::Keyboard::Escape) {  // é¸å¤‰ç¬…æµœå’µscé–¿î‡†ç´å¨“å‘Šå™é†å‚šä» 
+				isPaused = !isPaused; // é’å›¨å´²é†å‚šä» é˜èˆµâ‚¬?
+				printf("ESC\n");
+				if (mIsMovingUp == true) mIsMovingUp = false;
+				if (mIsMovingDown == true) mIsMovingDown = false;
+				if (mIsMovingLeft == true) mIsMovingLeft = false;
+				if (mIsMovingRight == true) mIsMovingRight = false;
+			}
 			playerInput(event.key.code, true);
 			break;
 		case sf::Event::KeyReleased:
@@ -4000,7 +4205,8 @@ void Game::processTaps()		//Íæ¼ÒÊäÈë´¦Àí
 	}
 }
 
-void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//¶ÁÈ¡ÊäÈë
+
+void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//è¯»å–è¾“å…¥
 {
 	if (key == sf::Keyboard::Up)
 		mIsMovingUp = isPressed;
@@ -4014,9 +4220,7 @@ void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//¶ÁÈ¡ÊäÈë
 		mIsFire = isPressed;
 	else if (key == sf::Keyboard::LShift)
 		mIsGrazing = isPressed;
-	else if (key == sf::Keyboard::X)
-		mIsUsingBomb = isPressed;
-	player.speed = (mIsGrazing) ? 3.0 : 10.0;
+	player.speed = (mIsGrazing) ? 3.0 : 7.5;
 }
 /*
 bool isOutOfBoard(sf::Sprite value)
@@ -4040,7 +4244,7 @@ bool isFOOutOfBoard(const FO value)
 }
 */
 
-void Game::mainProcessing()			//´¦ÀíÒÆ¶¯
+void Game::mainProcessing()			//å¤„ç†ç§»åŠ¨
 {
 	if (mIsMovingUp == true && player.hero.getPosition().y > 40)
 	{
@@ -4069,8 +4273,8 @@ void Game::mainProcessing()			//´¦ÀíÒÆ¶¯
 		player.velocity.y = player.speed * sin(player.theta);
 		player.hero.move(player.velocity);
 	}*/
-	
-	if (mIsFire)			//´¦ÀíÊÇ·ñ¿ª»ğ£¬ÉèÖÃ×´Ì¬
+
+	if (mIsFire)			//å¤„ç†æ˜¯å¦å¼€ç«ï¼Œè®¾ç½®çŠ¶æ€
 	{
 		if (playerBulletSound.getStatus() != playerBulletSound.Playing)
 		{
@@ -4078,10 +4282,10 @@ void Game::mainProcessing()			//´¦ÀíÒÆ¶¯
 		}
 	}
 
-	// ÉÏÏßÁË£¬³¡ÉÏËùÓĞÀ¶µã£¨11035£©±ä³É¡°»á×·×ÙÍæ¼ÒµÄÀ¶µã¡±£¨11036£©
+	// ä¸Šçº¿äº†ï¼Œåœºä¸Šæ‰€æœ‰è“ç‚¹ï¼ˆ11035ï¼‰å˜æˆâ€œä¼šè¿½è¸ªç©å®¶çš„è“ç‚¹â€ï¼ˆ11036ï¼‰
 	if (player.hero.getPosition().y < 200)
 	{
-	    for (FO & bp : bluePoints)
+		for (FO& bp : bluePoints)
 		{
 			if (bp.type != 11036)
 			{
@@ -4091,18 +4295,18 @@ void Game::mainProcessing()			//´¦ÀíÒÆ¶¯
 		}
 	}
 
-	// ¶Ô»á×·×ÙÍæ¼ÒµÄÀ¶µã²»¶ÏµØÉèÖÃ½Ç¶È
-	for (FO & bp : bluePoints)
+	// å¯¹ä¼šè¿½è¸ªç©å®¶çš„è“ç‚¹ä¸æ–­åœ°è®¾ç½®è§’åº¦
+	for (FO& bp : bluePoints)
 	{
-	    if (bp.type == 11036)
+		if (bp.type == 11036)
 		{
-		    bp.theta = atan2(julgePoint.getPosition().y - bp.hero.getPosition().y, julgePoint.getPosition().x - bp.hero.getPosition().x);
+			bp.theta = atan2(julgePoint.getPosition().y - bp.hero.getPosition().y, julgePoint.getPosition().x - bp.hero.getPosition().x);
 		}
 	}
 }
 
-bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//¼ì²â¾«ÁéÅö×²
-{								
+bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//æ£€æµ‹ç²¾çµç¢°æ’
+{
 	sf::FloatRect f1 = obj1.getGlobalBounds();
 	sf::FloatRect f2 = obj2.getGlobalBounds();
 	if (f1.intersects(f2))
@@ -4112,13 +4316,13 @@ bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//¼ì²â¾«ÁéÅö×²
 	return false;
 }
 
-pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		// ¼ì²âÍæ¼ÒÊÇ·ñÓë×Óµ¯/µĞ»ú/À¶µãÅö×²
+pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		// æ£€æµ‹ç©å®¶æ˜¯å¦ä¸å­å¼¹/æ•Œæœº/è“ç‚¹ç¢°æ’
 {
 	sf::Vector2f JP = julgePoint.getPosition();
 	JP.x -= 8;
 	JP.y -= 8;
 
-	// µĞ»ú×Óµ¯
+	// æ•Œæœºå­å¼¹
 	for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
 	{
 		sf::FloatRect f = it->hero.getGlobalBounds();
@@ -4127,16 +4331,16 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		f.height /= 2.0;
 		if (f.contains(JP))
 		{
-			return {PlayerCollisionResult::EnemyBullet, it};
+			return { PlayerCollisionResult::EnemyBullet, it };
 		}
 	}
 
-	// µĞ»úÌåÊõ
+	// æ•Œæœºä½“æœ¯
 	for (list<FO>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
 		if (it->type == 0)
 		{
-			continue;  // º¢×ÓÃÇ£¬ÎÒ²»Ïë±»¹ı³¡¶¯»­ÌåÊõ
+			continue;  // å­©å­ä»¬ï¼Œæˆ‘ä¸æƒ³è¢«è¿‡åœºåŠ¨ç”»ä½“æœ¯
 		}
 
 		sf::FloatRect f = it->hero.getGlobalBounds();
@@ -4145,15 +4349,15 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		f.height /= 2.0;
 		if (f.contains(JP))
 		{
-			return {PlayerCollisionResult::EnemyBody, it};
+			return { PlayerCollisionResult::EnemyBody, it };
 		}
 	}
 
-	// À¶µã
+	// è“ç‚¹
 	for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
 	{
 		sf::FloatRect f = it->hero.getGlobalBounds();
-		
+
 		f.width /= 2.0;
 		f.height /= 2.0;
 
@@ -4164,17 +4368,17 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 
 		if (f.intersects(rectFromJP))
 		{
-			return {PlayerCollisionResult::BluePoint, it};
+			return { PlayerCollisionResult::BluePoint, it };
 		}
 	}
 
-	// Ë³±ã£¬ÔÚ°´ Shift Ê±£¬ÊÕÀ¶µãµÄ·¶Î§´óÒ»Ğ©£¨²»ÊÇÁ¢¿ÌÊÕ£¬¶øÊÇÊ¹À¶µã±äÎª¡°×·×ÙÍæ¼Ò¡±µÄ×´Ì¬¡££©
+	// é¡ºä¾¿ï¼Œåœ¨æŒ‰ Shift æ—¶ï¼Œæ”¶è“ç‚¹çš„èŒƒå›´å¤§ä¸€äº›ï¼ˆä¸æ˜¯ç«‹åˆ»æ”¶ï¼Œè€Œæ˜¯ä½¿è“ç‚¹å˜ä¸ºâ€œè¿½è¸ªç©å®¶â€çš„çŠ¶æ€ã€‚ï¼‰
 	if (mIsGrazing)
 	{
 		for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
 		{
 			sf::FloatRect f = it->hero.getGlobalBounds();
-		
+
 			f.width /= 2.0;
 			f.height /= 2.0;
 
@@ -4183,8 +4387,8 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 			rectFromJP.left -= player.width / 2;
 			rectFromJP.top -= player.height / 2;
 
-			rectFromJP.left -= 32, rectFromJP.width  += 64;
-			rectFromJP.top  -= 32, rectFromJP.height += 64;
+			rectFromJP.left -= 32, rectFromJP.width += 64;
+			rectFromJP.top -= 32, rectFromJP.height += 64;
 
 			if (f.intersects(rectFromJP))
 			{
@@ -4197,7 +4401,7 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		}
 	}
 
-	return {PlayerCollisionResult::NoCollision, enemyBullets.end()}; // Ã»ÓĞ×²µ½, ÕâÊ±ÓÃ enemyBullets.end() À´³äµ±¡°×²ÉÏµÄÎïÆ·¡±
+	return { PlayerCollisionResult::NoCollision, enemyBullets.end() }; // æ²¡æœ‰æ’åˆ°, è¿™æ—¶ç”¨ enemyBullets.end() æ¥å……å½“â€œæ’ä¸Šçš„ç‰©å“â€
 }
 /*
 void Game::GameOver()
@@ -4207,61 +4411,61 @@ void Game::GameOver()
 */
 void Game::GameOver()
 {
-    // ÔİÍ£ÓÎÏ·×´Ì¬
-    sf::Clock pauseClock;
-    sf::Time pauseDuration = sf::seconds(5); // ÉèÖÃÔİÍ£Ê±¼äÎª 10 Ãë
+	// æš‚åœæ¸¸æˆçŠ¶æ€
+	sf::Clock pauseClock;
+	sf::Time pauseDuration = sf::seconds(5); // è®¾ç½®æš‚åœæ—¶é—´ä¸º 10 ç§’
 
-    // ÏÔÊ¾·ÖÊıµÄµ¯´°
-    sf::RenderWindow gameOverWindow(sf::VideoMode(400, 300), "Game Over");
+	// æ˜¾ç¤ºåˆ†æ•°çš„å¼¹çª—
+	sf::RenderWindow gameOverWindow(sf::VideoMode(400, 300), "Game Over");
 
-    // ´´½¨ÏÔÊ¾·ÖÊıµÄÎÄ±¾
-    sf::Text scoreText;
-    scoreText.setFont(font); // Ê¹ÓÃÒÑ¼ÓÔØµÄ×ÖÌå
-    scoreText.setString("Score: " + std::to_string(score)); // ½«µÃ·Ö×ª»¯Îª×Ö·û´®
-    scoreText.setCharacterSize(24);
-    scoreText.setFillColor(sf::Color::Black);
-    scoreText.setPosition(50, 50);
+	// åˆ›å»ºæ˜¾ç¤ºåˆ†æ•°çš„æ–‡æœ¬
+	sf::Text scoreText;
+	scoreText.setFont(font); // ä½¿ç”¨å·²åŠ è½½çš„å­—ä½“
+	scoreText.setString("Score: " + std::to_string(score)); // å°†å¾—åˆ†è½¬åŒ–ä¸ºå­—ç¬¦ä¸²
+	scoreText.setCharacterSize(24);
+	scoreText.setFillColor(sf::Color::Black);
+	scoreText.setPosition(50, 50);
 
 	/*
 	sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("./res/sl_pl01.png")) // Ìæ»»ÎªÍ¼Æ¬Â·¾¶
-    {
-        // ´¦Àí¼ÓÔØÊ§°ÜÇé¿ö
-        puts("Failed to load background image");
-        return;
-    }
+	if (!backgroundTexture.loadFromFile("./res/sl_pl01.png")) // æ›¿æ¢ä¸ºå›¾ç‰‡è·¯å¾„
+	{
+		// å¤„ç†åŠ è½½å¤±è´¥æƒ…å†µ
+		puts("Failed to load background image");
+		return;
+	}
 
 	sf::Sprite backgroundSprite;
-    backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setPosition(-50, 0); // ÉèÖÃÍ¼Æ¬Î»ÖÃ
-    backgroundSprite.setScale(
-        gameOverWindow.getSize().x / backgroundSprite.getLocalBounds().width,
-        gameOverWindow.getSize().y / backgroundSprite.getLocalBounds().height
-    ); // ÊÊÓ¦´°¿Ú´óĞ¡
+	backgroundSprite.setTexture(backgroundTexture);
+	backgroundSprite.setPosition(-50, 0); // è®¾ç½®å›¾ç‰‡ä½ç½®
+	backgroundSprite.setScale(
+		gameOverWindow.getSize().x / backgroundSprite.getLocalBounds().width,
+		gameOverWindow.getSize().y / backgroundSprite.getLocalBounds().height
+	); // é€‚åº”çª—å£å¤§å°
 
 	*/
 
-    // Í£Ö¹ÓÎÏ·¸üĞÂÑ­»·
-    while (pauseClock.getElapsedTime() < pauseDuration)
-    {
-        sf::Event event;
-        while (gameOverWindow.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                gameOverWindow.close();
-            }
-        }
+	// åœæ­¢æ¸¸æˆæ›´æ–°å¾ªç¯
+	while (pauseClock.getElapsedTime() < pauseDuration)
+	{
+		sf::Event event;
+		while (gameOverWindow.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				gameOverWindow.close();
+			}
+		}
 
-        // äÖÈ¾ÔİÍ£´°¿ÚÄÚÈİ
-        gameOverWindow.clear(sf::Color::White);
+		// æ¸²æŸ“æš‚åœçª—å£å†…å®¹
+		gameOverWindow.clear(sf::Color::White);
 		//gameOverWindow.draw(backgroundSprite);
-        gameOverWindow.draw(scoreText);
-        gameOverWindow.display();
-    }
+		gameOverWindow.draw(scoreText);
+		gameOverWindow.display();
+	}
 
-    // ¹Ø±Õµ¯´°ºó¼ÌĞøÔËĞĞÓÎÏ·´°¿Ú
-    exit(0);
+	// å…³é—­å¼¹çª—åç»§ç»­è¿è¡Œæ¸¸æˆçª—å£
+	exit(0);
 }
 
 

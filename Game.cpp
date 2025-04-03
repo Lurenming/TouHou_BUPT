@@ -971,7 +971,7 @@ void Game::options()
 				{
 					if (selectedItem == 4)
 					{
-						selectSound.play();
+						cancelSound.play();
 						return;
 					}
 				}
@@ -980,7 +980,7 @@ void Game::options()
 				{
 					if (selectedItem == 4)
 					{
-						selectSound.play();
+						cancelSound.play();
 						return;
 					}
 					else

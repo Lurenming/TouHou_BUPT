@@ -129,11 +129,12 @@ private:
 	sf::Texture bombPieces;
 	sf::Texture title,optionsBg,optionsTitle;
 	sf::Texture bluePointTexture;
+	sf::Texture gameClear;
 	sf::Sprite loadingUI, loadingUISub, back[6], backEff[6], front01, front02, front03, front04;
 	sf::Sprite julgePoint, playerAmmo, AmmoEff, deathEff, lifeBoard;
 	sf::Sprite bombBoard;
-	sf::Sprite titleBackground,optionsBackground,optionsTitleUI;
-	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM;
+	sf::Sprite titleBackground,optionsBackground,optionsTitleUI,gameClearBackground;
+	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM,gameClearMusic;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
 	sf::SoundBuffer selectSoundBuffer, okSoundBuffer, cancelSoundBuffer;

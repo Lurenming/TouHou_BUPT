@@ -44,6 +44,7 @@ Game::Game()
 
 	srand((unsigned)time(NULL));
 	remnant = 3;
+	bomb = 2;
 	score = 0;
 	clockForInvulnerability.restart();
 	mIsMovingUp = false;
@@ -52,6 +53,7 @@ Game::Game()
 	mIsMovingRight = false;
 	mIsGrazing = false;
 	mIsFire = false;
+	mIsUsingBomb = false;
 
 	loadPrimeFrame();
 
@@ -186,7 +188,11 @@ void Game::loadBackgrounds()		//加载背景纹理
 		puts("Error: Load lifePieces failed!");			//生命条加载
 	}
 	lifeBoard.setTexture(lifePieces);
-
+	if (!bombPieces.loadFromFile("./res/bombPieces.png"))
+	{
+		puts("Error: load bombPieces failed!");
+	}
+	bombBoard.setTexture(bombPieces);
 	if (!Title1.loadFromFile("./res/stg01logo.png"))
 	{
 		puts("Error: Load stg01logo failed!");			//logo加载
@@ -432,8 +438,12 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 	{
 		puts("Error: Open se_item00.wav failed!");
 	}
-
-
+	bombSound.setBuffer(bombSoundBuffer);
+	bombSound.setVolume(100);
+	if (!bombSoundBuffer.loadFromFile("./res/se_bomb00.wav"))			//加载雷音效
+	{
+		puts("Error: Open se_bomb00.wav failed!");
+	}
 	breakSound.setBuffer(breakSoundBuffer);							//加载死亡音效
 	breakSound.setVolume(50);
 	if (!playerDeadSoundBuffer.loadFromFile("./res/se_pldead00.wav"))
@@ -813,9 +823,9 @@ void Game::options()
 	// 音量和音效的值
 	static int volume = 10;
 	static int sfx = 10;
-	// 调整残机和雷（雷没有实现）
+	// 调整残机和雷
 	static int lifeDisplay = remnant;
-	static int bombDisplay = 2;
+	static int bombDisplay = bomb;
 
 	int selectedItem = 0;
 	loadOptionsUI();
@@ -882,6 +892,7 @@ void Game::options()
 						playerBulletSound.setVolume(sfx * 5);
 						enemyBulletSound.setVolume(sfx * 1.5);
 						bluePointCollectedSound.setVolume(sfx * 5);
+						bombSound.setVolume(sfx * 10);
 						breakSound.setVolume(sfx * 5);
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
@@ -903,6 +914,8 @@ void Game::options()
 						if (bombDisplay > 0)
 						{
 							bombDisplay--;
+							bomb = bombDisplay;
+							printf("%lld\n", bomb);
 						}
 					}
 				}
@@ -949,6 +962,8 @@ void Game::options()
 						if (bombDisplay < MAX_BOMB)
 						{
 							bombDisplay++;
+							bomb = bombDisplay;
+							printf("%lld\n", bomb);
 						}
 					}
 				}
@@ -2135,7 +2150,7 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为boss
 		}
 
 		enemyCollisionProcessing(it);
-		
+		//enemyBombProcessing(it);
 		enemiesPushToDraw(it);
 	}
 	if (i1 > 60 * 60)
@@ -2758,6 +2773,8 @@ void Game::frameDisplay()//ammo->front->player->jpoint
 
 	playerAmmoDisplay();
 
+	playerBombDisplay();
+
 	effsDisplay();
 	
 	playerDisplay();
@@ -2828,6 +2845,66 @@ void Game::playerAmmoDisplay()			//处理自机的子弹
 		mWindow.draw(*it);
 	}
 }
+//
+void Game::playerBombDisplay()			// 处理角色的雷
+{
+	if (mIsUsingBomb)
+	{
+		if (bomb > 0)
+		{
+			bombSound.play();
+			printf("bomb\n");
+			bomb--;
+			// 暂时的效果：消除全屏子弹 & 暂时无敌 & 全屏伤害
+			clockForInvulnerability.restart();
+			for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
+			{
+				enemyCrash(it);
+			}
+			//for (list<FO>::iterator itEnemy = enemies.begin(); itEnemy != enemies.end(); itEnemy++)
+			//{
+			//	printf("%d ", itEnemy->type);
+			//	enemyBombProcessing(itEnemy);
+			//}
+		}
+		// SFML只能判定“键盘摁下”，而雷的功能需要”键盘摁下仅触发一次“
+		mIsUsingBomb = false;
+	}
+}
+//void Game::enemyBombProcessing(list<FO>::iterator it)		// 处理使用雷时的敌人受击判定，复用被弹判定的代码
+//{
+//	it->HealthPoint -= 10000;
+//	score += 10;
+//	printf("%d ", it->type);
+//	if (it->HealthPoint <= 0)
+//	{
+//		it->phase--;
+//		// 爆蓝点喽
+//		//puts("setBluePointByEnemyType(it);");
+//		setBluePointByEnemyType(it);
+//		if (it->phase <= 0)
+//		{	// 敌机击毁？
+//			enemyCrash(it);
+//		}
+//		else
+//		{	// 敌机是 boss，进入了下一阶段？
+//			cardGet.play();
+//			breakSound.play();
+//			score += it->score;
+//			deathEff.setTexture(deathCircle);
+//			deathEff.setTextureRect(sf::IntRect(64, 0, 64, 64));
+//			deathEff.setOrigin(32, 32);
+//			deathEff.setPosition(it->hero.getPosition().x + it->width * 0.25, it->hero.getPosition().y + it->height * 0.25);
+//			deathEff.setScale(0.1, 0.1);
+//			deathEffs.push_back(deathEff);
+//			deathEff.setScale(0.3, 0.06);
+//			deathEff.setRotation(rand() % 360);
+//			deathEffs.push_back(deathEff);
+//			it->HealthPoint += 1500;
+//		}
+//	}
+//
+//}
 //
 void Game::enemiesDisplay()		//敌人精灵绘制
 {
@@ -2957,13 +3034,13 @@ void Game::effsDisplay()		//处理子弹效果和死亡效果
 	deathEffs.remove_if([](sf::Sprite obj) { if (obj.getScale().x > 2.3 || (obj.getRotation() < EPS && obj.getScale().x > 2.0)) return true; else return false; });
 }
 //
-void Game::boardDisplay()			//显示血量和分数
+void Game::boardDisplay()			//显示血量、雷和分数
 {
 	mWindow.draw(front01);
 	mWindow.draw(front02);
 	mWindow.draw(front03);
 	mWindow.draw(front04);
-
+	// 血量
 	switch (remnant)
 	{
 	case 8:
@@ -2995,11 +3072,45 @@ void Game::boardDisplay()			//显示血量和分数
 	default:
 		;
 	}
-	
 	lifeBoard.setScale(1.5, 1.5);
 	lifeBoard.setPosition(830, 300);
 	mWindow.draw(lifeBoard);
-
+	// 雷
+	switch (bomb)
+	{
+	case 8:
+		bombBoard.setTextureRect(sf::IntRect(0, 0, 278, 36));
+		break;
+	case 7:
+		bombBoard.setTextureRect(sf::IntRect(0, 44, 278, 36));
+		break;
+	case 6:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 2, 278, 36));
+		break;
+	case 5:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 3, 278, 36));
+		break;
+	case 4:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 4, 278, 36));
+		break;
+	case 3:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 5, 278, 36));
+		break;
+	case 2:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 6, 278, 36));
+		break;
+	case 1:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 7, 278, 36));
+		break;
+	case 0:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 8, 278, 36));
+	default:
+		;
+	}
+	bombBoard.setScale(1.5, 1.5);
+	bombBoard.setPosition(830, 350);
+	mWindow.draw(bombBoard);
+	// 分数
 	static string scoreStr;
 	scoreStr = "Score:             ";
 	scoreStr += to_string(score);
@@ -3027,6 +3138,7 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//处理敌人被子弹击中
 				setBluePointByEnemyType(it);
 				if (it->phase <= 0)
 				{	// 敌机击毁？
+					//printf("%d ", it->type);
 					enemyCrash(it);
 				}
 				else
@@ -3902,6 +4014,8 @@ void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//读取输入
 		mIsFire = isPressed;
 	else if (key == sf::Keyboard::LShift)
 		mIsGrazing = isPressed;
+	else if (key == sf::Keyboard::X)
+		mIsUsingBomb = isPressed;
 	player.speed = (mIsGrazing) ? 3.0 : 10.0;
 }
 /*

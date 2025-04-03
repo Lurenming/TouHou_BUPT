@@ -60,6 +60,7 @@ public:
 	void frameDisplay();
 	void backgroundDisplay();
 	void playerAmmoDisplay();
+	void playerBombDisplay();
 	void enemiesDisplay();
 	//void enemyBulletsPreDisplay();
 	void enemyBulletsDisplay();
@@ -67,6 +68,7 @@ public:
 	void effsDisplay();
 	void boardDisplay();
 	void enemyCollisionProcessing(list<FO>::iterator it);
+	//void enemyBombProcessing(list <FO>::iterator it);
 	void enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator itAmmo);
 	void enemyCrash(list<FO>::iterator it);
 	void bluePointCollected(list<FO>::iterator it);
@@ -118,26 +120,30 @@ public:
 
 private:
 	Game* self = this;
-	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight, mIsGrazing, mIsFire;
+	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight, mIsGrazing, mIsFire, mIsUsingBomb;
 	sf::RenderWindow mWindow;
 	sf::Font font;
 	sf::Text text, tempScore;
 	sf::Texture loading, nowLoading, stageSelect, front00, julgePointArray, Title1, Title2, allBullets1, allBullets2, whiteSpark;
 	sf::Texture bullets, buffetsEff, deathCircle, bg1, bgEff1, bg2, bgEff2, bg3, bgEff3, Enemy1, Enemy2, Enemy3, lifePieces, magicSquare;
-	sf::Texture title,optionsBg,optionsTitle, gameClear;
+	sf::Texture bombPieces;
+	sf::Texture title,optionsBg,optionsTitle;
 	sf::Texture bluePointTexture;
 	sf::Sprite loadingUI, loadingUISub, back[6], backEff[6], front01, front02, front03, front04;
 	sf::Sprite julgePoint, playerAmmo, AmmoEff, deathEff, lifeBoard;
-	sf::Sprite titleBackground,optionsBackground,optionsTitleUI, gameClearBackground;
-	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM, gameClearMusic;
+	sf::Sprite bombBoard;
+	sf::Sprite titleBackground,optionsBackground,optionsTitleUI;
+	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
 	sf::SoundBuffer selectSoundBuffer, okSoundBuffer, cancelSoundBuffer;
 	sf::SoundBuffer bluePointCollectedSoundBuffer;
+	sf::SoundBuffer bombSoundBuffer;
 	sf::Sound playerBulletSound, playerBulletSound1, enemyBulletSound, collisionSound, spellCardSound, buttomSound, SCAnounce, cardGet;
 	sf::Sound breakSound, playerDeadSound;
 	sf::Sound selectSound,okSound,cancelSound;
 	sf::Sound bluePointCollectedSound;
+	sf::Sound bombSound;
 	sf::Clock clock;
 	sf::Clock clockForInvulnerability;
 	FO player;
@@ -146,6 +152,6 @@ private:
 	list<FO> enemies;
 	list<sf::Sprite> playerBulletsEffs, backgroundEffs;
 	list<FO> bluePoints;
-	long long remnant, score;
+	long long remnant, score, bomb;
 };
 

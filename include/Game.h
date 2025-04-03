@@ -30,6 +30,10 @@ public:
 	void loadEnemy();
 	void loadMusicAndSounds();
 	void loadOptionsUI();
+	sf::Texture captureScreenshot();
+	void displayPauseMenu();
+	void restartGame();
+	void restartAllWaves();
 	void run();
 	void menu();
 	void gameClearFunction();
@@ -119,20 +123,20 @@ public:
 
 private:
 	Game* self = this;
-	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight, mIsGrazing, mIsFire, mIsUsingBomb;
+	bool mIsMovingUp, mIsMovingDown, mIsMovingLeft, mIsMovingRight, mIsGrazing, mIsFire, mIsUsingBomb, isPaused, restartI1s;
 	sf::RenderWindow mWindow;
 	sf::Font font;
 	sf::Text text, tempScore;
 	sf::Texture loading, nowLoading, stageSelect, front00, julgePointArray, Title1, Title2, allBullets1, allBullets2, whiteSpark;
 	sf::Texture bullets, buffetsEff, deathCircle, bg1, bgEff1, bg2, bgEff2, bg3, bgEff3, Enemy1, Enemy2, Enemy3, lifePieces, magicSquare;
 	sf::Texture bombPieces;
-	sf::Texture title,optionsBg,optionsTitle,gameClear;
+	sf::Texture title,optionsBg,optionsTitle,gameClear,pausedBackground;
 	sf::Texture bluePointTexture;
 	sf::Sprite loadingUI, loadingUISub, back[6], backEff[6], front01, front02, front03, front04;
 	sf::Sprite julgePoint, playerAmmo, AmmoEff, deathEff, lifeBoard;
 	sf::Sprite bombBoard;
 	sf::Sprite titleBackground,optionsBackground,optionsTitleUI,gameClearBackground;
-	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM,gameClearMusic;
+	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM,gameClearMusic, *nowMusic;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
 	sf::SoundBuffer selectSoundBuffer, okSoundBuffer, cancelSoundBuffer;
@@ -143,6 +147,7 @@ private:
 	sf::Sound selectSound,okSound,cancelSound;
 	sf::Sound bluePointCollectedSound;
 	sf::Sound bombSound;
+	sf::Time elapsed1;
 	sf::Clock clock;
 	sf::Clock clockForInvulnerability;
 	FO player;
@@ -151,6 +156,7 @@ private:
 	list<FO> enemies;
 	list<sf::Sprite> playerBulletsEffs, backgroundEffs;
 	list<FO> bluePoints;
-	long long remnant, score, bomb;
+	long long remnant, score, bomb, lifeDisplay, bombDisplay, secCount, curTime;
+	int evts[20] = { 0 };
 };
 

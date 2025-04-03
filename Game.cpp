@@ -375,13 +375,13 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 	{
 		puts("Error: Open menu.wav failed!");
 	}
-	if (!stage1BGM.openFromFile("./res/stage1.wav"))
+	if (!stage1BGM.openFromFile("./res/bosshe.mp3"))
 	{
-		puts("Error: Open stage1.wav failed!");
+		puts("Error: Open bosshe.mp3 failed!");
 	}
-	if (!stage2BGM.openFromFile("./res/stage2.wav"))
+	if (!stage2BGM.openFromFile("./res/bossYAU.mp3"))
 	{
-		puts("Error: Open stage2.wav failed!");
+		puts("Error: Open bossYAU.mp3 failed!");
 	}
 	if (!stage3BGM.openFromFile("./res/stage3.wav"))
 	{
@@ -470,32 +470,43 @@ void Game::run()
 {
 	//播放主菜单界面，展示主菜单
 	menu();
+	lifeDisplay = remnant;
+	bombDisplay = 2;
 	int level = 1;			//关卡选择，目前仅仅实装了sg1
+	isPaused = false;
+
 	switch (level)
 	{
 	case 1:
-		stage1BGM.play();
-		stage1BGM.setLoop(true);
+		nowMusic = &stage1BGM;
 		break;
 	}
+	nowMusic->play();
+	nowMusic->setLoop(true);
 	//游戏进行的主循环
-	mWindow.setFramerateLimit(60);
+	mWindow.setFramerateLimit(60);      //60帧
 	mWindow.draw(player.hero);			//更新人物位置
+
 	frameDisplay();
 	/*HANDLE hThread_1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)BGMPlay, self, 0, NULL);*/
+	elapsed1 = sf::Time::Zero;
+	clock.restart();
+	secCount = 0;
+	curTime = 1;
 	while (mWindow.isOpen())
 	{
 		mWindow.clear();
-		
+
 		switch (level)
 		{
 		case 1:
 			Stage1();
 			break;
 		}
-		processTaps(); 
+		processTaps();
 		mainProcessing();
-		
+
+
 		frameDisplay();
 	}
 }
@@ -607,7 +618,158 @@ void Game::menu()
 	}
 }
 
+sf::Texture Game::captureScreenshot() {
+	sf::Texture screenshotTexture;
+	screenshotTexture.create(mWindow.getSize().x, mWindow.getSize().y);
+	screenshotTexture.update(mWindow);
+	return screenshotTexture;
+}
 
+
+void Game::displayPauseMenu() {
+	if (isPaused) {
+
+		printf("Stop!\n");
+		nowMusic->pause();
+
+		pausedBackground = captureScreenshot();
+		sf::Sprite backgroundSprite(pausedBackground);
+
+
+		sf::Text textPause("Game Pause!", font, 50);
+		sf::Text textReturn("Return to Game", font, 50);
+		sf::Text textBackToTitle("Quit and Return to Select", font, 50);
+		sf::Text textRetry("Retry this Game", font, 50);
+
+		textPause.setPosition(100, 580);
+		textReturn.setPosition(110, 660);
+		textBackToTitle.setPosition(120, 740);
+		textRetry.setPosition(130, 820);
+
+		sf::RectangleShape overlay;
+		overlay.setSize(sf::Vector2f(mWindow.getSize().x, mWindow.getSize().y));
+		overlay.setFillColor(sf::Color(0, 0, 0, 150));
+
+		int selectedItem = 0;
+		while (mWindow.isOpen())
+		{
+			sf::Event event;
+
+			while (mWindow.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+				{
+					mWindow.close();
+					return;
+				}
+
+				if (event.type == sf::Event::KeyPressed)
+				{
+					if (event.key.code == sf::Keyboard::Up)
+					{
+						selectSound.play();
+						selectedItem = (selectedItem - 1 + 3) % 3;
+					}
+					else if (event.key.code == sf::Keyboard::Down)
+					{
+						selectSound.play();
+						selectedItem = (selectedItem + 1) % 3;
+					}
+					else if (event.key.code == sf::Keyboard::Z)
+					{
+						selectSound.play();
+
+						if (selectedItem == 0)
+						{
+							isPaused = false;
+							nowMusic->play();
+							return;
+						}
+
+						else if (selectedItem == 1)
+						{
+
+							menu();
+							restartGame();
+							return;
+						}
+
+						else if (selectedItem == 2)
+						{
+
+							restartGame();
+							return;
+						}
+					}
+				}
+			}
+
+			clock.restart();
+
+
+			textPause.setFillColor(sf::Color::Yellow);
+			textReturn.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
+			textBackToTitle.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
+			textRetry.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
+
+
+			mWindow.clear();
+
+			mWindow.draw(backgroundSprite);
+			mWindow.draw(overlay);
+			mWindow.draw(textPause);
+			mWindow.draw(textReturn);
+			mWindow.draw(textBackToTitle);
+			mWindow.draw(textRetry);
+
+			mWindow.display();
+		}
+	}
+	// 没有暂停，就直接结束
+}
+
+void Game::restartGame() {
+
+	player.hero.setPosition(sf::Vector2f(430, 820)); // 位置初始化为屏幕中心
+	int level = 1;
+	isPaused = false;
+	nowMusic->stop();
+	nowMusic = &stage1BGM;
+
+	nowMusic->play();
+	nowMusic->setLoop(true);
+
+
+	elapsed1 = sf::Time::Zero;
+	clock.restart();
+	curTime = 1;
+	remnant = lifeDisplay;
+	bomb = bombDisplay;
+	enemyBullets.clear();
+	bluePoints.clear();
+	memset(evts, 0, sizeof(evts));
+	restartI1s = true;
+	restartAllWaves();
+	restartI1s = false;
+}
+
+void Game::restartAllWaves()
+{
+	S1E1();
+	S1E2();
+	S1E3();
+	S1E4();
+	S1E5();
+	S1E6();
+	S1E7();
+	S1E8();
+	S1E9();
+	S1E10();
+	S1E11();
+	S1E12();
+	S1E13();
+	S1E14();
+}
 
 void Game::gameClearFunction()
 {
@@ -824,8 +986,8 @@ void Game::options()
 	static int volume = 10;
 	static int sfx = 10;
 	// 调整残机和雷
-	static int lifeDisplay = remnant;
-	static int bombDisplay = bomb;
+	lifeDisplay = remnant;
+	bombDisplay = bomb;
 
 	int selectedItem = 0;
 	loadOptionsUI();
@@ -1017,15 +1179,12 @@ void Game::options()
 
 void Game::Stage1()
 {
-	static sf::Time elapsed1 = clock.restart();		//游戏帧重置
-	elapsed1 = clock.getElapsedTime();
-	
-	static int evts[20] = { 0 };
+	elapsed1 += clock.restart();
+	evts[20] = { 0 };
 
-	static int curTime = 1;
 	if (curTime < elapsed1.asSeconds())
 	{
-		printf("%.0f\n", elapsed1.asSeconds());
+		printf("%.f\n", elapsed1.asSeconds());
 		curTime++;
 	}
 
@@ -1189,6 +1348,15 @@ int Game::S1E1()
 	int gapFrame = gapTime * 60;		//生成帧间隔
 	static int gap = 0, temp = 0;		//gap用来区分每个敌人生成的时间，确保分开生成
 
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
+
 	if (i1 % gapFrame == 1 && i1 < 15 * gapFrame)
 	{
 		FO sButterfly(2);						//生成第一类小怪
@@ -1305,6 +1473,12 @@ int Game::S1E2()			//E2比较特殊，这里涉及一个小过场
 	i1++;
 	static list<FO> wave1;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
+
 	if (i1 == 1)
 	{
 		FO mainTitle(0);
@@ -1339,6 +1513,16 @@ int Game::S1E3()
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
+
 	if (i1 % gapFrame == 1 && i1 < 15 * gapFrame)
 	{
 		FO sButterfly(2);
@@ -1444,6 +1628,16 @@ int Game::S1E4()
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		wave3.clear();
+		return 0;
+	}
 
 	if (i1 % gapFrame == 1 && i1 < 10 * gapFrame)
 	{
@@ -1623,6 +1817,17 @@ int Game::S1E5()//mButter quit anime dierction
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		wave3.clear();
+		wave4.clear();
+		return 0;
+	}
 
 	if (i1 == 1)
 	{
@@ -1834,6 +2039,17 @@ int Game::S1E6()
 	double gapTime = 0.2;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		wave3.clear();
+		wave4.clear();
+		return 0;
+	}
 	
 	if (i1 == 41)
 	{
@@ -2022,6 +2238,12 @@ int Game::S1E7()
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
 	
 	if (i1 == 1)
 	{
@@ -2075,6 +2297,14 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为boss
 	static int i1 = 0, stp = 0;
 	i1++;
 	static list<FO> wave1, wave2;	//wave1存储幽灵本体，wave2存储一个绕着转的背景魔法阵
+
+	if (restartI1s == true) {
+		i1 = 0;
+		stp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 == 1)
 	{						//生成
@@ -2170,6 +2400,15 @@ int Game::S1E9()				//随机大蝴蝶，类似春终米粒弹，实现封位效果
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
+
 	if (i1 % gapFrame == 1 && i1 < 30 * gapFrame)
 	{
 		FO sButterfly(2);
@@ -2248,6 +2487,15 @@ int Game::S1E10()
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
+
 	if (i1 % gapFrame == 1 && i1 < 5 * gapFrame)
 	{
 		FO mButterfly(5);
@@ -2318,6 +2566,15 @@ int Game::S1E11()			//顶端大量生成小怪，一阶段下落，二阶段随机跑路
 	double gapTime = 0.1;
 	int gapFrame = gapTime * 60;
 	static int gap = 0, temp = 0;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		gap = 0;
+		temp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 % gapFrame == 1 && i1 < 60 * gapFrame)
 	{
@@ -2392,6 +2649,13 @@ int Game::S1E12()			//第一面结束，进入第二面，但方便测试可以看作都是第一面
 	i1++;
 	static list<FO> wave1;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
+
+
 	if (i1 == 1)
 	{
 		FO mainTitle(0);
@@ -2445,6 +2709,14 @@ int Game::S1E13()			//测试用，第二面仅一个幽灵boss
 	static int i1 = 0, stp = 0;
 	i1++;
 	static list<FO> wave1, wave2;
+
+	if (restartI1s == true) {
+		i1 = 0;
+		stp = 0;
+		wave1.clear();
+		wave2.clear();
+		return 0;
+	}
 
 	if (i1 == 1)
 	{
@@ -2641,6 +2913,12 @@ int Game::S1E14()			//未实装
 	i1++;
 	static list<FO> wave1;
 
+	if (restartI1s == true) {
+		i1 = 0;
+		wave1.clear();
+		return 0;
+	}
+
 	if (i1 == 1)
 	{
 		FO mainTitle(0);
@@ -2789,6 +3067,8 @@ void Game::frameDisplay()//ammo->front->player->jpoint
 
 	
 	mWindow.draw(text);		//demo
+
+	displayPauseMenu();
 	
 	mWindow.display();		//刷新窗口
 }
@@ -3466,43 +3746,90 @@ void Game::nonSpellCard1(list<FO>::iterator it)			//一面旋转弹，非符，具体原理参
 	temp += PI / 120.0;
 }
 
-void Game::nonSpellCard2(list<FO>::iterator it)		//2非
+void Game::nonSpellCard2(list<FO>::iterator it)
 {
-	static double theta1 = PI / 6.0;
-	static double theta2 = PI / 2.0;
-	static double temp = 0.0;
+	static int time = 0;
 	static int cts = 0;
+	static double theta1 = PI / 6.0;
+	static double theta2 = 2 * PI / 3;
+	static double theta3 = PI / 6.0;
 	cts++;
-	if (fabs(temp - 2 * PI) < EPS)
-	{
-		temp = 0.0;
-	}
-	
 	FO nonSpell2;
-	nonSpell2.speed = 4.0;
+	nonSpell2.speed = 0.0;
 	nonSpell2.width = 16;
 	nonSpell2.height = 16;
 	nonSpell2.hero.setTexture(allBullets1);
-	nonSpell2.hero.setTextureRect(sf::IntRect(80, 128, 16, 16));
+	nonSpell2.hero.setTextureRect(sf::IntRect(48, 48, 16, 16));
 	nonSpell2.hero.setOrigin(8, 8);
 	nonSpell2.hero.setScale(1.5, 1.5);
 	nonSpell2.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
-	if (cts % 360 <= 120)
+
+	if (cts == 1)
 	{
-		if (cts % 24 == 0)
+		nonSpell2.speed = 0.0;
+		nonSpell2.hero.setPosition(300, 80);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 80);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(200, 200);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(700, 200);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(300, 300);
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 300);
+		enemyBullets.push_back(nonSpell2);
+
+	}
+
+	if (cts % 10 == 0)
+	{
+		nonSpell2.speed = 4.0;
+		nonSpell2.hero.setPosition(300, 80);
+		nonSpell2.theta = theta1;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 80);
+		nonSpell2.theta = PI - theta1;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(200, 200);
+		nonSpell2.theta = theta2;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(700, 200);
+		nonSpell2.theta = PI - theta2;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(300, 320);
+		nonSpell2.theta = theta3;
+		enemyBullets.push_back(nonSpell2);
+
+		nonSpell2.hero.setPosition(600, 320);
+		nonSpell2.theta = PI - theta3;
+		enemyBullets.push_back(nonSpell2);
+
+		theta1 = theta1 + PI / 27;
+		theta2 = theta2 - PI / 54;
+		theta3 = theta3 + PI / 27;
+		if (theta1 >= 2 * PI)
 		{
-			enemyBulletSound.play();
-			nonSpell2.hero.setPosition((rand() % 300) * 2 + 100, (rand() % 100) + 60);
-			for (int i = 0; i < 72; i++)
-			{
-				nonSpell2.theta = theta1 + PI * 2 * i / 72.0;
-				nonSpell2.hero.setRotation(nonSpell2.theta / PI * 180.0 + 90);
-				enemyBullets.push_back(nonSpell2);
-			}
+			theta1 = 0.0;
+		}
+		if (theta2 <= PI / 6.0)
+		{
+			theta2 = 2 * PI / 3;
+		}
+		if (theta3 >= PI * 5 / 6)
+		{
+			theta3 = PI / 6.0;
 		}
 	}
-	theta1 += 0.04 * PI * sin(temp);
-	temp += PI / 240.0;
 }
 
 void Game::nonSpellCard3(list<FO>::iterator it)		//3非
@@ -3946,6 +4273,14 @@ void Game::processTaps()		//玩家输入处理
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
+			if (event.key.code == sf::Keyboard::Escape) {
+				isPaused = !isPaused;
+				printf("ESC\n");
+				if (mIsMovingUp == true) mIsMovingUp = false;
+				if (mIsMovingDown == true) mIsMovingDown = false;
+				if (mIsMovingLeft == true) mIsMovingLeft = false;
+				if (mIsMovingRight == true) mIsMovingRight = false;
+			}
 			playerInput(event.key.code, true);
 			break;
 		case sf::Event::KeyReleased:
@@ -3976,7 +4311,7 @@ void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//读取输入
 		mIsGrazing = isPressed;
 	else if (key == sf::Keyboard::X)
 		mIsUsingBomb = isPressed;
-	player.speed = (mIsGrazing) ? 3.0 : 10.0;
+	player.speed = (mIsGrazing) ? 3.0 : 7.5;
 }
 /*
 bool isOutOfBoard(sf::Sprite value)

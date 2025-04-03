@@ -2855,6 +2855,12 @@ void Game::playerBombDisplay()			// 处理角色的雷
 			bombSound.play();
 			printf("bomb\n");
 			bomb--;
+			// 暂时的效果：消除全屏子弹 & 暂时无敌 & 全屏伤害
+			clockForInvulnerability.restart();
+			for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
+			{
+				enemyCrash(it);
+			}
 		}
 		// SFML只能判定“键盘摁下”，而雷的功能需要”键盘摁下仅触发一次“
 		mIsUsingBomb = false;

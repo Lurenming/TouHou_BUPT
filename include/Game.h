@@ -29,6 +29,10 @@ public:
 	void setBluePointByEnemyType(list<FO>::iterator it);
 	void loadEnemy();
 	void loadMusicAndSounds();
+	sf::Texture captureScreenshot();
+	void displayPauseMenu();
+	void restartGame();
+	void restartAllWaves();
 	void loadOptionsUI();
 	sf::Texture captureScreenshot();
 	void displayPauseMenu();
@@ -64,7 +68,6 @@ public:
 	void frameDisplay();
 	void backgroundDisplay();
 	void playerAmmoDisplay();
-	void playerBombDisplay();
 	void enemiesDisplay();
 	//void enemyBulletsPreDisplay();
 	void enemyBulletsDisplay();
@@ -139,12 +142,11 @@ private:
 	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM,gameClearMusic, *nowMusic;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
-	sf::SoundBuffer selectSoundBuffer, okSoundBuffer, cancelSoundBuffer;
+	sf::SoundBuffer selectSoundBuffer;
 	sf::SoundBuffer bluePointCollectedSoundBuffer;
-	sf::SoundBuffer bombSoundBuffer;
 	sf::Sound playerBulletSound, playerBulletSound1, enemyBulletSound, collisionSound, spellCardSound, buttomSound, SCAnounce, cardGet;
 	sf::Sound breakSound, playerDeadSound;
-	sf::Sound selectSound,okSound,cancelSound;
+	sf::Sound selectSound;
 	sf::Sound bluePointCollectedSound;
 	sf::Sound bombSound;
 	sf::Time elapsed1;

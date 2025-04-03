@@ -66,6 +66,7 @@ public:
 	void effsDisplay();
 	void boardDisplay();
 	void enemyCollisionProcessing(list<FO>::iterator it);
+	//void enemyBombProcessing(list <FO>::iterator it);
 	void enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator itAmmo);
 	void enemyCrash(list<FO>::iterator it);
 	void bluePointCollected(list<FO>::iterator it);

@@ -1926,7 +1926,7 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为boss
 		}
 
 		enemyCollisionProcessing(it);
-		
+		//enemyBombProcessing(it);
 		enemiesPushToDraw(it);
 	}
 	if (i1 > 60 * 60)
@@ -2630,11 +2630,56 @@ void Game::playerBombDisplay()			// 处理角色的雷
 			bombSound.play();
 			printf("bomb\n");
 			bomb--;
+			// 暂时的效果：消除全屏子弹 & 暂时无敌 & 全屏伤害
+			clockForInvulnerability.restart();
+			for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
+			{
+				enemyCrash(it);
+			}
+			//for (list<FO>::iterator itEnemy = enemies.begin(); itEnemy != enemies.end(); itEnemy++)
+			//{
+			//	printf("%d ", itEnemy->type);
+			//	enemyBombProcessing(itEnemy);
+			//}
 		}
 		// SFML只能判定“键盘摁下”，而雷的功能需要”键盘摁下仅触发一次“
 		mIsUsingBomb = false;
 	}
 }
+//void Game::enemyBombProcessing(list<FO>::iterator it)		// 处理使用雷时的敌人受击判定，复用被弹判定的代码
+//{
+//	it->HealthPoint -= 10000;
+//	score += 10;
+//	printf("%d ", it->type);
+//	if (it->HealthPoint <= 0)
+//	{
+//		it->phase--;
+//		// 爆蓝点喽
+//		//puts("setBluePointByEnemyType(it);");
+//		setBluePointByEnemyType(it);
+//		if (it->phase <= 0)
+//		{	// 敌机击毁？
+//			enemyCrash(it);
+//		}
+//		else
+//		{	// 敌机是 boss，进入了下一阶段？
+//			cardGet.play();
+//			breakSound.play();
+//			score += it->score;
+//			deathEff.setTexture(deathCircle);
+//			deathEff.setTextureRect(sf::IntRect(64, 0, 64, 64));
+//			deathEff.setOrigin(32, 32);
+//			deathEff.setPosition(it->hero.getPosition().x + it->width * 0.25, it->hero.getPosition().y + it->height * 0.25);
+//			deathEff.setScale(0.1, 0.1);
+//			deathEffs.push_back(deathEff);
+//			deathEff.setScale(0.3, 0.06);
+//			deathEff.setRotation(rand() % 360);
+//			deathEffs.push_back(deathEff);
+//			it->HealthPoint += 1500;
+//		}
+//	}
+//
+//}
 //
 void Game::enemiesDisplay()		//敌人精灵绘制
 {
@@ -2868,6 +2913,7 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//处理敌人被子弹击中
 				setBluePointByEnemyType(it);
 				if (it->phase <= 0)
 				{	// 敌机击毁？
+					//printf("%d ", it->type);
 					enemyCrash(it);
 				}
 				else

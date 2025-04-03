@@ -132,11 +132,11 @@ private:
 	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM, gameClearMusic;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
-	sf::SoundBuffer selectSoundBuffer;
+	sf::SoundBuffer selectSoundBuffer, okSoundBuffer, cancelSoundBuffer;
 	sf::SoundBuffer bluePointCollectedSoundBuffer;
 	sf::Sound playerBulletSound, playerBulletSound1, enemyBulletSound, collisionSound, spellCardSound, buttomSound, SCAnounce, cardGet;
 	sf::Sound breakSound, playerDeadSound;
-	sf::Sound selectSound;
+	sf::Sound selectSound,okSound,cancelSound;
 	sf::Sound bluePointCollectedSound;
 	sf::Clock clock;
 	sf::Clock clockForInvulnerability;

@@ -391,12 +391,24 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 	stage3BGM.setVolume(100);
 	gameClearMusic.setVolume(100);
 
-	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))
+	if (!selectSoundBuffer.loadFromFile("./res/se_select00.wav"))			//加载菜单相关音效
 	{
 		puts("Error: Open se_select00.wav failed!");
 	}
 	selectSound.setBuffer(selectSoundBuffer);
 	selectSound.setVolume(50);
+	if (!okSoundBuffer.loadFromFile("./res/se_ok00.wav"))			//加载菜单相关音效
+	{
+		puts("Error: Open se_ok00.wav failed!");
+	}
+	okSound.setBuffer(okSoundBuffer);
+	okSound.setVolume(50);
+	if (!cancelSoundBuffer.loadFromFile("./res/se_cancel00.wav"))			//加载菜单相关音效
+	{
+		puts("Error: Open se_cancel00.wav failed!");
+	}
+	cancelSound.setBuffer(cancelSoundBuffer);
+	cancelSound.setVolume(50);
 	if (!playerBulletSoundBuffer.loadFromFile("./res/se_damage00.wav"))		//加载子弹音效
 	{
 		puts("Error: Open se_damage00.wav failed!");
@@ -525,34 +537,37 @@ void Game::menu()
 				}
 				else if (event.key.code == sf::Keyboard::Z)
 				{
-					selectSound.play();
 					//Quit
 					if (selectedItem == 2)
 					{
+						cancelSound.play();
 						mWindow.close();
 						return;
 					}
 					//Start
 					else if (selectedItem == 0)
 					{
+						okSound.play();
 						menuMusic.stop();
 						return;
 					}
 					//Options
 					else if (selectedItem == 1)
 					{
+						okSound.play();
 						printf("Options\n");
 						options();
 					}
 					else if (selectedItem == 3)
 					{
+						okSound.play();
 						printf("5G\n");
 					}
 				}
 				else if (event.key.code == sf::Keyboard::X)
 				{
 					// 模拟官作主菜单中的“按X跳转到Quit”操作
-					selectSound.play();
+					cancelSound.play();
 					if (selectedItem == 2)
 					{
 						mWindow.close();
@@ -848,11 +863,11 @@ void Game::options()
 				// 调整音量和音效
 				else if (event.key.code == sf::Keyboard::Left)
 				{
+					okSound.play();
 					if (selectedItem == 2)  // 音量调小
 					{
 						if (volume > 0)
 							volume--;
-						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
@@ -864,7 +879,6 @@ void Game::options()
 						if (sfx > 0)
 							sfx--;
 						selectSound.setVolume(sfx * 5);
-						selectSound.play();
 						playerBulletSound.setVolume(sfx * 5);
 						enemyBulletSound.setVolume(sfx * 1.5);
 						bluePointCollectedSound.setVolume(sfx * 5);
@@ -872,6 +886,8 @@ void Game::options()
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
+						okSound.setVolume(sfx * 5);
+						cancelSound.setVolume(sfx * 5);
 					}
 					else if (selectedItem == 0)  // 调整残机
 					{
@@ -892,11 +908,11 @@ void Game::options()
 				}
 				else if (event.key.code == sf::Keyboard::Right)
 				{
+					okSound.play();
 					if (selectedItem == 2)  // 音量调大
 					{
 						if (volume < 10)
 							volume++;
-						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
@@ -916,6 +932,8 @@ void Game::options()
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
+						okSound.setVolume(sfx * 5);
+						cancelSound.setVolume(sfx * 5);
 					}
 					else if (selectedItem == 0)  // 调整残机
 					{

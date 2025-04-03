@@ -119,7 +119,7 @@ void Game::NowLoading()
 	loadingUISub.setScale(1.5f, 1.5f);
 	loadingUISub.setPosition(sf::Vector2f(1000, 800));
 
-	// ���ý�����˸��ر���
+	// ���ý�����˸��ر���?
 	sf::Clock clock;
 	float duration = 4.0f; // ���س���ʱ��
 	float elapsedTime = 0.0f;
@@ -130,7 +130,7 @@ void Game::NowLoading()
 		elapsedTime = clock.getElapsedTime().asSeconds();
 
 		// ����͸����
-		float alpha = (sin(elapsedTime * 6.0f) + 1.0f) / 2.0f * 255; // 0��255֮���ֵ
+		float alpha = (sin(elapsedTime * 6.0f) + 1.0f) / 2.0f * 255; // 0��255֮����?
 		loadingUISub.setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha))); // ����͸����
 
 		mWindow.clear();
@@ -169,7 +169,7 @@ void Game::loadBackgrounds()		//���ر�������
 		back[i].setScale(sf::Vector2f(1.5, 1.5));
 		back[i].setPosition((float)65.0, (float)(i - 1) * 192.0 + 35.0);
 		backEff[i].setTexture(bgEff1);
-		backEff[i].setScale(sf::Vector2f(1.5, 1.5));			//ģ���������
+		backEff[i].setScale(sf::Vector2f(1.5, 1.5));			//ģ���������?
 		backEff[i].setPosition(65.0, (i - 1) * 384.0 + 35.0);
 	}
 
@@ -207,7 +207,7 @@ void Game::loadBackgrounds()		//���ر�������
 	}
 }
 //
-void Game::loadPrimeFrame()					//���������ͼƬ�и�չʾ
+void Game::loadPrimeFrame()					//���������ͼƬ�и�չ�?
 {
 	if (!front00.loadFromFile("./res/front00.png"))
 	{
@@ -229,7 +229,7 @@ void Game::loadPrimeFrame()					//���������ͼƬ�и�չʾ
 //
 void Game::loadPointsAndEffs()		//�����ӵ����ж���
 {
-	if (!julgePointArray.loadFromFile("./res/etama2.png"))	//�ж������
+	if (!julgePointArray.loadFromFile("./res/etama2.png"))	//�ж������?
 	{
 		puts("Error: Load julgePointArray failed!");
 	}
@@ -303,7 +303,7 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//���ڴ���
 
 	// printf("dead enemy position: (%f, %f)\n", it->hero.getPosition().x, it->hero.getPosition().y);
 	// ^^^^^^ �ݴ˳ɹ����� bug ԭ��
-	// ԭ���ڵл��������ٵ��� setBluePointByEnemyType()����������������л�ѵл���λ���Ƶ���Ļ���ȥ����������Ҳ������Ļ�����ˣ����Կ��������㡣
+	// ԭ���ڵл��������ٵ��� setBluePointByEnemyType()����������������л�ѵл���λ���Ƶ���Ļ���ȥ����������Ҳ������Ļ�����ˣ����Կ���������?
 	// �ڵл�����ǰ���� setBluePoint() ���ɡ�
 	// bluePoint.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
 	// printf("new blue point position: (%f, %f)\n", bluePoint.hero.getPosition().x, bluePoint.hero.getPosition().y);
@@ -428,7 +428,7 @@ void Game::loadMusicAndSounds()		//���ر������ֺ���Ч
 	}
 	bombSound.setBuffer(bombSoundBuffer);
 	bombSound.setVolume(100);
-	if (!bombSoundBuffer.loadFromFile("./res/se_bomb00.wav"))			//加载雷音效
+	if (!bombSoundBuffer.loadFromFile("./res/se_bomb00.wav"))			//加载雷音�?
 	{
 		puts("Error: Open se_bomb00.wav failed!");
 	}
@@ -505,7 +505,7 @@ void Game::menu()
 	sf::Text textExStart(L"��ʼ Extra ��", font, 50);
 	sf::Text textOptions(L"ѡ��", font, 50);
 	sf::Text textQuit(L"�˳�", font, 50);
-	sf::Text text5G(L"5G�����", font, 50);
+	sf::Text text5G(L"5G�����?, font, 50);
 	if (!title.loadFromFile("./res/title.png"))
 	{
 		puts("Error: Load title failed!");
@@ -513,7 +513,7 @@ void Game::menu()
 	titleBackground.setTexture(title);
 	menuMusic.play();
 	menuMusic.setLoop(true);
-	// ����ѡ���λ��
+	// ����ѡ���λ��?
 	textStart.setPosition(100, 560);
 	textExStart.setPosition(110, 630);
 	textOptions.setPosition(120, 700);
@@ -531,7 +531,7 @@ void Game::menu()
 				mWindow.close();
 				return;
 			}
-			// ��ȡ���·�����л�ѡ��
+			// ��ȡ���·�����л�ѡ��?
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Up)
@@ -970,7 +970,7 @@ void Game::options()
 	// ��������Ч��ֵ
 	static int volume = 10;
 	static int sfx = 10;
-	// 调整残机和雷（雷没有实现）
+	// 调整残机和雷（雷没有实现�?
 	lifeDisplay = remnant;
 	bombDisplay = 2;
 
@@ -1164,7 +1164,7 @@ void Game::options()
 
 void Game::Stage1()
 {
-	static sf::Time elapsed1 = clock.restart();		//游戏帧重置
+	static sf::Time elapsed1 = clock.restart();		//游戏帧重�?
 	elapsed1 = clock.getElapsedTime();
 	
 	static int evts[20] = { 0 };
@@ -1333,7 +1333,7 @@ int Game::S1E1()
 	i1++;
 	static list<FO> wave1, wave2;		//���ڴ�ŵл����������
 	double gapTime = 0.4;				//����ʱ����
-	int gapFrame = gapTime * 60;		//����֡���
+	int gapFrame = gapTime * 60;		//����֡���?
 	static int gap = 0, temp = 0;		//gap��������ÿ���������ɵ�ʱ�䣬ȷ���ֿ�����
 
 	if (restartI1s == true) {
@@ -1351,7 +1351,7 @@ int Game::S1E1()
 		sButterfly.hero.setTexture(Enemy1);
 		sButterfly.hero.setTextureRect(sf::IntRect(0, 320, sButterfly.width, sButterfly.height));
 		sButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		sButterfly.hero.setPosition(sf::Vector2f(400 + pow(-1.0, i1 / gapFrame) * 0.8 * i1, 20.0));		//���ݵ�ǰʱ��֡������˵�λ�ã����ҽ��棩
+		sButterfly.hero.setPosition(sf::Vector2f(400 + pow(-1.0, i1 / gapFrame) * 0.8 * i1, 20.0));		//���ݵ�ǰʱ��֡������˵�λ�ã����ҽ���?
 		//sButterfly.setSButterfly(400 + pow(-1.0, i1 / gapFrame) * i1, 20.0);
 		sButterfly.born = i1;
 		sButterfly.gap = gap;
@@ -1373,7 +1373,7 @@ int Game::S1E1()
 		wave2.push_back(mButterfly);
 	}
 
-	wave1.remove_if(isFOOutOfBoard);		//��һ����˵���Ϊ
+	wave1.remove_if(isFOOutOfBoard);		//��һ����˵����?
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
 
@@ -1388,7 +1388,7 @@ int Game::S1E1()
 			it->theta = 0.5 * PI;
 			it->hero.setTextureRect(sf::IntRect(i1 % 35 / 7 * it->width, 320, it->width, it->height));
 		}
-		else//phase2				//ʱ����ˣ�С��׼���볡
+		else//phase2				//ʱ����ˣ�С��׼����?
 		{
 			it->speed = (temp - 200) / 10.0;
 			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0 * PI / 360.0;
@@ -1418,9 +1418,9 @@ int Game::S1E1()
 		enemiesPushToDraw(it);
 	}
 
-	wave2.remove_if(isFOOutOfBoard);		//�ڶ�����˵���Ϊ
+	wave2.remove_if(isFOOutOfBoard);		//�ڶ�����˵����?
 	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)
-	{					//��������Ƕȷ����ӵ�
+	{					//��������Ƕȷ����ӵ�?
 		it->hero.setTextureRect(sf::IntRect(i1 % 50 / 10 * it->width, 448, it->width, it->height));
 		if (i1 < 400)
 		{
@@ -1483,7 +1483,7 @@ int Game::S1E2()			//E2�Ƚ����⣬�����漰һ��С���
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
 		it->hero.setColor(sf::Color(255, 255, 255, -i1 * (i1 - 301) / (151.0 * 150.0) * 255));
-		enemiesPushToDraw(it);			//ʵ��logo�Ľ������
+		enemiesPushToDraw(it);			//ʵ��logo�Ľ������?
 	}
 	if (i1 > 5 * 60)
 	{
@@ -1526,7 +1526,7 @@ int Game::S1E3()
 		wave1.push_back(sButterfly);
 	}
 	if (i1 == 21)
-	{				//�����
+	{				//�����?
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
@@ -1789,7 +1789,7 @@ int Game::S1E4()
 
 	if (i1 > 15 * 60)
 	{
-		wave1.clear();		//ʱ�䵽��С����·������Ļ��Ȼ�����
+		wave1.clear();		//ʱ�䵽��С����·������Ļ��Ȼ�����?
 		wave2.clear();
 		wave3.clear();
 		return 1;
@@ -2252,7 +2252,7 @@ int Game::S1E7()
 		it->hero.setTextureRect(sf::IntRect(i1 % 50 / 10 * it->width, 448, it->width, it->height));
 		if (i1 < 80)
 		{
-			it->speed = (80 - i1) / 16.0;			//�ǳ��ſ�ĶԳ�С������Ļ
+			it->speed = (80 - i1) / 16.0;			//�ǳ��ſ�ĶԳ�С�������?
 			it->theta = 0.5 * PI;
 		}
 		else if (i1 >= 80 && i1 < 400)
@@ -2318,7 +2318,7 @@ int Game::S1E8()				//��һ���ǵ�һ��Ľ���������
 		return 1;
 	}
 	wave2.remove_if(isFOOutOfBoard);
-	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)		//����ħ�������תЧ��
+	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)		//����ħ�������תЧ��?
 	{
 		it->hero.setPosition(wave1.begin()->hero.getPosition().x, wave1.begin()->hero.getPosition().y + 32);
 		it->theta += PI / 100.0;
@@ -2546,7 +2546,7 @@ int Game::S1E10()
 	return 0;
 }
 
-int Game::S1E11()			//���˴�������С�֣�һ�׶����䣬���׶������·
+int Game::S1E11()			//���˴�������С�֣�һ�׶����䣬���׶�������?
 {
 	static int i1 = 0;
 	i1++;
@@ -2631,7 +2631,7 @@ int Game::S1E11()			//���˴�������С�֣�һ�׶���
 	return 0;
 }
 
-int Game::S1E12()			//��һ�����������ڶ��棬��������Կ��Կ������ǵ�һ��
+int Game::S1E12()			//��һ�����������ڶ��棬��������Կ��Կ������ǵ�һ��?
 {
 	static int i1 = 0;
 	i1++;
@@ -2931,7 +2931,7 @@ int Game::S1E14()			//δʵװ
 	return 0;
 }
 
-void Game::enemiesPushToDraw(list<FO>::iterator it)			//�����ͬ���͵ĵ��˵��߼��͵�Ļ����
+void Game::enemiesPushToDraw(list<FO>::iterator it)			//�����ͬ���͵ĵ��˵��߼��͵�Ļ����?
 {
 	switch (it->type)
 	{
@@ -3015,7 +3015,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//�����ͬ���
 	enemies.push_back(*it);
 }
 
-void Game::backEsPushToDraw(list<FO>::iterator it)			//������±�����Ч
+void Game::backEsPushToDraw(list<FO>::iterator it)			//������±������?
 {
 	if (it->speed > EPS)
 	{
@@ -3091,7 +3091,7 @@ void Game::playerAmmoDisplay()			//�����Ի����ӵ�
 	if (mIsFire)
 	{
 		//playerAmmo = (mIsGrazing) ? player.LSAmmo : player.HSAmmo;
-		if (player.staticFrame % 2 == 1)		//ÿ֡���
+		if (player.staticFrame % 2 == 1)		//ÿ֡���?
 		{
 			player.LSAmmo.setPosition(sf::Vector2f(player.hero.getPosition().x + 4, player.hero.getPosition().y + 80));
 			playerBullets.push_back(player.LSAmmo);
@@ -3111,7 +3111,7 @@ void Game::playerAmmoDisplay()			//�����Ի����ӵ�
 	}
 }
 //
-void Game::enemiesDisplay()		//���˾������
+void Game::enemiesDisplay()		//���˾������?
 {
 	for (list<FO>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
@@ -3151,7 +3151,7 @@ void Game::playerDisplay()
 		|| collision.first == PlayerCollisionResult::EnemyBody)         // ���߱�����
 		&& clockForInvulnerability.getElapsedTime().asSeconds() > 1.0)  // ���Ҳ����޵�ʱ����
 	{
-		// ��ճ����������Եл����ӵ�
+		// ��ճ����������Եл����ӵ�?
 		for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
 		{
 			enemyCrash(it);
@@ -3184,7 +3184,7 @@ void Game::playerDisplay()
 		;  // noop��
 	}
 
-	if (mIsMovingLeft)			//�������
+	if (mIsMovingLeft)			//�������?
 	{
 		if (player.dynamicFrame < 14)
 		{
@@ -3192,7 +3192,7 @@ void Game::playerDisplay()
 		}
 		player.hero.setTextureRect(sf::IntRect(player.width * (player.dynamicFrame / 2), player.height, player.width, player.height));
 	}
-	else if (mIsMovingRight)		//�������
+	else if (mIsMovingRight)		//�������?
 	{
 		if (player.dynamicFrame < 14)
 		{
@@ -3281,7 +3281,7 @@ void Game::boardDisplay()			//��ʾѪ���ͷ���
 	lifeBoard.setScale(1.5, 1.5);
 	lifeBoard.setPosition(830, 300);
 	mWindow.draw(lifeBoard);
-	// 雷
+	// �?
 	switch (bomb)
 	{
 	case 8:
@@ -3316,7 +3316,11 @@ void Game::boardDisplay()			//��ʾѪ���ͷ���
 	bombBoard.setScale(1.5, 1.5);
 	bombBoard.setPosition(830, 350);
 	mWindow.draw(bombBoard);
+<<<<<<< Updated upstream
 	// 分数
+=======
+	// ����
+>>>>>>> Stashed changes
 	//static string scoreStr;
 	//scoreStr = "Score:             ";
 	//scoreStr += to_string(score);
@@ -3328,7 +3332,7 @@ void Game::boardDisplay()			//��ʾѪ���ͷ���
 	mWindow.draw(tempScore);
 }
 
-void Game::enemyCollisionProcessing(list<FO>::iterator it)		//������˱��ӵ����е�ʵ��
+void Game::enemyCollisionProcessing(list<FO>::iterator it)		//������˱��ӵ����е�ʵ��?
 {
 	for (list<sf::Sprite>::iterator itAmmo = playerBullets.begin(); itAmmo != playerBullets.end(); itAmmo++)
 	{
@@ -3339,7 +3343,7 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//������
 			if (it->HealthPoint <= 0)
 			{
 				it->phase--;
-				// �������
+				// �������?
 				//puts("setBluePointByEnemyType(it);");
 				setBluePointByEnemyType(it);
 				if (it->phase <= 0)
@@ -3378,7 +3382,7 @@ void Game::enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator it
 	itAmmo->setPosition(-100, -100);
 }
 
-void Game::enemyCrash(list<FO>::iterator it)		//������˱�����
+void Game::enemyCrash(list<FO>::iterator it)		//������˱�����?
 {
 	breakSound.play();
 	score += it->score;
@@ -3397,7 +3401,7 @@ void Game::enemyCrash(list<FO>::iterator it)		//������˱����
 void Game::bluePointCollected(list<FO>::iterator it)		//�������㱻�Ե�
 {
 	bluePointCollectedSound.play();
-	// ���Խ�ߣ�����Խ��
+	// ���Խ�ߣ�����Խ��?
 	score += 50 + static_cast<int>(100 * (1 - static_cast<double>(player.hero.getPosition().y - 40) / (850 - 40)));
 
 	it->hero.setPosition(-100, -100);
@@ -3406,7 +3410,7 @@ void Game::bluePointCollected(list<FO>::iterator it)		//�������㱻
 void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//���ú����Ķ���֡�ͷ���
 {
 	double t1 = it->theta - 0.5 * PI;
-	double t2 = it->theta - 1.5 * PI;			//����Ƕ�
+	double t2 = it->theta - 1.5 * PI;			//����Ƕ�?
 	int he = 320;
 	if (fabs(t1) < EPS || fabs(t2) * PI < EPS)			//�жϺ����������ö�Ӧ������
 	{
@@ -3439,7 +3443,7 @@ void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//����
 	}
 }
 
-void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//����һ���������ƣ�������������ͺ���
+void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//����һ���������ƣ�������������ͺ���?
 {
 	double t1 = it->theta - 0.5 * PI;
 	double t2 = it->theta - 1.5 * PI;
@@ -3471,7 +3475,7 @@ void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//����
 	}
 }
 
-void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//���ڴ����ͷ�����˵��ӵ�
+void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//���ڴ����ͷ�����˵��ӵ�?
 {
 	enemyBulletSound.play();
 	FO Snipe;
@@ -3545,7 +3549,7 @@ void Game::setGeneralMultiSnipe(list<FO>::iterator it, double speed, int type, i
 	enemyBullets.push_back(GeneralMultiSnipe);
 }
 
-void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, double leftBoarder, double range)	//���������
+void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, double leftBoarder, double range)	//���������?
 {
 	enemyBulletSound.play();
 	FO Random;
@@ -3562,7 +3566,7 @@ void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, d
 	enemyBullets.push_back(Random);
 }
 
-void Game::setRoundRandom(list<FO>::iterator it, double speed, int color, double leftBoarder, double range)	//�����
+void Game::setRoundRandom(list<FO>::iterator it, double speed, int color, double leftBoarder, double range)	//�����?
 {
 	enemyBulletSound.play();
 	FO RoundRandom;
@@ -3995,7 +3999,7 @@ void Game::spellCard1(list<FO>::iterator it)		//1��
 		enemyBullets.push_back(Card1);
 	}
 
-	(ct % 2) ? range -= 16 : range += 16;			//�ж��Ƿ���ͣ�ʵ�ֵ�����Ч��
+	(ct % 2) ? range -= 16 : range += 16;			//�ж��Ƿ���ͣ�ʵ�ֵ�����Ч��?
 	temp++;
 	if (range >= 350 || range <= 0)
 	{
@@ -4230,7 +4234,7 @@ void Game::spellCard6(list<FO>::iterator it)				//6��
 	temp += PI / 240.0;
 }
 
-void Game::processTaps()		//������봦��
+void Game::processTaps()		//������봦��?
 {
 	sf::Event event;
 	while (mWindow.pollEvent(event))
@@ -4350,7 +4354,7 @@ void Game::mainProcessing()			//�����ƶ�
 		}
 	}
 
-	// �Ի�׷����ҵ����㲻�ϵ����ýǶ�
+	// �Ի�׷����ҵ����㲻�ϵ����ýǶ�?
 	for (FO& bp : bluePoints)
 	{
 		if (bp.type == 11036)
@@ -4360,7 +4364,7 @@ void Game::mainProcessing()			//�����ƶ�
 	}
 }
 
-bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//��⾫����ײ
+bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//��⾫�����?
 {
 	sf::FloatRect f1 = obj1.getGlobalBounds();
 	sf::FloatRect f2 = obj2.getGlobalBounds();
@@ -4427,7 +4431,7 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		}
 	}
 
-	// ˳�㣬�ڰ� Shift ʱ��������ķ�Χ��һЩ�����������գ�����ʹ�����Ϊ��׷����ҡ���״̬����
+	// ˳�㣬�ڰ� Shift ʱ��������ķ�Χ��һЩ�����������գ�����ʹ�����Ϊ��׷����ҡ���״̬����?
 	if (mIsGrazing)
 	{
 		for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
@@ -4519,7 +4523,7 @@ void Game::GameOver()
 		gameOverWindow.display();
 	}
 
-	// �رյ��������������Ϸ����
+	// �رյ��������������Ϸ����?
 	exit(0);
 }
 

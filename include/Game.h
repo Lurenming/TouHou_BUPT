@@ -32,6 +32,8 @@ public:
 	void loadOptionsUI();
 	void run();
 	void menu();
+	void gameClearFunction();
+	void playerSignName();
 	void options();
 	void Stage1();
 	int S1E1();
@@ -122,12 +124,12 @@ private:
 	sf::Text text, tempScore;
 	sf::Texture loading, nowLoading, stageSelect, front00, julgePointArray, Title1, Title2, allBullets1, allBullets2, whiteSpark;
 	sf::Texture bullets, buffetsEff, deathCircle, bg1, bgEff1, bg2, bgEff2, bg3, bgEff3, Enemy1, Enemy2, Enemy3, lifePieces, magicSquare;
-	sf::Texture title,optionsBg,optionsTitle;
+	sf::Texture title,optionsBg,optionsTitle, gameClear;
 	sf::Texture bluePointTexture;
 	sf::Sprite loadingUI, loadingUISub, back[6], backEff[6], front01, front02, front03, front04;
 	sf::Sprite julgePoint, playerAmmo, AmmoEff, deathEff, lifeBoard;
-	sf::Sprite titleBackground,optionsBackground,optionsTitleUI;
-	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM;
+	sf::Sprite titleBackground,optionsBackground,optionsTitleUI, gameClearBackground;
+	sf::Music menuMusic, stage1BGM, stage2BGM, stage3BGM, gameClearMusic;
 	sf::SoundBuffer playerBulletSoundBuffer, playerBulletSoundBuffer1, enemyBulletSoundBuffer, collisionSoundBuffer, spellCardSoundBuffer, buttomSoundBuffer;
 	sf::SoundBuffer breakSoundBuffer, playerDeadSoundBuffer, SCAnounceBuffer, cardGetBuffer;
 	sf::SoundBuffer selectSoundBuffer;

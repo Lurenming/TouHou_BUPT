@@ -1,4 +1,4 @@
-﻿#include "Game.h"
+#include "Game.h"
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>

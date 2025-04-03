@@ -3073,7 +3073,7 @@ void Game::boardDisplay()			//显示血量、雷和分数
 	mWindow.draw(bombBoard);
 	// 分数
 	static string scoreStr;
-	scoreStr = "Score:             ";
+	scoreStr = "Score:";
 	scoreStr += to_string(score);
 	tempScore.setString(scoreStr);
 	tempScore.setStyle(sf::Text::Italic);

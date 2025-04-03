@@ -33,7 +33,7 @@ bool isFOOutOfBoard(const FO value)
 }
 
 Game::Game()
-	:mWindow(sf::VideoMode(1280, 960), "TouHou114.0-chs")			//生成窗口
+	:mWindow(sf::VideoMode(1280, 960), "TouHou114.0-chs")			//���ɴ���
 	, font()
 	, player(1)
 {
@@ -44,6 +44,7 @@ Game::Game()
 
 	srand((unsigned)time(NULL));
 	remnant = 3;
+	bomb = 2;
 	score = 0;
 	clockForInvulnerability.restart();
 	mIsMovingUp = false;
@@ -52,6 +53,7 @@ Game::Game()
 	mIsMovingRight = false;
 	mIsGrazing = false;
 	mIsFire = false;
+	mIsUsingBomb = false;
 
 	loadPrimeFrame();
 
@@ -62,7 +64,7 @@ Game::Game()
 	loadEnemy();
 
 
-	if (!font.loadFromFile("./res/MapleMonoNL-NF-CN-Regular.ttf"))	//加载字体
+	if (!font.loadFromFile("./res/MapleMonoNL-NF-CN-Regular.ttf"))	//��������
 	{
 		puts("Error: Load MapleMonoNL-NF-CN-Regular.ttf failed!");
 	}
@@ -74,7 +76,7 @@ Game::Game()
 
 
 }
-/*		version1   无固定加载过程，已废弃
+/*		version1   �޹̶����ع��̣��ѷ���
 
 void Game::NowLoading()
 {
@@ -102,7 +104,7 @@ void Game::NowLoading()
 
 void Game::NowLoading()
 {
-	// 创建加载窗口和加载纹理
+	// �������ش��ںͼ�������
 	if (!loading.loadFromFile("./res/sig.png"))
 	{
 		puts("Error: Load loading failed!");
@@ -117,33 +119,33 @@ void Game::NowLoading()
 	loadingUISub.setScale(1.5f, 1.5f);
 	loadingUISub.setPosition(sf::Vector2f(1000, 800));
 
-	// 设置渐变闪烁相关变量
+	// ���ý�����˸��ر���
 	sf::Clock clock;
-	float duration = 4.0f; // 加载持续时间
+	float duration = 4.0f; // ���س���ʱ��
 	float elapsedTime = 0.0f;
 
-	// 渐变闪烁效果
+	// ������˸Ч��
 	while (elapsedTime < duration)
 	{
 		elapsedTime = clock.getElapsedTime().asSeconds();
 
-		// 计算透明度
-		float alpha = (sin(elapsedTime * 6.0f) + 1.0f) / 2.0f * 255; // 0到255之间的值
-		loadingUISub.setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha))); // 设置透明度
+		// ����͸����
+		float alpha = (sin(elapsedTime * 6.0f) + 1.0f) / 2.0f * 255; // 0��255֮���ֵ
+		loadingUISub.setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha))); // ����͸����
 
 		mWindow.clear();
 		mWindow.draw(loadingUI);
 		mWindow.draw(loadingUISub);
 		mWindow.display();
 
-		// 控制帧率
-		sf::sleep(sf::milliseconds(16)); // 大约60FPS
+		// ����֡��
+		sf::sleep(sf::milliseconds(16)); // ��Լ60FPS
 	}
 
 	//menuMusic.stop();
 }
 
-void Game::loadBackgrounds()		//加载背景纹理
+void Game::loadBackgrounds()		//���ر�������
 {
 	if (!bg1.loadFromFile("./res/stage02a.png"))
 	{
@@ -156,7 +158,7 @@ void Game::loadBackgrounds()		//加载背景纹理
 	if (!bg2.loadFromFile("./res/stage02a.png"))
 	{
 		puts("Error: Load stage3bg failed!");
-	}												//bg2仅仅实现了函数，未实装
+	}												//bg2����ʵ���˺�����δʵװ
 	if (!bgEff2.loadFromFile("./res/stage02b.png"))
 	{
 		puts("Error: Load stage3bg failed!");
@@ -167,7 +169,7 @@ void Game::loadBackgrounds()		//加载背景纹理
 		back[i].setScale(sf::Vector2f(1.5, 1.5));
 		back[i].setPosition((float)65.0, (float)(i - 1) * 192.0 + 35.0);
 		backEff[i].setTexture(bgEff1);
-		backEff[i].setScale(sf::Vector2f(1.5, 1.5));			//模拟滚动背景
+		backEff[i].setScale(sf::Vector2f(1.5, 1.5));			//ģ���������
 		backEff[i].setPosition(65.0, (i - 1) * 384.0 + 35.0);
 	}
 
@@ -183,17 +185,21 @@ void Game::loadBackgrounds()		//加载背景纹理
 
 	if (!lifePieces.loadFromFile("./res/lifePieces.png"))
 	{
-		puts("Error: Load lifePieces failed!");			//生命条加载
+		puts("Error: Load lifePieces failed!");			//����������
 	}
 	lifeBoard.setTexture(lifePieces);
-
+	if (!bombPieces.loadFromFile("./res/bombPieces.png"))
+	{
+		puts("Error: load bombPieces failed!");
+	}
+	bombBoard.setTexture(bombPieces);
 	if (!Title1.loadFromFile("./res/stg01logo.png"))
 	{
-		puts("Error: Load stg01logo failed!");			//logo加载
+		puts("Error: Load stg01logo failed!");			//logo����
 	}
 	if (!Title2.loadFromFile("./res/front01.png"))
 	{
-		puts("Error: Load clear failed!");				//clear图片加载
+		puts("Error: Load clear failed!");				//clearͼƬ����
 	}
 	if (!whiteSpark.loadFromFile("./res/White.png"))
 	{
@@ -201,7 +207,7 @@ void Game::loadBackgrounds()		//加载背景纹理
 	}
 }
 //
-void Game::loadPrimeFrame()					//把主界面的图片切割展示
+void Game::loadPrimeFrame()					//���������ͼƬ�и�չʾ
 {
 	if (!front00.loadFromFile("./res/front00.png"))
 	{
@@ -221,9 +227,9 @@ void Game::loadPrimeFrame()					//把主界面的图片切割展示
 	front04.setPosition(sf::Vector2f(0, 0));
 }
 //
-void Game::loadPointsAndEffs()		//加载子弹和判定点
+void Game::loadPointsAndEffs()		//�����ӵ����ж���
 {
-	if (!julgePointArray.loadFromFile("./res/etama2.png"))	//判定点加载
+	if (!julgePointArray.loadFromFile("./res/etama2.png"))	//�ж������
 	{
 		puts("Error: Load julgePointArray failed!");
 	}
@@ -232,7 +238,7 @@ void Game::loadPointsAndEffs()		//加载子弹和判定点
 	julgePoint.setTextureRect(sf::IntRect(0, 16, 64, 64));
 	julgePoint.setScale(1.5, 1.5);
 
-	if (!bullets.loadFromFile("./res/etama.png"))		//弹幕加载
+	if (!bullets.loadFromFile("./res/etama.png"))		//��Ļ����
 	{
 		puts("Error: Load bullets failed!");
 	}
@@ -240,7 +246,7 @@ void Game::loadPointsAndEffs()		//加载子弹和判定点
 	{
 		puts("Error: Load buffetsEff failed!");
 	}
-	if (!deathCircle.loadFromFile("./res/eff_deadcircle.png"))		//死亡特效加载
+	if (!deathCircle.loadFromFile("./res/eff_deadcircle.png"))		//������Ч����
 	{
 		puts("Error: Load deathCircle failed!");
 	}
@@ -266,7 +272,7 @@ void Game::loadBluePoints()
 	}
 }
 
-void Game::displayBluePoints()			//处理蓝点的显示和移除超出边界的蓝点
+void Game::displayBluePoints()			//�����������ʾ���Ƴ������߽������
 {
 	//printf("len of bluePoints: %llu before remove_if\n", (unsigned long long) bluePoints.size());
 	bluePoints.remove_if(isFOOutOfBoard);
@@ -279,9 +285,9 @@ void Game::displayBluePoints()			//处理蓝点的显示和移除超出边界的
 	}
 }
 
-void Game::setBluePointByEnemyType(list<FO>::iterator it)	//用于创建蓝点并使其下落
+void Game::setBluePointByEnemyType(list<FO>::iterator it)	//���ڴ������㲢ʹ������
 {
-	// 不用播放音效
+	// ���ò�����Ч
 	FO bluePoint;
 	bluePoint.speed = 4;
 	bluePoint.width = 16;
@@ -296,9 +302,9 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//用于创建蓝点�
 	bluePoint.type = 11035;
 
 	// printf("dead enemy position: (%f, %f)\n", it->hero.getPosition().x, it->hero.getPosition().y);
-	// ^^^^^^ 据此成功发现 bug 原因。
-	// 原先在敌机死亡后再调用 setBluePointByEnemyType()，但死亡代码过程中会把敌机的位置移到屏幕外边去，导致蓝点也生在屏幕外面了，所以看不见蓝点。
-	// 在敌机死亡前调用 setBluePoint() 即可。
+	// ^^^^^^ �ݴ˳ɹ����� bug ԭ��
+	// ԭ���ڵл��������ٵ��� setBluePointByEnemyType()����������������л�ѵл���λ���Ƶ���Ļ���ȥ����������Ҳ������Ļ�����ˣ����Կ��������㡣
+	// �ڵл�����ǰ���� setBluePoint() ���ɡ�
 	// bluePoint.hero.setPosition(it->hero.getPosition().x, it->hero.getPosition().y + it->height);
 	// printf("new blue point position: (%f, %f)\n", bluePoint.hero.getPosition().x, bluePoint.hero.getPosition().y);
 
@@ -324,7 +330,7 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//用于创建蓝点�
 		bluePoints.push_back(bluePoint);
 		break;
 	case 5://mButterfly
-		// 生成 3 个蓝点，位置分散一些
+		// ���� 3 �����㣬λ�÷�ɢһЩ
 		for (int i = 0; i < 3; i++)
 		{
 			bluePoint.hero.setPosition(it->hero.getPosition().x + (rand() % 64 - 32), it->hero.getPosition().y + it->height + (rand() % 64 - 32));
@@ -332,7 +338,7 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//用于创建蓝点�
 		}
 		break;
 	case 6://Ghost
-		// 生成 15 个蓝点，位置分散一些
+		// ���� 15 �����㣬λ�÷�ɢһЩ
 		for (int i = 0; i < 15; i++)
 		{
 			bluePoint.hero.setPosition(it->hero.getPosition().x + (rand() % 128 - 64), it->hero.getPosition().y + it->height + (rand() % 128 - 64));
@@ -347,7 +353,7 @@ void Game::setBluePointByEnemyType(list<FO>::iterator it)	//用于创建蓝点�
 
 //
 void Game::loadEnemy()
-{							//加载敌人突破
+{							//���ص���ͻ��
 	// Load a enemy to display
 	if (!Enemy1.loadFromFile("./res/enemy.png"))
 	{
@@ -363,7 +369,7 @@ void Game::loadEnemy()
 	}
 }
 //
-void Game::loadMusicAndSounds()		//加载背景音乐和音效
+void Game::loadMusicAndSounds()		//���ر������ֺ���Ч
 {
 	if (!menuMusic.openFromFile("./res/menu.wav"))
 	{
@@ -397,32 +403,36 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 	}
 	selectSound.setBuffer(selectSoundBuffer);
 	selectSound.setVolume(50);
-	if (!playerBulletSoundBuffer.loadFromFile("./res/se_damage00.wav"))		//加载子弹音效
+	if (!playerBulletSoundBuffer.loadFromFile("./res/se_damage00.wav"))		//�����ӵ���Ч
 	{
 		puts("Error: Open se_damage00.wav failed!");
 	}
 	playerBulletSound.setBuffer(playerBulletSoundBuffer);
 	playerBulletSound.setVolume(50);
-	if (!enemyBulletSoundBuffer.loadFromFile("./res/se_tan00.wav"))		//加载弹幕音效
+	if (!enemyBulletSoundBuffer.loadFromFile("./res/se_tan00.wav"))		//���ص�Ļ��Ч
 	{
 		puts("Error: Open se_tan00.wav failed!");
 	}
 	enemyBulletSound.setBuffer(enemyBulletSoundBuffer);
 	enemyBulletSound.setVolume(15);
-	if (!breakSoundBuffer.loadFromFile("./res/se_enep00.wav"))			//加载中弹音效
+	if (!breakSoundBuffer.loadFromFile("./res/se_enep00.wav"))			//�����е���Ч
 	{
 		puts("Error: Open se_enep00.wav failed!");
 	}
 
 	bluePointCollectedSound.setBuffer(bluePointCollectedSoundBuffer);
 	bluePointCollectedSound.setVolume(50);
-	if (!bluePointCollectedSoundBuffer.loadFromFile("./res/se_item00.wav"))			//加载蓝点收集音效
+	if (!bluePointCollectedSoundBuffer.loadFromFile("./res/se_item00.wav"))			//���������ռ���Ч
 	{
 		puts("Error: Open se_item00.wav failed!");
 	}
-
-
-	breakSound.setBuffer(breakSoundBuffer);							//加载死亡音效
+	bombSound.setBuffer(bombSoundBuffer);
+	bombSound.setVolume(100);
+	if (!bombSoundBuffer.loadFromFile("./res/se_bomb00.wav"))			//加载雷音效
+	{
+		puts("Error: Open se_bomb00.wav failed!");
+	}
+	breakSound.setBuffer(breakSoundBuffer);							//����������Ч
 	breakSound.setVolume(50);
 	if (!playerDeadSoundBuffer.loadFromFile("./res/se_pldead00.wav"))
 	{
@@ -430,13 +440,13 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 	}
 	playerDeadSound.setBuffer(playerDeadSoundBuffer);
 	playerDeadSound.setVolume(50);
-	if (!SCAnounceBuffer.loadFromFile("./res/se_cat00.wav"))		//加载SC音效
+	if (!SCAnounceBuffer.loadFromFile("./res/se_cat00.wav"))		//����SC��Ч
 	{
 		puts("Error: Open se_cat00.wav failed!");
 	}
 	SCAnounce.setBuffer(SCAnounceBuffer);
 	SCAnounce.setVolume(50);
-	if (!cardGetBuffer.loadFromFile("./res/se_cardget.wav"))		//加载收取音效
+	if (!cardGetBuffer.loadFromFile("./res/se_cardget.wav"))		//������ȡ��Ч
 	{
 		puts("Error: Open se_cardget.wav failed!");
 	}
@@ -446,11 +456,11 @@ void Game::loadMusicAndSounds()		//加载背景音乐和音效
 
 void Game::run()
 {
-	//播放主菜单界面，展示主菜单
+	//�������˵����棬չʾ���˵�
 	menu();
 	lifeDisplay = remnant;
 	bombDisplay = 2;
-	int level = 1;			//关卡选择，目前仅仅实装了sg1
+	int level = 1;			//�ؿ�ѡ��Ŀǰ����ʵװ��sg1
 	isPaused = false;
 
 	switch (level)
@@ -461,9 +471,9 @@ void Game::run()
 	}
 	nowMusic->play();
 	nowMusic->setLoop(true);
-	//游戏进行的主循环
-	mWindow.setFramerateLimit(60);      //60帧
-	mWindow.draw(player.hero);			//更新人物位置
+	//��Ϸ���е���ѭ��
+	mWindow.setFramerateLimit(60);      //60֡
+	mWindow.draw(player.hero);			//��������λ��
 
 	frameDisplay();
 	/*HANDLE hThread_1 = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)BGMPlay, self, 0, NULL);*/
@@ -491,11 +501,11 @@ void Game::run()
 
 void Game::menu()
 {
-	sf::Text textStart(L"开始", font, 50);
-	sf::Text textExStart(L"开始 Extra 面", font, 50);
-	sf::Text textOptions(L"选项", font, 50);
-	sf::Text textQuit(L"退出", font, 50);
-	sf::Text text5G(L"5G，启动", font, 50);
+	sf::Text textStart(L"��ʼ", font, 50);
+	sf::Text textExStart(L"��ʼ Extra ��", font, 50);
+	sf::Text textOptions(L"ѡ��", font, 50);
+	sf::Text textQuit(L"�˳�", font, 50);
+	sf::Text text5G(L"5G�����", font, 50);
 	if (!title.loadFromFile("./res/title.png"))
 	{
 		puts("Error: Load title failed!");
@@ -503,14 +513,14 @@ void Game::menu()
 	titleBackground.setTexture(title);
 	menuMusic.play();
 	menuMusic.setLoop(true);
-	// 设置选项的位置
+	// ����ѡ���λ��
 	textStart.setPosition(100, 560);
 	textExStart.setPosition(110, 630);
 	textOptions.setPosition(120, 700);
 	textQuit.setPosition(130, 770);
 	text5G.setPosition(140, 840);
-	int selectedItem = 0;		// 记录当前选项，默认为textStart
-	// 主菜单主循环
+	int selectedItem = 0;		// ��¼��ǰѡ�Ĭ��ΪtextStart
+	// ���˵���ѭ��
 	while (mWindow.isOpen())
 	{
 		sf::Event event;
@@ -521,7 +531,7 @@ void Game::menu()
 				mWindow.close();
 				return;
 			}
-			// 读取上下方向键切换选项
+			// ��ȡ���·�����л�ѡ��
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Up)
@@ -562,7 +572,7 @@ void Game::menu()
 				}
 				else if (event.key.code == sf::Keyboard::X)
 				{
-					// 模拟官作主菜单中的“按X跳转到Quit”操作
+					// ģ��������˵��еġ���X��ת��Quit������
 					selectSound.play();
 					if (selectedItem == 2)
 					{
@@ -576,7 +586,7 @@ void Game::menu()
 				}
 			}
 		}
-		// 选中时高亮
+		// ѡ��ʱ����
 		textStart.setFillColor(sf::Color(166, 166, 166));
 		textExStart.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
 		textOptions.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
@@ -700,12 +710,12 @@ void Game::displayPauseMenu() {
 			mWindow.display();
 		}
 	}
-	// 没有暂停，就直接结束
+	// û����ͣ����ֱ�ӽ���
 }
 
 void Game::restartGame() {
 
-	player.hero.setPosition(sf::Vector2f(430, 820)); // 位置初始化为屏幕中心
+	player.hero.setPosition(sf::Vector2f(430, 820)); // λ�ó�ʼ��Ϊ��Ļ����
 	int level = 1;
 	isPaused = false;
 	nowMusic->stop();
@@ -758,18 +768,18 @@ void Game::gameClearFunction()
 	gameClearMusic.setLoop(true);
 
 	vector<sf::Text> textList{
-		{L"游戏已结束~", font, 50},
-		{L"芝士第二行文字", font, 50},
+		{L"��Ϸ�ѽ���~", font, 50},
+		{L"֥ʿ�ڶ�������", font, 50},
 	};
 
 	int currentIndex = 0;
 
-	// 设置文字的位置
+	// �������ֵ�λ��
 	for (sf::Text& text : textList) {
 		text.setPosition(120, 720);
 	}
 
-	// 通关界面主循环
+	// ͨ�ؽ�����ѭ��
 	while (mWindow.isOpen())
 	{
 		sf::Event event;
@@ -780,7 +790,7 @@ void Game::gameClearFunction()
 				mWindow.close();
 				return;
 			}
-			// 读取 Z 键切换文字
+			// ��ȡ Z ���л�����
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Z)
@@ -806,7 +816,7 @@ void Game::playerSignName()
 		L"nopqrstuvwxyz",
 		L"0123456789+-=",
 		L",.!?@:;[]()_/",
-		L"{}|~^#$%&*□←終",
+		L"{}|~^#$%&*�����K",
 	};
 
 	const int maxI = keys.size();
@@ -836,7 +846,7 @@ void Game::playerSignName()
 	gameClearMusic.play();
 	gameClearMusic.setLoop(true);
 
-	// 设置文字的位置
+	// �������ֵ�λ��
 	for (int i = 0; i < maxI; ++i)
 	{
 		for (int j = 0; j < maxJ; ++j)
@@ -853,7 +863,7 @@ void Game::playerSignName()
 	playerNameText.setPosition(200, 120);
 
 
-	// 机签主循环
+	// ��ǩ��ѭ��
 	while (mWindow.isOpen())
 	{
 		sf::Event event;
@@ -864,22 +874,22 @@ void Game::playerSignName()
 				mWindow.close();
 				return;
 			}
-			// 读取 Z 键切换文字
+			// ��ȡ Z ���л�����
 			if (event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Z)
 				{
 					selectSound.play();
 					const wchar_t wch = keys.at(selectedI).at(selectedJ);
-					if (wch == L'□')
+					if (wch == L'��')
 					{
 						playerName.push_back(L' ');
 					}
-					else if (wch == L'←')
+					else if (wch == L'��')
 					{
 						playerName.pop_back();
 					}
-					else if (wch == L'終')
+					else if (wch == L'�K')
 					{
 						return;
 					}
@@ -928,7 +938,7 @@ void Game::playerSignName()
 		mWindow.draw(gameClearBackground);
 		mWindow.draw(playerNameText);
 
-		// 选中时高亮
+		// ѡ��ʱ����
 		for (int i = 0; i < maxI; ++i)
 		{
 			for (int j = 0; j < maxJ; ++j)
@@ -957,7 +967,7 @@ void Game::loadOptionsUI()
 
 void Game::options()
 {
-	// 音量和音效的值
+	// ��������Ч��ֵ
 	static int volume = 10;
 	static int sfx = 10;
 	// 调整残机和雷（雷没有实现）
@@ -969,7 +979,7 @@ void Game::options()
 	optionsTitleUI.setScale(4, 4);
 	optionsTitleUI.setPosition(240, 50);
 
-	// UI（文本）
+	// UI���ı���
 	sf::Text textLife("", font, 50);
 	textLife.setPosition(200, 400);
 
@@ -982,7 +992,7 @@ void Game::options()
 	sf::Text textSFX("", font, 50);
 	textSFX.setPosition(230, 580);
 
-	sf::Text textBack(L"回到标题画面", font, 50);
+	sf::Text textBack(L"�ص����⻭��", font, 50);
 	textBack.setPosition(240, 640);
 	while (mWindow.isOpen())
 	{
@@ -996,7 +1006,7 @@ void Game::options()
 			}
 			if (event.type == sf::Event::KeyPressed)
 			{
-				// 切换选项
+				// �л�ѡ��
 				if (event.key.code == sf::Keyboard::Up)
 				{
 					selectSound.play();
@@ -1007,35 +1017,37 @@ void Game::options()
 					selectSound.play();
 					selectedItem = (selectedItem + 1) % 5;
 				}
-				// 调整音量和音效
+				// ������������Ч
 				else if (event.key.code == sf::Keyboard::Left)
 				{
-					if (selectedItem == 2)  // 音量调小
+					okSound.play();
+					if (selectedItem == 2)  // ������С
 					{
 						if (volume > 0)
 							volume--;
-						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
 						stage3BGM.setVolume(volume * 10);
 						gameClearMusic.setVolume(volume * 10);
 					}
-					else if (selectedItem == 3)  // 音效调小
+					else if (selectedItem == 3)  // ��Ч��С
 					{
 						if (sfx > 0)
 							sfx--;
 						selectSound.setVolume(sfx * 5);
-						selectSound.play();
 						playerBulletSound.setVolume(sfx * 5);
 						enemyBulletSound.setVolume(sfx * 1.5);
 						bluePointCollectedSound.setVolume(sfx * 5);
+						bombSound.setVolume(sfx * 10);
 						breakSound.setVolume(sfx * 5);
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
+						okSound.setVolume(sfx * 5);
+						cancelSound.setVolume(sfx * 5);
 					}
-					else if (selectedItem == 0)  // 调整残机
+					else if (selectedItem == 0)  // �����л�
 					{
 						if (lifeDisplay > 0)
 						{
@@ -1044,28 +1056,30 @@ void Game::options()
 							printf("%lld\n", remnant);
 						}
 					}
-					else if (selectedItem == 1)  // 调整雷
+					else if (selectedItem == 1)  // ������
 					{
 						if (bombDisplay > 0)
 						{
 							bombDisplay--;
+							bomb = bombDisplay;
+							printf("%lld\n", bomb);
 						}
 					}
 				}
 				else if (event.key.code == sf::Keyboard::Right)
 				{
-					if (selectedItem == 2)  // 音量调大
+					okSound.play();
+					if (selectedItem == 2)  // ��������
 					{
 						if (volume < 10)
 							volume++;
-						selectSound.play();
 						menuMusic.setVolume(volume * 10);
 						stage1BGM.setVolume(volume * 10);
 						stage2BGM.setVolume(volume * 10);
 						stage3BGM.setVolume(volume * 10);
 						menuMusic.setVolume(volume * 10);
 					}
-					else if (selectedItem == 3)  // 音效调大
+					else if (selectedItem == 3)  // ��Ч����
 					{
 						if (sfx < 10)
 							sfx++;
@@ -1078,8 +1092,10 @@ void Game::options()
 						playerDeadSound.setVolume(sfx * 5);
 						SCAnounce.setVolume(sfx * 5);
 						cardGet.setVolume(sfx * 5);
+						okSound.setVolume(sfx * 5);
+						cancelSound.setVolume(sfx * 5);
 					}
-					else if (selectedItem == 0)  // 调整残机
+					else if (selectedItem == 0)  // �����л�
 					{
 						if (lifeDisplay < MAX_LIFE)
 						{
@@ -1088,11 +1104,13 @@ void Game::options()
 							printf("%lld\n", remnant);
 						}
 					}
-					else if (selectedItem == 1)  // 调整雷
+					else if (selectedItem == 1)  // ������
 					{
 						if (bombDisplay < MAX_BOMB)
 						{
 							bombDisplay++;
+							bomb = bombDisplay;
+							printf("%lld\n", bomb);
 						}
 					}
 				}
@@ -1100,16 +1118,16 @@ void Game::options()
 				{
 					if (selectedItem == 4)
 					{
-						selectSound.play();
+						cancelSound.play();
 						return;
 					}
 				}
-				// 按X退出 
+				// ��X�˳� 
 				else if (event.key.code == sf::Keyboard::X)
 				{
 					if (selectedItem == 4)
 					{
-						selectSound.play();
+						cancelSound.play();
 						return;
 					}
 					else
@@ -1119,13 +1137,13 @@ void Game::options()
 				}
 			}
 		}
-		// 更新显示文本
-		textVolume.setString(L"音乐: " + std::to_wstring(volume));
-		textSFX.setString(L"音效: " + std::to_wstring(sfx));
-		textLife.setString(L"残机: " + std::to_wstring(lifeDisplay));
+		// ������ʾ�ı�
+		textVolume.setString(L"����: " + std::to_wstring(volume));
+		textSFX.setString(L"��Ч: " + std::to_wstring(sfx));
+		textLife.setString(L"�л�: " + std::to_wstring(lifeDisplay));
 		textBomb.setString(L"Bomb: " + std::to_wstring(bombDisplay));
 
-		// 选中时高亮
+		// ѡ��ʱ����
 		textLife.setFillColor(selectedItem == 0 ? sf::Color::Yellow : sf::Color::White);
 		textBomb.setFillColor(selectedItem == 1 ? sf::Color::Yellow : sf::Color::White);
 		textVolume.setFillColor(selectedItem == 2 ? sf::Color::Yellow : sf::Color::White);
@@ -1146,16 +1164,19 @@ void Game::options()
 
 void Game::Stage1()
 {
-	elapsed1 += clock.restart();
-	evts[20] = { 0 };
+	static sf::Time elapsed1 = clock.restart();		//游戏帧重置
+	elapsed1 = clock.getElapsedTime();
+	
+	static int evts[20] = { 0 };
 
+	static int curTime = 1;
 	if (curTime < elapsed1.asSeconds())
 	{
-		printf("%.f\n", elapsed1.asSeconds());
+		printf("%.0f\n", elapsed1.asSeconds());
 		curTime++;
 	}
 
-	switch ((int)elapsed1.asSeconds() + 0)//test用，所有敌人生成都是以时间来判断
+	switch ((int)elapsed1.asSeconds() + 0)//test�ã����е������ɶ�����ʱ�����ж�
 	{
 	case 1:
 		//pre
@@ -1196,7 +1217,7 @@ void Game::Stage1()
 		evts[11] = 1;
 		break;
 	case 100:
-		//切换场景至测试2面
+		//�л�����������2��
 		evts[12] = 1;
 		break;
 	case 105:
@@ -1205,7 +1226,7 @@ void Game::Stage1()
 		break;
 	}
 
-	if (evts[1]) // 值为1
+	if (evts[1])
 	{
 		if (S1E1())
 		{
@@ -1256,7 +1277,6 @@ void Game::Stage1()
 	}
 	if (evts[8])
 	{
-		// 閬撲腑瀵硅瘽
 		if (S1E8())
 		{
 			evts[8] = 0;
@@ -1306,15 +1326,15 @@ void Game::Stage1()
 		}
 	}
 }
-//生成敌人的函数   S表示关卡，E指代波数，比较重复的代码不作注释，任何行为都是基于游戏帧来执行
+//���ɵ��˵ĺ���   S��ʾ�ؿ���Eָ���������Ƚ��ظ��Ĵ��벻��ע�ͣ��κ���Ϊ���ǻ�����Ϸ֡��ִ��
 int Game::S1E1()
 {
-	static int i1 = 0;			//记录帧
+	static int i1 = 0;			//��¼֡
 	i1++;
-	static list<FO> wave1, wave2;		//用于存放敌机对象的链表
-	double gapTime = 0.4;				//生成时间间隔
-	int gapFrame = gapTime * 60;		//生成帧间隔
-	static int gap = 0, temp = 0;		//gap用来区分每个敌人生成的时间，确保分开生成
+	static list<FO> wave1, wave2;		//���ڴ�ŵл����������
+	double gapTime = 0.4;				//����ʱ����
+	int gapFrame = gapTime * 60;		//����֡���
+	static int gap = 0, temp = 0;		//gap��������ÿ���������ɵ�ʱ�䣬ȷ���ֿ�����
 
 	if (restartI1s == true) {
 		i1 = 0;
@@ -1327,11 +1347,11 @@ int Game::S1E1()
 
 	if (i1 % gapFrame == 1 && i1 < 15 * gapFrame)
 	{
-		FO sButterfly(2);						//生成第一类小怪
+		FO sButterfly(2);						//���ɵ�һ��С��
 		sButterfly.hero.setTexture(Enemy1);
 		sButterfly.hero.setTextureRect(sf::IntRect(0, 320, sButterfly.width, sButterfly.height));
 		sButterfly.hero.setScale(sf::Vector2f(1.5, 1.5));
-		sButterfly.hero.setPosition(sf::Vector2f(400 + pow(-1.0, i1 / gapFrame) * 0.8 * i1, 20.0));		//根据当前时间帧计算敌人的位置（左右交替）
+		sButterfly.hero.setPosition(sf::Vector2f(400 + pow(-1.0, i1 / gapFrame) * 0.8 * i1, 20.0));		//���ݵ�ǰʱ��֡������˵�λ�ã����ҽ��棩
 		//sButterfly.setSButterfly(400 + pow(-1.0, i1 / gapFrame) * i1, 20.0);
 		sButterfly.born = i1;
 		sButterfly.gap = gap;
@@ -1340,7 +1360,7 @@ int Game::S1E1()
 		wave1.push_back(sButterfly);
 	}
 	if (i1 == 270)
-	{								//生成第二类敌人，大蝴蝶
+	{								//���ɵڶ�����ˣ������
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
@@ -1353,12 +1373,12 @@ int Game::S1E1()
 		wave2.push_back(mButterfly);
 	}
 
-	wave1.remove_if(isFOOutOfBoard);		//第一类敌人的行为
+	wave1.remove_if(isFOOutOfBoard);		//��һ����˵���Ϊ
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
 
 		temp = i1 - it->gap * gapFrame;
-		if (temp < 200)//phase1			//正常是向下移动，偶尔发射子弹
+		if (temp < 200)//phase1			//�����������ƶ���ż�������ӵ�
 		{
 			if (rand() % 20 == 0)
 			{
@@ -1368,7 +1388,7 @@ int Game::S1E1()
 			it->theta = 0.5 * PI;
 			it->hero.setTextureRect(sf::IntRect(i1 % 35 / 7 * it->width, 320, it->width, it->height));
 		}
-		else//phase2				//时间过了，小怪准备离场
+		else//phase2				//ʱ����ˣ�С��׼���볡
 		{
 			it->speed = (temp - 200) / 10.0;
 			it->theta = 0.5 * PI + pow(-1.0, it->gap + 1.0) * 10.0 * PI / 360.0;
@@ -1398,9 +1418,9 @@ int Game::S1E1()
 		enemiesPushToDraw(it);
 	}
 
-	wave2.remove_if(isFOOutOfBoard);		//第二类敌人的行为
+	wave2.remove_if(isFOOutOfBoard);		//�ڶ�����˵���Ϊ
 	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)
-	{					//向下随机角度发射子弹
+	{					//��������Ƕȷ����ӵ�
 		it->hero.setTextureRect(sf::IntRect(i1 % 50 / 10 * it->width, 448, it->width, it->height));
 		if (i1 < 400)
 		{
@@ -1426,7 +1446,7 @@ int Game::S1E1()
 		enemiesPushToDraw(it);
 	}
 
-	if (i1 > 15 * 60)			//关卡结束判断
+	if (i1 > 15 * 60)			//�ؿ������ж�
 	{
 		wave1.clear();//Final clear for accident
 		wave2.clear();
@@ -1435,7 +1455,7 @@ int Game::S1E1()
 	return 0;
 }
 
-int Game::S1E2()			//E2比较特殊，这里涉及一个小过场
+int Game::S1E2()			//E2�Ƚ����⣬�����漰һ��С����
 {
 	static int i1 = 0;
 	i1++;
@@ -1450,7 +1470,7 @@ int Game::S1E2()			//E2比较特殊，这里涉及一个小过场
 	if (i1 == 1)
 	{
 		FO mainTitle(0);
-		mainTitle.hero.setTexture(Title1);		//加载过场logo
+		mainTitle.hero.setTexture(Title1);		//���ع���logo
 		mainTitle.hero.setTextureRect(sf::IntRect(0, 0, 512, 256));
 		//mainTitle.hero.setScale(sf::Vector2f(1.5, 1.5));
 		mainTitle.speed = 0.0;
@@ -1463,18 +1483,18 @@ int Game::S1E2()			//E2比较特殊，这里涉及一个小过场
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
 		it->hero.setColor(sf::Color(255, 255, 255, -i1 * (i1 - 301) / (151.0 * 150.0) * 255));
-		enemiesPushToDraw(it);			//实现logo的渐变出现
+		enemiesPushToDraw(it);			//ʵ��logo�Ľ������
 	}
 	if (i1 > 5 * 60)
 	{
-		wave1.clear();			//动画结束检测的
+		wave1.clear();			//������������
 		return 1;
 	}
 	return 0;
 }
 
 int Game::S1E3()
-{				//第一串小怪
+{				//��һ��С��
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1, wave2;
@@ -1506,7 +1526,7 @@ int Game::S1E3()
 		wave1.push_back(sButterfly);
 	}
 	if (i1 == 21)
-	{				//大蝴蝶
+	{				//�����
 		FO mButterfly(5);
 		mButterfly.hero.setTexture(Enemy1);
 		mButterfly.hero.setTextureRect(sf::IntRect(0, 448, mButterfly.width, mButterfly.height));
@@ -1589,7 +1609,7 @@ int Game::S1E3()
 }
 
 int Game::S1E4()
-{				//三波串怪
+{				//��������
 	static int i1 = 0;
 	i1++;
 	static list<FO> wave1, wave2, wave3;
@@ -1769,7 +1789,7 @@ int Game::S1E4()
 
 	if (i1 > 15 * 60)
 	{
-		wave1.clear();		//时间到了小怪跑路，到屏幕外然后清除
+		wave1.clear();		//ʱ�䵽��С����·������Ļ��Ȼ�����
 		wave2.clear();
 		wave3.clear();
 		return 1;
@@ -2232,7 +2252,7 @@ int Game::S1E7()
 		it->hero.setTextureRect(sf::IntRect(i1 % 50 / 10 * it->width, 448, it->width, it->height));
 		if (i1 < 80)
 		{
-			it->speed = (80 - i1) / 16.0;			//非常炫酷的对称小开花弹幕
+			it->speed = (80 - i1) / 16.0;			//�ǳ��ſ�ĶԳ�С������Ļ
 			it->theta = 0.5 * PI;
 		}
 		else if (i1 >= 80 && i1 < 400)
@@ -2260,11 +2280,11 @@ int Game::S1E7()
 	return 0;
 }
 
-int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为boss
+int Game::S1E8()				//��һ���ǵ�һ��Ľ���������һ��������Ϊboss
 {
 	static int i1 = 0, stp = 0;
 	i1++;
-	static list<FO> wave1, wave2;	//wave1存储幽灵本体，wave2存储一个绕着转的背景魔法阵
+	static list<FO> wave1, wave2;	//wave1�洢���鱾�壬wave2�洢һ������ת�ı���ħ����
 
 	if (restartI1s == true) {
 		i1 = 0;
@@ -2275,7 +2295,7 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为b
 	}
 
 	if (i1 == 1)
-	{						//生成
+	{						//����
 		FO ghost(6);
 		ghost.hero.setTexture(Enemy2);
 		ghost.hero.setTextureRect(sf::IntRect(0, 64, ghost.width, ghost.height));
@@ -2293,12 +2313,12 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为b
 		wave2.push_back(spellBoard);
 	}
 	if (wave1.size() == 0)
-	{				//判断是否击破，击破之后魔法阵清除
+	{				//�ж��Ƿ���ƣ�����֮��ħ�������
 		wave2.clear();
 		return 1;
 	}
 	wave2.remove_if(isFOOutOfBoard);
-	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)		//控制魔法阵的旋转效果
+	for (list<FO>::iterator it = wave2.begin(); it != wave2.end(); it++)		//����ħ�������תЧ��
 	{
 		it->hero.setPosition(wave1.begin()->hero.getPosition().x, wave1.begin()->hero.getPosition().y + 32);
 		it->theta += PI / 100.0;
@@ -2319,13 +2339,13 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为b
 			it->speed = (80 - i1) / 16.0;
 			it->theta = 0.5 * PI;
 		}
-		else if (i1 >= 80 && i1 < 1200)				//处理boss的攻击行为处于哪个阶段
+		else if (i1 >= 80 && i1 < 1200)				//����boss�Ĺ�����Ϊ�����ĸ��׶�
 		{
 			it->speed = 0.0;
 			switch (it->phase)
 			{
 			case 2:
-				nonSpellCard1(it);		//1非
+				nonSpellCard1(it);		//1��
 				break;
 			case 1:
 				if (i1 == 141)
@@ -2334,7 +2354,7 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为b
 				}
 				if (i1 > 3 * 60)
 				{
-					spellCard1(it);		//1符
+					spellCard1(it);		//1��
 				}
 				break;
 			}
@@ -2353,13 +2373,13 @@ int Game::S1E8()				//这一波是第一面的结束，生成一个幽灵作为b
 	}
 	if (i1 > 60 * 60)
 	{
-		wave1.clear();			//到点跑路
+		wave1.clear();			//������·
 		return 1;
 	}
 	return 0;
 }
 
-int Game::S1E9()				//随机大蝴蝶，类似春终米粒弹，实现封位效果
+int Game::S1E9()				//�������������ƴ�����������ʵ�ַ�λЧ��
 {
 	static int i1 = 0;
 	i1++;
@@ -2526,7 +2546,7 @@ int Game::S1E10()
 	return 0;
 }
 
-int Game::S1E11()			//顶端大量生成小怪，一阶段下落，二阶段随机跑路
+int Game::S1E11()			//���˴�������С�֣�һ�׶����䣬���׶������·
 {
 	static int i1 = 0;
 	i1++;
@@ -2611,7 +2631,7 @@ int Game::S1E11()			//顶端大量生成小怪，一阶段下落，二阶段随�
 	return 0;
 }
 
-int Game::S1E12()			//第一面结束，进入第二面，但方便测试可以看作都是第一面
+int Game::S1E12()			//��һ�����������ڶ��棬��������Կ��Կ������ǵ�һ��
 {
 	static int i1 = 0;
 	i1++;
@@ -2641,13 +2661,13 @@ int Game::S1E12()			//第一面结束，进入第二面，但方便测试可以�
 		it->hero.setColor(sf::Color(255, 255, 255, alpha));
 		if (i1 < 151)
 		{
-			stage1BGM.setVolume((255 - alpha) / 255.0 * 100.0);			//第一面的bgm渐变降低
+			stage1BGM.setVolume((255 - alpha) / 255.0 * 100.0);			//��һ���bgm���併��
 			if (alpha > 240)
 			{
 				stage1BGM.pause();
 				for (int i = 0; i < 6; i++)
 				{
-					back[i].setTexture(bg2);					//切换背景至第二面
+					back[i].setTexture(bg2);					//�л��������ڶ���
 					back[i].setScale(sf::Vector2f(1.5, 1.5));
 					back[i].setPosition((float)65.0, (float)(i - 1) * 192.0 + 35.0);
 					backEff[i].setTexture(bgEff2);
@@ -2661,7 +2681,7 @@ int Game::S1E12()			//第一面结束，进入第二面，但方便测试可以�
 	if (i1 == 200)
 	{
 		stage2BGM.play();
-		stage2BGM.setLoop(true);		//第二面的bgm
+		stage2BGM.setLoop(true);		//�ڶ����bgm
 	}
 	if (i1 > 5 * 60)
 	{
@@ -2671,7 +2691,7 @@ int Game::S1E12()			//第一面结束，进入第二面，但方便测试可以�
 	return 0;
 }
 
-int Game::S1E13()			//测试用，第二面仅一个幽灵boss
+int Game::S1E13()			//�����ã��ڶ����һ������boss
 {
 	static int i1 = 0, stp = 0;
 	i1++;
@@ -2700,7 +2720,7 @@ int Game::S1E13()			//测试用，第二面仅一个幽灵boss
 		spellBoard.hero.setPosition(ghost.hero.getPosition());
 		spellBoard.theta = 0;
 		spellBoard.hero.setColor(sf::Color(255, 255, 255, 127));
-		ghost.phase = 10;			//初始阶段定义，目前是2非
+		ghost.phase = 10;			//��ʼ�׶ζ��壬Ŀǰ��2��
 		wave1.push_back(ghost);
 		wave2.push_back(spellBoard);
 	}
@@ -2721,7 +2741,7 @@ int Game::S1E13()			//测试用，第二面仅一个幽灵boss
 	wave1.remove_if(isFOOutOfBoard);
 	for (list<FO>::iterator it = wave1.begin(); it != wave1.end(); it++)
 	{
-		if (it->phase + stp == 9)				//判断目前的阶段并执行
+		if (it->phase + stp == 9)				//�ж�Ŀǰ�Ľ׶β�ִ��
 		{
 			stp++;
 			i1 = 80;
@@ -2849,7 +2869,7 @@ int Game::S1E13()			//测试用，第二面仅一个幽灵boss
 				cardGet.play();
 				breakSound.play();
 				score += it->score;
-				//死亡效果
+				//����Ч��
 				deathEff.setTexture(deathCircle);
 				deathEff.setTextureRect(sf::IntRect(64, 0, 64, 64));
 				deathEff.setOrigin(32, 32);
@@ -2874,7 +2894,7 @@ int Game::S1E13()			//测试用，第二面仅一个幽灵boss
 
 
 
-int Game::S1E14()			//未实装
+int Game::S1E14()			//δʵװ
 {
 	static int i1 = 0;
 	i1++;
@@ -2911,11 +2931,11 @@ int Game::S1E14()			//未实装
 	return 0;
 }
 
-void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌人的逻辑和弹幕发射
+void Game::enemiesPushToDraw(list<FO>::iterator it)			//�����ͬ���͵ĵ��˵��߼��͵�Ļ����
 {
 	switch (it->type)
 	{
-	case 101:				//边界反弹类
+	case 101:				//�߽練����
 		if (it->hero.getPosition().y < 60 || it->hero.getPosition().y > 900)
 		{
 			if (it->bounds < 3)
@@ -2926,7 +2946,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌
 		}
 		return;
 		break;
-	case 103:			//发射弹幕类
+	case 103:			//���䵯Ļ��
 		it->HealthPoint++;
 		if (it->HealthPoint > 60 && it->phase > 0)
 		{
@@ -2967,7 +2987,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌
 			return;
 		}
 		break;
-	case 104:			//抛物线运动类
+	case 104:			//�������˶���
 		it->HealthPoint++;
 		if (it->speed > EPS)
 		{
@@ -2984,7 +3004,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌
 		return;
 		break;
 	}
-	//通用类
+	//ͨ����
 	if (it->speed > EPS)
 	{
 		it->velocity.x = it->speed * cos(it->theta);
@@ -2995,7 +3015,7 @@ void Game::enemiesPushToDraw(list<FO>::iterator it)			//处理不同类型的敌
 	enemies.push_back(*it);
 }
 
-void Game::backEsPushToDraw(list<FO>::iterator it)			//管理更新背景特效
+void Game::backEsPushToDraw(list<FO>::iterator it)			//������±�����Ч
 {
 	if (it->speed > EPS)
 	{
@@ -3009,7 +3029,7 @@ void Game::backEsPushToDraw(list<FO>::iterator it)			//管理更新背景特效
 
 void Game::frameDisplay()//ammo->front->player->jpoint
 {
-	//用来渲染每一帧的显示效果
+	//������Ⱦÿһ֡����ʾЧ��
 	player.staticFrame = player.staticFrame % 56;
 	player.staticFrame++;
 	mWindow.clear();
@@ -3035,12 +3055,12 @@ void Game::frameDisplay()//ammo->front->player->jpoint
 
 	displayPauseMenu();
 
-	mWindow.display();		//刷新窗口
+	mWindow.display();		//ˢ�´���
 }
 //
-void Game::backgroundDisplay()				//实现背景的滚动
+void Game::backgroundDisplay()				//ʵ�ֱ����Ĺ���
 {
-	for (int i = 0; i < 6; i++)					//滚动背景
+	for (int i = 0; i < 6; i++)					//��������
 	{
 		if (back[i].getPosition().y >= 5 * 192 + 35)
 		{
@@ -3050,7 +3070,7 @@ void Game::backgroundDisplay()				//实现背景的滚动
 		mWindow.draw(back[i]);
 
 	}
-	for (int i = 0; i < 4; i++)					//滚动背景特效
+	for (int i = 0; i < 4; i++)					//����������Ч
 	{
 		if (backEff[i].getPosition().y >= 3 * 384 + 35)
 		{
@@ -3066,12 +3086,12 @@ void Game::backgroundDisplay()				//实现背景的滚动
 	backgroundEffs.clear();
 }
 //
-void Game::playerAmmoDisplay()			//处理自机的子弹
+void Game::playerAmmoDisplay()			//�����Ի����ӵ�
 {
 	if (mIsFire)
 	{
 		//playerAmmo = (mIsGrazing) ? player.LSAmmo : player.HSAmmo;
-		if (player.staticFrame % 2 == 1)		//每帧射击
+		if (player.staticFrame % 2 == 1)		//ÿ֡���
 		{
 			player.LSAmmo.setPosition(sf::Vector2f(player.hero.getPosition().x + 4, player.hero.getPosition().y + 80));
 			playerBullets.push_back(player.LSAmmo);
@@ -3086,12 +3106,12 @@ void Game::playerAmmoDisplay()			//处理自机的子弹
 	playerBullets.remove_if(isOutOfBoard);
 	for (list<sf::Sprite>::iterator it = playerBullets.begin(); it != playerBullets.end(); it++)
 	{
-		it->move(0.0, -60.0);	//子弹的移动
+		it->move(0.0, -60.0);	//�ӵ����ƶ�
 		mWindow.draw(*it);
 	}
 }
 //
-void Game::enemiesDisplay()		//敌人精灵绘制
+void Game::enemiesDisplay()		//���˾������
 {
 	for (list<FO>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
@@ -3114,7 +3134,7 @@ void Game::enemiesDisplay()		//敌人精灵绘制
 	}
 }*/
 //
-void Game::enemyBulletsDisplay()			//处理敌方子弹的显示和移除超出边界的子弹
+void Game::enemyBulletsDisplay()			//����з��ӵ�����ʾ���Ƴ������߽���ӵ�
 {
 	enemyBullets.remove_if(isFOOutOfBoard);
 	for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
@@ -3127,11 +3147,11 @@ void Game::playerDisplay()
 {
 	pair<PlayerCollisionResult, list<FO>::iterator> collision = checkPlayerCollision();
 
-	if ((collision.first == PlayerCollisionResult::EnemyBullet          // 被弹
-		|| collision.first == PlayerCollisionResult::EnemyBody)         // 或者被体术
-		&& clockForInvulnerability.getElapsedTime().asSeconds() > 1.0)  // 而且不在无敌时间内
+	if ((collision.first == PlayerCollisionResult::EnemyBullet          // ����
+		|| collision.first == PlayerCollisionResult::EnemyBody)         // ���߱�����
+		&& clockForInvulnerability.getElapsedTime().asSeconds() > 1.0)  // ���Ҳ����޵�ʱ����
 	{
-		// 清空场上所有来自敌机的子弹
+		// ��ճ����������Եл����ӵ�
 		for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
 		{
 			enemyCrash(it);
@@ -3140,7 +3160,7 @@ void Game::playerDisplay()
 		clockForInvulnerability.restart();
 		playerDeadSound.play();
 
-		// 扣除残机
+		// �۳��л�
 		if (remnant > 0)
 		{
 			remnant--;
@@ -3153,7 +3173,7 @@ void Game::playerDisplay()
 		}
 	}
 
-	// 这是吃到蓝点。
+	// ���ǳԵ����㡣
 	if (collision.first == PlayerCollisionResult::BluePoint)
 	{
 		bluePointCollected(collision.second);
@@ -3161,10 +3181,10 @@ void Game::playerDisplay()
 
 	if (collision.first == PlayerCollisionResult::NoCollision)
 	{
-		;  // noop。
+		;  // noop��
 	}
 
-	if (mIsMovingLeft)			//检测左移
+	if (mIsMovingLeft)			//�������
 	{
 		if (player.dynamicFrame < 14)
 		{
@@ -3172,7 +3192,7 @@ void Game::playerDisplay()
 		}
 		player.hero.setTextureRect(sf::IntRect(player.width * (player.dynamicFrame / 2), player.height, player.width, player.height));
 	}
-	else if (mIsMovingRight)		//检测右移
+	else if (mIsMovingRight)		//�������
 	{
 		if (player.dynamicFrame < 14)
 		{
@@ -3186,7 +3206,7 @@ void Game::playerDisplay()
 		player.dynamicFrame = 0;
 	}
 
-	mWindow.draw(player.hero);		//更新人物位置
+	mWindow.draw(player.hero);		//��������λ��
 
 	static int julgeRotate = 0;
 	julgeRotate++;
@@ -3194,13 +3214,13 @@ void Game::playerDisplay()
 	julgePoint.setOrigin(32, 32);
 	julgePoint.setRotation(julgeRotate);
 	julgePoint.setPosition(sf::Vector2f(player.hero.getPosition().x - 24 + 48, player.hero.getPosition().y - 8 + 48));
-	if (mIsGrazing)			//检测低速
+	if (mIsGrazing)			//������
 	{
 		mWindow.draw(julgePoint);
 	}
 }
 //
-void Game::effsDisplay()		//处理子弹效果和死亡效果
+void Game::effsDisplay()		//�����ӵ�Ч��������Ч��
 {
 	for (list<sf::Sprite>::iterator it = playerBulletsEffs.begin(); it != playerBulletsEffs.end(); it++)
 	{
@@ -3219,7 +3239,7 @@ void Game::effsDisplay()		//处理子弹效果和死亡效果
 	deathEffs.remove_if([](sf::Sprite obj) { if (obj.getScale().x > 2.3 || (obj.getRotation() < EPS && obj.getScale().x > 2.0)) return true; else return false; });
 }
 //
-void Game::boardDisplay()			//显示血量和分数
+void Game::boardDisplay()			//��ʾѪ���ͷ���
 {
 	mWindow.draw(front01);
 	mWindow.draw(front02);
@@ -3261,11 +3281,46 @@ void Game::boardDisplay()			//显示血量和分数
 	lifeBoard.setScale(1.5, 1.5);
 	lifeBoard.setPosition(830, 300);
 	mWindow.draw(lifeBoard);
-
-	static string scoreStr;
-	scoreStr = "Score:             ";
-	scoreStr += to_string(score);
-	tempScore.setString(scoreStr);
+	// 雷
+	switch (bomb)
+	{
+	case 8:
+		bombBoard.setTextureRect(sf::IntRect(0, 0, 278, 36));
+		break;
+	case 7:
+		bombBoard.setTextureRect(sf::IntRect(0, 44, 278, 36));
+		break;
+	case 6:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 2, 278, 36));
+		break;
+	case 5:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 3, 278, 36));
+		break;
+	case 4:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 4, 278, 36));
+		break;
+	case 3:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 5, 278, 36));
+		break;
+	case 2:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 6, 278, 36));
+		break;
+	case 1:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 7, 278, 36));
+		break;
+	case 0:
+		bombBoard.setTextureRect(sf::IntRect(0, 44 * 8, 278, 36));
+	default:
+		;
+	}
+	bombBoard.setScale(1.5, 1.5);
+	bombBoard.setPosition(830, 350);
+	mWindow.draw(bombBoard);
+	// 分数
+	//static string scoreStr;
+	//scoreStr = "Score:             ";
+	//scoreStr += to_string(score);
+	tempScore.setString("Score:"+std::to_string(score));
 	tempScore.setStyle(sf::Text::Italic);
 	tempScore.setFont(font);
 	tempScore.setCharacterSize(50);
@@ -3273,7 +3328,7 @@ void Game::boardDisplay()			//显示血量和分数
 	mWindow.draw(tempScore);
 }
 
-void Game::enemyCollisionProcessing(list<FO>::iterator it)		//处理敌人被子弹击中的实现
+void Game::enemyCollisionProcessing(list<FO>::iterator it)		//������˱��ӵ����е�ʵ��
 {
 	for (list<sf::Sprite>::iterator itAmmo = playerBullets.begin(); itAmmo != playerBullets.end(); itAmmo++)
 	{
@@ -3284,15 +3339,15 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//处理敌人被子
 			if (it->HealthPoint <= 0)
 			{
 				it->phase--;
-				// 爆蓝点喽
+				// �������
 				//puts("setBluePointByEnemyType(it);");
 				setBluePointByEnemyType(it);
 				if (it->phase <= 0)
-				{	// 敌机击毁？
+				{	// �л����٣�
 					enemyCrash(it);
 				}
 				else
-				{	// 敌机是 boss，进入了下一阶段？
+				{	// �л��� boss����������һ�׶Σ�
 					cardGet.play();
 					breakSound.play();
 					score += it->score;
@@ -3312,7 +3367,7 @@ void Game::enemyCollisionProcessing(list<FO>::iterator it)		//处理敌人被子
 	}
 }
 
-void Game::enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator itAmmo)		//处理敌人被击中后的效果
+void Game::enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator itAmmo)		//������˱����к��Ч��
 {
 	score++;
 	it->HealthPoint -= player.damage;
@@ -3323,7 +3378,7 @@ void Game::enemyUnderAttack(list<FO>::iterator it, list<sf::Sprite>::iterator it
 	itAmmo->setPosition(-100, -100);
 }
 
-void Game::enemyCrash(list<FO>::iterator it)		//处理敌人被击毁
+void Game::enemyCrash(list<FO>::iterator it)		//������˱�����
 {
 	breakSound.play();
 	score += it->score;
@@ -3339,21 +3394,21 @@ void Game::enemyCrash(list<FO>::iterator it)		//处理敌人被击毁
 	it->hero.setPosition(-100, -100);
 }
 
-void Game::bluePointCollected(list<FO>::iterator it)		//处理蓝点被吃掉
+void Game::bluePointCollected(list<FO>::iterator it)		//�������㱻�Ե�
 {
 	bluePointCollectedSound.play();
-	// 玩家越高，分数越大
+	// ���Խ�ߣ�����Խ��
 	score += 50 + static_cast<int>(100 * (1 - static_cast<double>(player.hero.getPosition().y - 40) / (850 - 40)));
 
 	it->hero.setPosition(-100, -100);
 }
 
-void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//设置蝴蝶的动画帧和方向
+void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//���ú����Ķ���֡�ͷ���
 {
 	double t1 = it->theta - 0.5 * PI;
-	double t2 = it->theta - 1.5 * PI;			//计算角度
+	double t2 = it->theta - 1.5 * PI;			//����Ƕ�
 	int he = 320;
-	if (fabs(t1) < EPS || fabs(t2) * PI < EPS)			//判断蝴蝶方向并设置对应的纹理
+	if (fabs(t1) < EPS || fabs(t2) * PI < EPS)			//�жϺ����������ö�Ӧ������
 	{
 		it->hero.setTextureRect(sf::IntRect((int)(temp / 8 % 5) * it->width, he, it->width, it->height));
 	}
@@ -3384,7 +3439,7 @@ void Game::standardSButterflyFrame(list<FO>::iterator it, int temp)	//设置蝴�
 	}
 }
 
-void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//和上一个函数类似，但处理的是中型蝴蝶
+void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//����һ���������ƣ�������������ͺ���
 {
 	double t1 = it->theta - 0.5 * PI;
 	double t2 = it->theta - 1.5 * PI;
@@ -3416,7 +3471,7 @@ void Game::standardMButterflyFrame(list<FO>::iterator it, int temp)	//和上一�
 	}
 }
 
-void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//用于创建和发射敌人的子弹
+void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//���ڴ����ͷ�����˵��ӵ�
 {
 	enemyBulletSound.play();
 	FO Snipe;
@@ -3433,7 +3488,7 @@ void Game::setSnipe(list<FO>::iterator it, double speed, int type, int color)	//
 	enemyBullets.push_back(Snipe);
 }
 
-void Game::setRoundSnipe(list<FO>::iterator it, double speed)			//圆形弹参数设置
+void Game::setRoundSnipe(list<FO>::iterator it, double speed)			//Բ�ε���������
 {
 	enemyBulletSound.play();
 	FO RoundSnipe;
@@ -3490,7 +3545,7 @@ void Game::setGeneralMultiSnipe(list<FO>::iterator it, double speed, int type, i
 	enemyBullets.push_back(GeneralMultiSnipe);
 }
 
-void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, double leftBoarder, double range)	//随机弹设置
+void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, double leftBoarder, double range)	//���������
 {
 	enemyBulletSound.play();
 	FO Random;
@@ -3507,7 +3562,7 @@ void Game::setRandom(list<FO>::iterator it, double speed, int type, int color, d
 	enemyBullets.push_back(Random);
 }
 
-void Game::setRoundRandom(list<FO>::iterator it, double speed, int color, double leftBoarder, double range)	//随机弹
+void Game::setRoundRandom(list<FO>::iterator it, double speed, int color, double leftBoarder, double range)	//�����
 {
 	enemyBulletSound.play();
 	FO RoundRandom;
@@ -3566,7 +3621,7 @@ void Game::setSharpLine(list<FO>::iterator it, double speed)
 	enemyBullets.push_back(SharpLine);
 }
 
-void Game::setSharpFlower1(list<FO>::iterator it, double speed, int type, int color)		//开花弹
+void Game::setSharpFlower1(list<FO>::iterator it, double speed, int type, int color)		//������
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3623,7 +3678,7 @@ void Game::setSharpFlower1(list<FO>::iterator it, double speed, int type, int co
 	}
 }
 
-void Game::nonSpellCard1(list<FO>::iterator it)			//一面旋转弹，非符，具体原理参考THB wiki/b站
+void Game::nonSpellCard1(list<FO>::iterator it)			//һ����ת�����Ƿ�������ԭ��ο�THB wiki/bվ
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3742,7 +3797,7 @@ void Game::nonSpellCard2(list<FO>::iterator it)
 	}
 }
 
-void Game::nonSpellCard3(list<FO>::iterator it)		//3非
+void Game::nonSpellCard3(list<FO>::iterator it)		//3��
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3777,7 +3832,7 @@ void Game::nonSpellCard3(list<FO>::iterator it)		//3非
 }
 
 
-void Game::nonSpellCard4(list<FO>::iterator it)				//4非
+void Game::nonSpellCard4(list<FO>::iterator it)				//4��
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3819,7 +3874,7 @@ void Game::nonSpellCard4(list<FO>::iterator it)				//4非
 	temp += PI / 240.0;
 }
 
-void Game::nonSpellCard5(list<FO>::iterator it)		//5非
+void Game::nonSpellCard5(list<FO>::iterator it)		//5��
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -3859,7 +3914,7 @@ void Game::nonSpellCard5(list<FO>::iterator it)		//5非
 	temp += PI / 240.0;
 }
 
-void Game::nonSpellCard6(list<FO>::iterator it)			//6非
+void Game::nonSpellCard6(list<FO>::iterator it)			//6��
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = -PI / 6.0;
@@ -3912,7 +3967,7 @@ void Game::nonSpellCard6(list<FO>::iterator it)			//6非
 	temp += PI / 240.0;
 }
 
-void Game::spellCard1(list<FO>::iterator it)		//1符
+void Game::spellCard1(list<FO>::iterator it)		//1��
 {
 	static double range = 0, x1 = rand() % 200 + 250;
 	static int ct = 0, temp = 0;
@@ -3940,7 +3995,7 @@ void Game::spellCard1(list<FO>::iterator it)		//1符
 		enemyBullets.push_back(Card1);
 	}
 
-	(ct % 2) ? range -= 16 : range += 16;			//判断是否过低，实现弹反的效果
+	(ct % 2) ? range -= 16 : range += 16;			//�ж��Ƿ���ͣ�ʵ�ֵ�����Ч��
 	temp++;
 	if (range >= 350 || range <= 0)
 	{
@@ -3948,7 +4003,7 @@ void Game::spellCard1(list<FO>::iterator it)		//1符
 	}
 }
 
-void Game::spellCard2(list<FO>::iterator it)			//2符
+void Game::spellCard2(list<FO>::iterator it)			//2��
 {
 	double speed = 4;
 	int type = 4, color = 0;
@@ -4006,7 +4061,7 @@ void Game::spellCard2(list<FO>::iterator it)			//2符
 	}
 }
 
-void Game::spellCard3(list<FO>::iterator it)			//3符
+void Game::spellCard3(list<FO>::iterator it)			//3��
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -4043,7 +4098,7 @@ void Game::spellCard3(list<FO>::iterator it)			//3符
 	temp += PI / 240.0;
 }
 
-void Game::spellCard4(list<FO>::iterator it)			//4符
+void Game::spellCard4(list<FO>::iterator it)			//4��
 {
 	enemyBulletSound.play();
 	FO Card4;
@@ -4063,7 +4118,7 @@ void Game::spellCard4(list<FO>::iterator it)			//4符
 	enemyBullets.push_back(Card4);
 }
 
-void Game::spellCard5(list<FO>::iterator it)				//5符
+void Game::spellCard5(list<FO>::iterator it)				//5��
 {
 	static double theta1 = PI / 2.0;
 	static double theta2 = PI / 2.0;
@@ -4117,7 +4172,7 @@ void Game::spellCard5(list<FO>::iterator it)				//5符
 	temp += PI / 240.0;
 }
 
-void Game::spellCard6(list<FO>::iterator it)				//6符
+void Game::spellCard6(list<FO>::iterator it)				//6��
 {
 	static double theta1 = PI / 6.0;
 	static double theta2 = PI / 2.0;
@@ -4175,7 +4230,7 @@ void Game::spellCard6(list<FO>::iterator it)				//6符
 	temp += PI / 240.0;
 }
 
-void Game::processTaps()		//玩家输入处理
+void Game::processTaps()		//������봦��
 {
 	sf::Event event;
 	while (mWindow.pollEvent(event))
@@ -4183,8 +4238,8 @@ void Game::processTaps()		//玩家输入处理
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
-			if (event.key.code == sf::Keyboard::Escape) {  // 鎸変笅浜咵sc閿紝娓告垙鏆傚仠
-				isPaused = !isPaused; // 鍒囨崲鏆傚仠鐘舵€?
+			if (event.key.code == sf::Keyboard::Escape) {  // 按下了Esc键，游戏暂停
+				isPaused = !isPaused; // 切换暂停状�?
 				printf("ESC\n");
 				if (mIsMovingUp == true) mIsMovingUp = false;
 				if (mIsMovingDown == true) mIsMovingDown = false;
@@ -4206,7 +4261,7 @@ void Game::processTaps()		//玩家输入处理
 }
 
 
-void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//读取输入
+void Game::playerInput(sf::Keyboard::Key key, bool isPressed)		//��ȡ����
 {
 	if (key == sf::Keyboard::Up)
 		mIsMovingUp = isPressed;
@@ -4244,7 +4299,7 @@ bool isFOOutOfBoard(const FO value)
 }
 */
 
-void Game::mainProcessing()			//处理移动
+void Game::mainProcessing()			//�����ƶ�
 {
 	if (mIsMovingUp == true && player.hero.getPosition().y > 40)
 	{
@@ -4274,7 +4329,7 @@ void Game::mainProcessing()			//处理移动
 		player.hero.move(player.velocity);
 	}*/
 
-	if (mIsFire)			//处理是否开火，设置状态
+	if (mIsFire)			//�����Ƿ񿪻�����״̬
 	{
 		if (playerBulletSound.getStatus() != playerBulletSound.Playing)
 		{
@@ -4282,7 +4337,7 @@ void Game::mainProcessing()			//处理移动
 		}
 	}
 
-	// 上线了，场上所有蓝点（11035）变成“会追踪玩家的蓝点”（11036）
+	// �����ˣ������������㣨11035����ɡ���׷����ҵ����㡱��11036��
 	if (player.hero.getPosition().y < 200)
 	{
 		for (FO& bp : bluePoints)
@@ -4295,7 +4350,7 @@ void Game::mainProcessing()			//处理移动
 		}
 	}
 
-	// 对会追踪玩家的蓝点不断地设置角度
+	// �Ի�׷����ҵ����㲻�ϵ����ýǶ�
 	for (FO& bp : bluePoints)
 	{
 		if (bp.type == 11036)
@@ -4305,7 +4360,7 @@ void Game::mainProcessing()			//处理移动
 	}
 }
 
-bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//检测精灵碰撞
+bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//��⾫����ײ
 {
 	sf::FloatRect f1 = obj1.getGlobalBounds();
 	sf::FloatRect f2 = obj2.getGlobalBounds();
@@ -4316,13 +4371,13 @@ bool Game::checkCollision(sf::Sprite obj1, sf::Sprite obj2)		//检测精灵碰�
 	return false;
 }
 
-pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		// 检测玩家是否与子弹/敌机/蓝点碰撞
+pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		// �������Ƿ����ӵ�/�л�/������ײ
 {
 	sf::Vector2f JP = julgePoint.getPosition();
 	JP.x -= 8;
 	JP.y -= 8;
 
-	// 敌机子弹
+	// �л��ӵ�
 	for (list<FO>::iterator it = enemyBullets.begin(); it != enemyBullets.end(); it++)
 	{
 		sf::FloatRect f = it->hero.getGlobalBounds();
@@ -4335,12 +4390,12 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		}
 	}
 
-	// 敌机体术
+	// �л�����
 	for (list<FO>::iterator it = enemies.begin(); it != enemies.end(); it++)
 	{
 		if (it->type == 0)
 		{
-			continue;  // 孩子们，我不想被过场动画体术
+			continue;  // �����ǣ��Ҳ��뱻������������
 		}
 
 		sf::FloatRect f = it->hero.getGlobalBounds();
@@ -4353,7 +4408,7 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		}
 	}
 
-	// 蓝点
+	// ����
 	for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
 	{
 		sf::FloatRect f = it->hero.getGlobalBounds();
@@ -4372,7 +4427,7 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		}
 	}
 
-	// 顺便，在按 Shift 时，收蓝点的范围大一些（不是立刻收，而是使蓝点变为“追踪玩家”的状态。）
+	// ˳�㣬�ڰ� Shift ʱ��������ķ�Χ��һЩ�����������գ�����ʹ�����Ϊ��׷����ҡ���״̬����
 	if (mIsGrazing)
 	{
 		for (list<FO>::iterator it = bluePoints.begin(); it != bluePoints.end(); it++)
@@ -4401,7 +4456,7 @@ pair<PlayerCollisionResult, list<FO>::iterator> Game::checkPlayerCollision()		//
 		}
 	}
 
-	return { PlayerCollisionResult::NoCollision, enemyBullets.end() }; // 没有撞到, 这时用 enemyBullets.end() 来充当“撞上的物品”
+	return { PlayerCollisionResult::NoCollision, enemyBullets.end() }; // û��ײ��, ��ʱ�� enemyBullets.end() ���䵱��ײ�ϵ���Ʒ��
 }
 /*
 void Game::GameOver()
@@ -4411,41 +4466,41 @@ void Game::GameOver()
 */
 void Game::GameOver()
 {
-	// 暂停游戏状态
+	// ��ͣ��Ϸ״̬
 	sf::Clock pauseClock;
-	sf::Time pauseDuration = sf::seconds(5); // 设置暂停时间为 10 秒
+	sf::Time pauseDuration = sf::seconds(5); // ������ͣʱ��Ϊ 10 ��
 
-	// 显示分数的弹窗
+	// ��ʾ�����ĵ���
 	sf::RenderWindow gameOverWindow(sf::VideoMode(400, 300), "Game Over");
 
-	// 创建显示分数的文本
+	// ������ʾ�������ı�
 	sf::Text scoreText;
-	scoreText.setFont(font); // 使用已加载的字体
-	scoreText.setString("Score: " + std::to_string(score)); // 将得分转化为字符串
+	scoreText.setFont(font); // ʹ���Ѽ��ص�����
+	scoreText.setString("Score: " + std::to_string(score)); // ���÷�ת��Ϊ�ַ���
 	scoreText.setCharacterSize(24);
 	scoreText.setFillColor(sf::Color::Black);
 	scoreText.setPosition(50, 50);
 
 	/*
 	sf::Texture backgroundTexture;
-	if (!backgroundTexture.loadFromFile("./res/sl_pl01.png")) // 替换为图片路径
+	if (!backgroundTexture.loadFromFile("./res/sl_pl01.png")) // �滻ΪͼƬ·��
 	{
-		// 处理加载失败情况
+		// �������ʧ�����
 		puts("Failed to load background image");
 		return;
 	}
 
 	sf::Sprite backgroundSprite;
 	backgroundSprite.setTexture(backgroundTexture);
-	backgroundSprite.setPosition(-50, 0); // 设置图片位置
+	backgroundSprite.setPosition(-50, 0); // ����ͼƬλ��
 	backgroundSprite.setScale(
 		gameOverWindow.getSize().x / backgroundSprite.getLocalBounds().width,
 		gameOverWindow.getSize().y / backgroundSprite.getLocalBounds().height
-	); // 适应窗口大小
+	); // ��Ӧ���ڴ�С
 
 	*/
 
-	// 停止游戏更新循环
+	// ֹͣ��Ϸ����ѭ��
 	while (pauseClock.getElapsedTime() < pauseDuration)
 	{
 		sf::Event event;
@@ -4457,14 +4512,14 @@ void Game::GameOver()
 			}
 		}
 
-		// 渲染暂停窗口内容
+		// ��Ⱦ��ͣ��������
 		gameOverWindow.clear(sf::Color::White);
 		//gameOverWindow.draw(backgroundSprite);
 		gameOverWindow.draw(scoreText);
 		gameOverWindow.display();
 	}
 
-	// 关闭弹窗后继续运行游戏窗口
+	// �رյ��������������Ϸ����
 	exit(0);
 }
 

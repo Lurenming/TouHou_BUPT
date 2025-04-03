@@ -111,7 +111,7 @@ FO::FO(int flag)
 		score = 1000;
 		break;
 	case 6://Ghost
-		HealthPoint = 1340;
+		HealthPoint = 500;
 		type = 6;
 		width = 32;
 		height = 32;

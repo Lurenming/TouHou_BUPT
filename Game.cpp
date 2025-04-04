@@ -2682,8 +2682,8 @@ int Game::S1E12()			//第一面结束，进入第二面，但方便测试可以看作都是第一面
 				{
 					back[i].setTexture(bg2);					//切换背景至第二面
 					back[i].setScale(sf::Vector2f(1.5, 1.5));
-					back[i].setPosition((float)65.0, (float)(i - 1)*192.0 + 35.0);
 					backEff[i].setTexture(bgEff2);
+					back[i].setPosition((float)65.0, (float)(i - 1)*192.0 + 35.0);
 					backEff[i].setScale(sf::Vector2f(1.5, 1.5));
 					backEff[i].setPosition(65.0, (i - 1)*384.0 + 35.0);
 				}
@@ -2693,8 +2693,10 @@ int Game::S1E12()			//第一面结束，进入第二面，但方便测试可以看作都是第一面
 	}
 	if (i1 == 200)
 	{
-		stage2BGM.play();
-		stage2BGM.setLoop(true);		//第二面的bgm
+		nowMusic->stop();
+		nowMusic = &stage2BGM;
+		nowMusic->play();
+		nowMusic->setLoop(true);		//第二面的bgm
 	}
 	if (i1 > 5 * 60)
 	{
@@ -3311,6 +3313,8 @@ void Game::boardDisplay()			//显示血量、雷和分数
 	case 0:
 		lifeBoard.setTextureRect(sf::IntRect(0, 44 * 8, 278, 36));
 	default:
+		lifeBoard.setTextureRect(sf::IntRect(0, 0, 278, 36));
+		break;
 		;
 	}
 	lifeBoard.setScale(1.5, 1.5);

@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\FO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\bombPieces.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bullet1.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bullet2.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bupt_library.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\eff_deadcircle.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\eff_magicsquare.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\enemy.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\enemy_aura.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\enemy2.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\enemy5.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\etama.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\etama2.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\front00.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\front01.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\lifePieces.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\lifePieces_orig.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\loading.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ls_bluePoint.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\options.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\optionsTitle.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\pl00.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\pl01.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\pl02.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\sig.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\sl_pl01.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stage02a.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stage02a7.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stage02b.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stage02b7.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stg01logo.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\switch.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\title.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\White.png">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\bosshe.mp3">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\BossHe.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\bossYAU.mp3">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\BossYau.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\menu.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_bomb00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_cancel00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_cardget.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_cat00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_damage00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_enep00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_item00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_ok00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_pldead00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_select00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\se_tan00.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\stage1.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\stage2.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\stage3.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="res\YAU.mp3">
+      <Filter>资源文件</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\MapleMonoNL-NF-CN-Regular.ttf">
+      <Filter>资源文件</Filter>
+    </Font>
+    <Font Include="res\RobotoCondensed-Regular.ttf">
+      <Filter>资源文件</Filter>
+    </Font>
+  </ItemGroup>
+</Project>

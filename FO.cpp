@@ -5,7 +5,7 @@
 #include <SFML/Audio.hpp>
 
 FO::FO()
-{				//¹¹Ôìº¯ÊıÄ¬ÈÏ
+{				//æ„é€ å‡½æ•°é»˜è®¤
 	phase = 1;
 	bounds = 0;
 	staticFrame = 0;
@@ -19,7 +19,7 @@ FO::FO()
 }
 
 FO::FO(int flag)
-{				//¹¹Ôìº¯Êı
+{				//æ„é€ å‡½æ•°
 	phase = 1;
 	bounds = 0;
 	staticFrame = 0;
@@ -40,7 +40,7 @@ FO::FO(int flag)
 		speed = 0.0;
 		theta = 0.0;
 		velocity = sf::Vector2f(0.0, 0.0);
-		break;  // ÕâÀïÖ®Ç°Ã»ÓĞĞ´ break£¬µ¼ÖÂ±êÌâ»­ÃæÔÚÏÂ·½Ğ¡Ñı¾«´úÂëÀï type ³ÉÔ±±»Éè³ÉÁË 1£¬»¹ÓĞ×ÅĞ¡Ñı¾«µÄÅö×²Ìå»ı£¬ÎªÌåÊõÅĞ¶¨ÔöÌíÁËÂé·³¡£
+		break;  // è¿™é‡Œä¹‹å‰æ²¡æœ‰å†™ breakï¼Œå¯¼è‡´æ ‡é¢˜ç”»é¢åœ¨ä¸‹æ–¹å°å¦–ç²¾ä»£ç é‡Œ type æˆå‘˜è¢«è®¾æˆäº† 1ï¼Œè¿˜æœ‰ç€å°å¦–ç²¾çš„ç¢°æ’ä½“ç§¯ï¼Œä¸ºä½“æœ¯åˆ¤å®šå¢æ·»äº†éº»çƒ¦ã€‚
 	case 1://player
 		type = 1;
 		if (!Reimu.loadFromFile("./res/pl00.png"))
@@ -60,13 +60,13 @@ FO::FO(int flag)
 		width = 48;
 		height = 72;
 		speed = 10.0;
-		hero.setTexture(Marisa);						//ÕâÀïÄ¿Ç°ÊÇÊÖ¶¯ÉèÖÃµÄÈËÎï£¬ÒÔºó¿ÉÍØÕ¹Îª¶àÈËÎïÑ¡Ôñ
+		hero.setTexture(Marisa);						//è¿™é‡Œç›®å‰æ˜¯æ‰‹åŠ¨è®¾ç½®çš„äººç‰©ï¼Œä»¥åå¯æ‹“å±•ä¸ºå¤šäººç‰©é€‰æ‹©
 		hero.setTextureRect(sf::IntRect(0, 0, width, height));
 		hero.setPosition(sf::Vector2f(430, 820));
-		HSAmmo.setTexture(Marisa);					//Ö÷ÅÚ
+		HSAmmo.setTexture(Marisa);					//ä¸»ç‚®
 		HSAmmo.setTextureRect(sf::IntRect(0, 3 * height + 0, 25, 24));
 		HSAmmo.setRotation(270);
-		LSAmmo.setTexture(Marisa);					//ÁÅ»ú
+		LSAmmo.setTexture(Marisa);					//åƒšæœº
 		LSAmmo.setTextureRect(sf::IntRect(4 * width, 3 * height + 48, 2 * width, 24));
 		LSAmmo.setRotation(270);
 		break;
